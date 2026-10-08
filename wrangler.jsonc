@@ -1,0 +1,9 @@
+// Cloudflare Workers configuration. The Astro Cloudflare adapter fills in the
+// entry point and static-assets binding at build time.
+// Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "portofolio",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+}
