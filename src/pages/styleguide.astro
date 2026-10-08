@@ -1,0 +1,238 @@
+---
+/**
+ * Private style guide: every token and component on one page, for design
+ * review. Not linked from the menu, not in the sitemap, and noindex.
+ *
+ * Exception to the i18n rule: this is an internal page, so its sample text
+ * is written inline in English (with Spanish samples to test accents).
+ * To see dark mode, switch your device/browser to dark appearance.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Card from '@/components/ui/Card.astro';
+import CardGrid from '@/components/ui/CardGrid.astro';
+import MetricGroup from '@/components/ui/MetricGroup.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Tag from '@/components/ui/Tag.astro';
+import TagList from '@/components/ui/TagList.astro';
+
+const colors = [
+  ['bg', 'Page background'],
+  ['surface', 'Cards'],
+  ['surface-2', 'Panels, code'],
+  ['border', 'Hairlines'],
+  ['border-strong', 'Control outlines'],
+  ['text', 'Body text'],
+  ['text-muted', 'Secondary text'],
+  ['accent', 'Links, primary'],
+  ['accent-hover', 'Hover'],
+  ['accent-soft', 'Tag background'],
+];
+
+const typeScale = [
+  ['3xl', 'Page title (h1)'],
+  ['2xl', 'Section title (h2)'],
+  ['xl', 'Subsection (h3)'],
+  ['lg', 'Lead paragraph'],
+  ['base', 'Body text'],
+  ['sm', 'Small text, buttons'],
+  ['xs', 'Mono labels'],
+];
+
+const metrics = [
+  { value: '120+', label: 'Links acquired per month' },
+  { value: 'DR 45', label: 'Average domain rating' },
+  { value: '5,000+', label: 'Publishers in network' },
+  { value: '8–12', label: 'State domains launched' },
+];
+---
+
+<BaseLayout
+  title="Style guide"
+  description="Internal design system reference: colors, typography, and components."
+  lang="en"
+  noindex
+>
+  <Section labelledby="sg-title">
+    <SectionHeading
+      level="h1"
+      id="sg-title"
+      eyebrow="Design system"
+      title="Style guide"
+      description="Signal green theme. Light by default; dark follows your device setting. Switch your system appearance to review dark mode."
+    />
+  </Section>
+
+  <Section labelledby="sg-colors" tinted>
+    <SectionHeading id="sg-colors" eyebrow="Tokens" title="Colors" />
+    <ul class="swatches">
+      {colors.map(([name, use]) => (
+        <li>
+          <span class="swatch" style={`background: var(--color-${name})`} />
+          <code>--color-{name}</code>
+          <span class="text-muted">{use}</span>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section labelledby="sg-type">
+    <SectionHeading id="sg-type" eyebrow="Tokens" title="Typography" />
+    <p class="text-muted">
+      IBM Plex Sans (text) and IBM Plex Mono (labels, numbers). Sizes scale smoothly between phone
+      and desktop.
+    </p>
+    <ul class="type-scale">
+      {typeScale.map(([size, use]) => (
+        <li>
+          <span class="mono-label">
+            {size} · {use}
+          </span>
+          <span style={`font-size: var(--fs-${size}); line-height: 1.2`}>
+            Organic growth, engineered
+          </span>
+        </li>
+      ))}
+    </ul>
+    <p style="font-family: var(--font-mono)">
+      Mono: 0123456789 · +120% · DR 45 · &lt;link rel="canonical"&gt;
+    </p>
+    <p lang="es">Español: ¿Cómo posicionar tu sitio? Optimización, año, pingüino, ¡éxito!</p>
+  </Section>
+
+  <Section labelledby="sg-buttons" tinted>
+    <SectionHeading id="sg-buttons" eyebrow="Components" title="Buttons" />
+    <div class="row">
+      <Button href="#" icon="download">
+        Download CV
+      </Button>
+      <Button href="#" variant="secondary" icon="arrow">
+        Contact me
+      </Button>
+      <Button href="#" variant="ghost" icon="arrow">
+        View case study
+      </Button>
+    </div>
+    <div class="row">
+      <Button href="#" size="lg" icon="download">
+        Download CV
+      </Button>
+      <Button href="#" size="lg" variant="secondary">
+        Contact me
+      </Button>
+      <Button variant="secondary" icon="external">
+        Button element
+      </Button>
+    </div>
+    <p class="text-muted">Use one primary button per view. Press Tab to see focus styles.</p>
+  </Section>
+
+  <Section labelledby="sg-tags">
+    <SectionHeading id="sg-tags" eyebrow="Components" title="Tags and metrics" />
+    <TagList tags={['Technical SEO', 'Digital PR', 'AEO', 'Python', 'iGaming']} label="Topics" />
+    <p class="tag-samples">
+      Single tag: <Tag>Schema.org</Tag> · Linked tag: <Tag href="#">Hreflang</Tag>
+    </p>
+    <MetricGroup metrics={metrics} />
+  </Section>
+
+  <Section labelledby="sg-cards" tinted>
+    <SectionHeading
+      id="sg-cards"
+      eyebrow="Components"
+      title="Cards"
+      description="Case studies, blog posts, and tools. The whole card is clickable."
+    />
+    <CardGrid>
+      <li>
+        <Card
+          href="#"
+          eyebrow="Case study"
+          title="Scaling a digital PR program to 120+ links a month"
+          description="Building a publisher network of 5,000+ sites for competitive US markets."
+          tags={['Digital PR', 'Link building']}
+          tagsLabel="Topics"
+        />
+      </li>
+      <li>
+        <Card
+          href="#"
+          eyebrow="Oct 8, 2026"
+          title="How I built this site for technical SEO"
+          description="Hreflang, structured data, and a sitemap generated from one route map."
+          meta="8 min read"
+          tags={['Astro', 'Hreflang']}
+          tagsLabel="Topics"
+        />
+      </li>
+      <li>
+        <Card
+          href="#"
+          eyebrow="Free tool"
+          title="SERP snippet preview"
+          description="Check title and description pixel widths before you publish."
+        />
+      </li>
+    </CardGrid>
+  </Section>
+
+  <Section labelledby="sg-prose" narrow>
+    <SectionHeading id="sg-prose" eyebrow="Content" title="Long-form text" />
+    <div class="prose">
+      <p>
+        Body text for blog posts and case studies, set at a comfortable reading width. Here is{' '}
+        <a href="#">an inline link</a>, some <strong>strong text</strong>, and inline{' '}
+        <code>code</code>.
+      </p>
+      <h3>A subsection heading</h3>
+      <ul>
+        <li>Audit crawlability, indexation, and Core Web Vitals.</li>
+        <li>Map keywords to search intent and page templates.</li>
+      </ul>
+      <blockquote>Good SEO is good engineering applied to how people search.</blockquote>
+      <pre><code>&lt;link rel="alternate" hreflang="es" href="/es/" /&gt;</code></pre>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .swatches li {
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--fs-sm);
+  }
+  .swatch {
+    height: 3.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .type-scale {
+    display: grid;
+    gap: var(--space-5);
+    margin: var(--space-6) 0;
+    padding: 0;
+    list-style: none;
+  }
+  .type-scale li {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .tag-samples {
+    margin-block: var(--space-4) var(--space-6);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+</style>

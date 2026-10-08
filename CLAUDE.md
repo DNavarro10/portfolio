@@ -51,12 +51,16 @@ src/
     seo/JsonLd.astro      Single JSON-LD <script> with @graph
     layout/               Header, footer, language switcher, breadcrumbs
     content/              Blog post, case study, and tool page templates (shared by EN/ES)
+    ui/                   Design-system components (see "Design system" below)
+    layout/Fonts.astro    Self-hosted font loading (@font-face + preload)
     PlaceholderPage.astro Temporary page used until real content exists
-  layouts/BaseLayout.astro  <html lang>, head, skip link, header/main/footer
+  layouts/BaseLayout.astro  <html lang>, head, fonts, skip link, header/main/footer
   content.config.ts       Collection schemas (blog, experience)
   content/{blog,experience}/{en,es}/*.md
   pages/                  Routes (EN at root, ES under /es/), sitemap.xml.ts, robots.txt.ts, 404
-  styles/global.css       Minimal base styles (design system comes later)
+  styles/tokens.css       Design tokens: colors (light + dark), type scale, spacing, radii
+  styles/global.css       Base styles: reset, typography, links, .container, .prose, utilities
+  pages/styleguide.astro  Private style guide (noindex, not in sitemap or menu)
 public/                   Static files served as-is (favicon; CV PDF later)
 ```
 
@@ -102,6 +106,27 @@ public/                   Static files served as-is (favicon; CV PDF later)
 - Semantic HTML and landmarks, keyboard navigable, visible focus, **WCAG AA** contrast,
   respect `prefers-reduced-motion`.
 
+## Design system
+
+- Style: "technical and precise". Theme: **Signal green**. Light by default, dark follows
+  `prefers-color-scheme` (no toggle).
+- **Use tokens only** (`var(--color-*)`, `--fs-*`, `--space-*`, `--radius*`). No raw hex values or
+  pixel font sizes in components. New colors go in `tokens.css` for both themes, with the contrast
+  ratio noted in a comment (AA: 4.5:1 text, 3:1 UI/large text).
+- Fonts: IBM Plex Sans (text, variable) + IBM Plex Mono 400/500 (labels, numbers), Latin subset only,
+  loaded in `components/layout/Fonts.astro`. Only Plex Sans is preloaded.
+- Components (`src/components/ui/`):
+  - `Section` (section landmark + container; pass `labelledby`) and `SectionHeading` (mono
+    eyebrow + heading).
+  - `Button` (`primary` max once per view, `secondary`, `ghost`; renders `<a>` with `href`).
+  - `Card` + `CardGrid` (wrap each card in `<li>`); whole card clickable via the title link.
+  - `Tag`, `TagList`, `MetricGroup` (results as a `<dl>`).
+- Layout helpers: `.container`, `.container--prose`, `.prose` (long-form), `.lead`, `.mono-label`,
+  `.text-muted`, `.visually-hidden`.
+- Header: desktop nav plus a no-JavaScript mobile menu (`<details>`). Touch targets ≥ 44px.
+- Review changes on `/styleguide/` in light and dark. That page is the one exception to the
+  "no hardcoded text" rule (internal, English sample text).
+
 ## Privacy and secrets
 
 - Never put the owner's email address or phone number in code or content. Contact happens via a
@@ -118,8 +143,8 @@ public/                   Static files served as-is (favicon; CV PDF later)
 
 ## Roadmap
 
-1. ✅ Foundation (this setup)
-2. Design system: colors, self-hosted fonts, spacing, components
+1. ✅ Foundation
+2. ✅ Design system (Signal green, IBM Plex, components, style guide)
 3. Home page
 4. About + Experience case studies (from the CV; anonymize metrics if confidential)
 5. Contact form + CV download (`/public`, track clicks)
