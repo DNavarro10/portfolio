@@ -9,7 +9,7 @@ export const en = {
   a11y: {
     skipToContent: 'Skip to main content',
     mainNav: 'Main navigation',
-    languageSwitcher: 'Change language',
+    openMenu: 'Menu',
     breadcrumb: 'Breadcrumb',
   },
   nav: {
@@ -25,6 +25,8 @@ export const en = {
     label: 'Español',
   },
   footer: {
+    builtWith: 'Built with Astro and hosted on Cloudflare.',
+    sourceCode: 'Source code',
     rights: 'All rights reserved.',
   },
   placeholder: {

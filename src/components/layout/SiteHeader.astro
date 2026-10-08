@@ -1,4 +1,12 @@
 ---
+/**
+ * Site header.
+ * - Desktop: brand on the left, nav links and language switch on the right.
+ * - Phone: a "Menu" button built on <details>/<summary>, which opens and
+ *   closes natively, with no JavaScript.
+ * Only one of the two navs is visible at a time (the other is display:none,
+ * so screen readers also see just one).
+ */
 import { SITE } from '@/config/site';
 import type { Lang } from '@/i18n/config';
 import { NAV_ROUTES } from '@/i18n/routes';
@@ -13,28 +21,214 @@ interface Props {
 const { lang, alternates } = Astro.props;
 const t = useTranslations(lang);
 const current = Astro.url.pathname;
+
+const links = NAV_ROUTES.map((key) => {
+  const href = routePath(key, lang);
+  return { key, href, label: t.nav[key], isCurrent: current.startsWith(href) };
+});
 ---
 
 <header class="site-header">
-  <a class="site-name" href={routePath('home', lang)}>
-    {SITE.name}
-  </a>
-  <nav aria-label={t.a11y.mainNav}>
-    <ul>
-      {NAV_ROUTES.map((key) => {
-        const href = routePath(key, lang);
-        const isCurrent = current === href || (href !== '/' && current.startsWith(href));
-        return (
+  <div class="container site-header__inner">
+    <a class="brand" href={routePath('home', lang)}>
+      <span class="brand__mark" aria-hidden="true">
+        DN
+      </span>
+      <span class="brand__name">{SITE.name}</span>
+    </a>
+
+    <nav class="nav nav--desktop" aria-label={t.a11y.mainNav}>
+      <ul class="nav__list">
+        {links.map((link) => (
           <li>
-            <a href={href} aria-current={isCurrent ? 'page' : undefined}>
-              {t.nav[key]}
+            <a href={link.href} aria-current={link.isCurrent ? 'page' : undefined}>
+              {link.label}
             </a>
           </li>
-        );
-      })}
-      <li>
-        <LanguageSwitcher lang={lang} alternates={alternates} />
-      </li>
-    </ul>
-  </nav>
+        ))}
+      </ul>
+      <LanguageSwitcher lang={lang} alternates={alternates} />
+    </nav>
+
+    <details class="nav nav--mobile">
+      <summary class="nav__toggle">
+        <span class="nav__toggle-icon" aria-hidden="true"></span>
+        {t.a11y.openMenu}
+      </summary>
+      <nav aria-label={t.a11y.mainNav}>
+        <ul class="nav__list">
+          {links.map((link) => (
+            <li>
+              <a href={link.href} aria-current={link.isCurrent ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <LanguageSwitcher lang={lang} alternates={alternates} />
+          </li>
+        </ul>
+      </nav>
+    </details>
+  </div>
 </header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    min-height: 4rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-text);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+  }
+  .brand:hover {
+    color: var(--color-text);
+  }
+  .brand__mark {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+  }
+
+  .nav__list {
+    display: flex;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nav :global(a) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius);
+    color: var(--color-text-muted);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    text-decoration: none;
+  }
+  .nav :global(a:hover) {
+    color: var(--color-text);
+    background: var(--color-surface-2);
+  }
+  .nav :global(a[aria-current='page']) {
+    color: var(--color-accent);
+  }
+
+  /* Desktop nav */
+  .nav--desktop {
+    display: none;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .nav--desktop :global(.lang-switch) {
+    padding-left: var(--space-3);
+    border-left: 1px solid var(--color-border);
+  }
+
+  /* Mobile nav */
+  .nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding-inline: var(--space-4);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    list-style: none;
+    cursor: pointer;
+  }
+  .nav__toggle::-webkit-details-marker {
+    display: none;
+  }
+  .nav__toggle-icon,
+  .nav__toggle-icon::before,
+  .nav__toggle-icon::after {
+    display: block;
+    width: 1rem;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform var(--transition);
+  }
+  .nav__toggle-icon {
+    position: relative;
+  }
+  .nav__toggle-icon::before,
+  .nav__toggle-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+  .nav__toggle-icon::before {
+    top: -5px;
+  }
+  .nav__toggle-icon::after {
+    top: 5px;
+  }
+  .nav--mobile[open] .nav__toggle-icon {
+    background: transparent;
+  }
+  .nav--mobile[open] .nav__toggle-icon::before {
+    transform: translateY(5px) rotate(45deg);
+  }
+  .nav--mobile[open] .nav__toggle-icon::after {
+    transform: translateY(-5px) rotate(-45deg);
+  }
+
+  .nav--mobile nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: var(--space-3) var(--gutter) var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .nav--mobile .nav__list {
+    flex-direction: column;
+  }
+  .nav--mobile :global(a) {
+    width: 100%;
+    font-size: var(--fs-base);
+  }
+  .nav--mobile li:last-child {
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 52rem) {
+    .nav--desktop {
+      display: flex;
+    }
+    .nav--mobile {
+      display: none;
+    }
+  }
+</style>

@@ -20,7 +20,7 @@ export function personSchema(): JsonLdNode {
     alternateName: OWNER.shortName,
     jobTitle: OWNER.jobTitle,
     url: `${SITE_URL}/`,
-    sameAs: [...OWNER.sameAs],
+    sameAs: OWNER.profiles.map((profile) => profile.url),
     address: { '@type': 'PostalAddress', addressCountry: 'CR' },
     knowsLanguage: LANGS.map((lang) => LANG_META[lang].hreflang),
   };

@@ -19,10 +19,27 @@ const href = alternates?.[target] ?? routePath('home', target);
 ---
 
 <a
+  class="lang-switch"
   href={href}
   hreflang={LANG_META[target].hreflang}
   lang={LANG_META[target].htmlLang}
-  aria-label={t.a11y.languageSwitcher + ': ' + t.langSwitch.label}
 >
+  <span class="lang-switch__code" aria-hidden="true">
+    {target.toUpperCase()}
+  </span>
   {t.langSwitch.label}
 </a>
+
+<style>
+  .lang-switch {
+    gap: var(--space-2);
+  }
+  .lang-switch__code {
+    padding: 0 0.35em;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+</style>

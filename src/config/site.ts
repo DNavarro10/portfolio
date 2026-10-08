@@ -14,8 +14,8 @@ export const OWNER = {
   shortName: 'Diego Navarro',
   jobTitle: 'Senior SEO Specialist',
   location: 'Costa Rica',
-  /** Public profiles; used for JSON-LD `sameAs` and footer links. */
-  sameAs: ['https://www.linkedin.com/in/diegonavarro10/'],
+  /** Public profiles: shown in the footer and used for JSON-LD `sameAs`. */
+  profiles: [{ label: 'LinkedIn', url: 'https://www.linkedin.com/in/diegonavarro10/' }],
 } as const;
 
 export const SITE = {
@@ -25,4 +25,6 @@ export const SITE = {
   defaultOgImage: '/og-default.png',
   /** Twitter/X handle without "@", or empty if none. */
   twitterHandle: '',
+  /** Public source code of this site (shown in the footer). */
+  sourceUrl: 'https://github.com/DNavarro10/portofolio',
 } as const;

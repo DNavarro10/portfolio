@@ -11,7 +11,7 @@ export const es: UiStrings = {
   a11y: {
     skipToContent: 'Saltar al contenido principal',
     mainNav: 'Navegación principal',
-    languageSwitcher: 'Cambiar idioma',
+    openMenu: 'Menú',
     breadcrumb: 'Ruta de navegación',
   },
   nav: {
@@ -26,6 +26,8 @@ export const es: UiStrings = {
     label: 'English',
   },
   footer: {
+    builtWith: 'Hecho con Astro y alojado en Cloudflare.',
+    sourceCode: 'Código fuente',
     rights: 'Todos los derechos reservados.',
   },
   placeholder: {
