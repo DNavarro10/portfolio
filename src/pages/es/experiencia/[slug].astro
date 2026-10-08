@@ -1,0 +1,10 @@
+---
+import CaseStudyPage from '@/components/content/CaseStudyPage.astro';
+import { staticPathsFor } from '@/lib/content';
+
+export const getStaticPaths = () => staticPathsFor('experience', 'es');
+
+const { entry, alternates } = Astro.props;
+---
+
+<CaseStudyPage entry={entry} alternates={alternates} lang="es" />

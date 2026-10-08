@@ -1,0 +1,42 @@
+---
+/**
+ * Shell for one SEO tool page. The interactive tool itself will be added
+ * as a client-side island inside the slot when each tool is built.
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { LANGS, type Lang } from '@/i18n/config';
+import { COLLECTION_BASE } from '@/i18n/routes';
+import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
+import { breadcrumbSchema } from '@/lib/schema';
+import type { Tool } from '@/data/tools';
+
+interface Props {
+  tool: Tool;
+  lang: Lang;
+}
+
+const { tool, lang } = Astro.props;
+const t = useTranslations(lang);
+const alternates: Alternates = Object.fromEntries(
+  LANGS.map((l) => [l, `${COLLECTION_BASE.tools[l]}${tool.slug[l]}/`]),
+);
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.tools, path: routePath('tools', lang) },
+  { name: tool.title[lang], path: alternates[lang]! },
+];
+---
+
+<BaseLayout
+  title={tool.title[lang]}
+  description={tool.description[lang]}
+  lang={lang}
+  alternates={alternates}
+  noindex={!tool.published}
+  jsonLd={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs lang={lang} items={crumbs} />
+  <h1>{tool.title[lang]}</h1>
+  <slot />
+</BaseLayout>

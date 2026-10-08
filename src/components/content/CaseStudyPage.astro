@@ -1,0 +1,62 @@
+---
+/** Renders one experience case study. Used by the EN and ES detail routes. */
+import { Image } from 'astro:assets';
+import { render, type CollectionEntry } from 'astro:content';
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang } from '@/i18n/config';
+import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
+import { entryPath } from '@/lib/content';
+import { breadcrumbSchema } from '@/lib/schema';
+
+interface Props {
+  entry: CollectionEntry<'experience'>;
+  alternates: Alternates;
+  lang: Lang;
+}
+
+const { entry, alternates, lang } = Astro.props;
+const { Content } = await render(entry);
+const t = useTranslations(lang);
+const { title, description, company, role, period, metrics, heroImage, heroAlt } = entry.data;
+
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.experience, path: routePath('experience', lang) },
+  { name: title, path: entryPath('experience', entry) },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  alternates={alternates}
+  ogType="article"
+  ogImage={heroImage?.src}
+  ogImageAlt={heroAlt}
+  noindex={entry.data.draft}
+  jsonLd={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs lang={lang} items={crumbs} />
+  <article>
+    <header>
+      <h1>{title}</h1>
+      <p>
+        {role} · {company} · {period}
+      </p>
+    </header>
+    {metrics.length > 0 && (
+      <dl>
+        {metrics.map((metric) => (
+          <div>
+            <dt>{metric.label}</dt>
+            <dd>{metric.value}</dd>
+          </div>
+        ))}
+      </dl>
+    )}
+    {heroImage && <Image src={heroImage} alt={heroAlt ?? ''} loading="eager" />}
+    <Content />
+  </article>
+</BaseLayout>

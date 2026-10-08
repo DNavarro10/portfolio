@@ -1,0 +1,72 @@
+---
+/** Renders one blog post. Used by both /blog/[slug] and /es/blog/[slug]. */
+import { Image } from 'astro:assets';
+import { render, type CollectionEntry } from 'astro:content';
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { LANG_META, type Lang } from '@/i18n/config';
+import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
+import { entryPath } from '@/lib/content';
+import { blogPostingSchema, breadcrumbSchema } from '@/lib/schema';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+  alternates: Alternates;
+  lang: Lang;
+}
+
+const { entry, alternates, lang } = Astro.props;
+const { Content } = await render(entry);
+const t = useTranslations(lang);
+const { title, description, pubDate, updatedDate, heroImage, heroAlt } = entry.data;
+const path = entryPath('blog', entry);
+
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, { dateStyle: 'long' });
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.blog, path: routePath('blog', lang) },
+  { name: title, path },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  alternates={alternates}
+  ogType="article"
+  ogImage={heroImage?.src}
+  ogImageAlt={heroAlt}
+  noindex={entry.data.draft}
+  jsonLd={[
+    blogPostingSchema({
+      title,
+      description,
+      path,
+      lang,
+      datePublished: pubDate,
+      dateModified: updatedDate,
+      image: heroImage?.src,
+    }),
+    breadcrumbSchema(crumbs),
+  ]}
+>
+  <Breadcrumbs lang={lang} items={crumbs} />
+  <article>
+    <header>
+      <h1>{title}</h1>
+      <p>
+        {t.blog.publishedOn}
+        <time datetime={pubDate.toISOString()}>{dateFormat.format(pubDate)}</time>
+        {updatedDate && (
+          <>
+            · {t.blog.updatedOn}
+            <time datetime={updatedDate.toISOString()}>{dateFormat.format(updatedDate)}</time>
+          </>
+        )}
+      </p>
+    </header>
+    {heroImage && <Image src={heroImage} alt={heroAlt ?? ''} loading="eager" />}
+    <Content />
+  </article>
+</BaseLayout>

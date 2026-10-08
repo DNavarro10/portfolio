@@ -1,0 +1,10 @@
+---
+import BlogPostPage from '@/components/content/BlogPostPage.astro';
+import { staticPathsFor } from '@/lib/content';
+
+export const getStaticPaths = () => staticPathsFor('blog', 'es');
+
+const { entry, alternates } = Astro.props;
+---
+
+<BlogPostPage entry={entry} alternates={alternates} lang="es" />
