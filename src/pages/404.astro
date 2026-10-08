@@ -1,0 +1,22 @@
+---
+/**
+ * Not-found page (served with HTTP 404). Always noindex.
+ * Shows a short message in both languages, since we can't know which
+ * language the visitor expected.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { routePath, useTranslations } from '@/i18n/utils';
+
+const en = useTranslations('en').pages.notFound;
+const es = useTranslations('es').pages.notFound;
+---
+
+<BaseLayout title={en.title} description={en.description} lang="en" noindex canonicalPath="/404/">
+  <h1>{en.title}</h1>
+  <p>
+    {en.description} <a href={routePath('home', 'en')}>{en.backHome}</a>
+  </p>
+  <p lang="es">
+    {es.description} <a href={routePath('home', 'es')}>{es.backHome}</a>
+  </p>
+</BaseLayout>

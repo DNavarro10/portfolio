@@ -1,0 +1,28 @@
+---
+/**
+ * Link to the same page in the other language. If this page has no
+ * translation, it links to the other language's home page instead.
+ * It's a plain link (no auto-redirects based on browser language).
+ */
+import { LANG_META, LANGS, type Lang } from '@/i18n/config';
+import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+  alternates?: Alternates;
+}
+
+const { lang, alternates } = Astro.props;
+const t = useTranslations(lang);
+const target = LANGS.find((l) => l !== lang)!;
+const href = alternates?.[target] ?? routePath('home', target);
+---
+
+<a
+  href={href}
+  hreflang={LANG_META[target].hreflang}
+  lang={LANG_META[target].htmlLang}
+  aria-label={t.a11y.languageSwitcher + ': ' + t.langSwitch.label}
+>
+  {t.langSwitch.label}
+</a>

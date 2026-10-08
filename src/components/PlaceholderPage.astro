@@ -1,0 +1,44 @@
+---
+/**
+ * Temporary page used by every route until real content is written.
+ * Pulls title/description from the translation files and URLs from the
+ * route registry, so each page file stays a one-liner.
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang } from '@/i18n/config';
+import { ROUTES, type RouteKey } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { breadcrumbSchema } from '@/lib/schema';
+
+interface Props {
+  page: RouteKey;
+  lang: Lang;
+}
+
+const { page, lang } = Astro.props;
+const t = useTranslations(lang);
+const meta = t.pages[page];
+const isHome = page === 'home';
+
+const crumbs = isHome
+  ? []
+  : [
+      { name: t.nav.home, path: routePath('home', lang) },
+      { name: t.nav[page], path: routePath(page, lang) },
+    ];
+---
+
+<BaseLayout
+  title={meta.title}
+  description={meta.description}
+  lang={lang}
+  alternates={routeAlternates(page)}
+  noindex={!ROUTES[page].published}
+  bareTitle={isHome}
+  jsonLd={crumbs.length ? [breadcrumbSchema(crumbs)] : []}
+>
+  {crumbs.length > 0 && <Breadcrumbs lang={lang} items={crumbs} />}
+  <h1>{meta.title}</h1>
+  <p>{t.placeholder.comingSoon}</p>
+</BaseLayout>

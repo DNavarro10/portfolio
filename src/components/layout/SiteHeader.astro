@@ -1,0 +1,40 @@
+---
+import { SITE } from '@/config/site';
+import type { Lang } from '@/i18n/config';
+import { NAV_ROUTES } from '@/i18n/routes';
+import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  lang: Lang;
+  alternates?: Alternates;
+}
+
+const { lang, alternates } = Astro.props;
+const t = useTranslations(lang);
+const current = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <a class="site-name" href={routePath('home', lang)}>
+    {SITE.name}
+  </a>
+  <nav aria-label={t.a11y.mainNav}>
+    <ul>
+      {NAV_ROUTES.map((key) => {
+        const href = routePath(key, lang);
+        const isCurrent = current === href || (href !== '/' && current.startsWith(href));
+        return (
+          <li>
+            <a href={href} aria-current={isCurrent ? 'page' : undefined}>
+              {t.nav[key]}
+            </a>
+          </li>
+        );
+      })}
+      <li>
+        <LanguageSwitcher lang={lang} alternates={alternates} />
+      </li>
+    </ul>
+  </nav>
+</header>

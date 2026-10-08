@@ -1,0 +1,46 @@
+---
+/**
+ * HTML skeleton shared by every page: <html lang>, the full SEO <head>,
+ * a skip link, header, <main>, and footer.
+ *
+ * Usage: <BaseLayout title="..." description="..." lang="en" alternates={...}> ... </BaseLayout>
+ * Each page must contain exactly one <h1> inside the slot.
+ */
+import SeoHead, { type SeoProps } from '@/components/seo/SeoHead.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import { LANG_META } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+import { personSchema, websiteSchema } from '@/lib/schema';
+import '@/styles/global.css';
+
+type Props = SeoProps;
+
+const props = Astro.props;
+const { lang, alternates, jsonLd = [] } = props;
+const t = useTranslations(lang);
+
+// Person + WebSite on every page so other entities can reference them by @id.
+const graph = [personSchema(), websiteSchema(), ...jsonLd];
+---
+
+<!doctype html>
+<html lang={LANG_META[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="generator" content={Astro.generator} />
+    <SeoHead {...props} jsonLd={graph} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      {t.a11y.skipToContent}
+    </a>
+    <SiteHeader lang={lang} alternates={alternates} />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter lang={lang} />
+  </body>
+</html>

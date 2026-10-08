@@ -1,0 +1,51 @@
+---
+/**
+ * Visible breadcrumb trail. Pair it with breadcrumbSchema() using the
+ * same items so the markup and structured data always match.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+import type { BreadcrumbItem } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+  items: BreadcrumbItem[];
+}
+
+const { lang, items } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<nav aria-label={t.a11y.breadcrumb} class="breadcrumbs">
+  <ol>
+    {items.map((item, index) =>
+      index === items.length - 1 ? (
+        <li aria-current="page">{item.name}</li>
+      ) : (
+        <li>
+          <a href={item.path}>{item.name}</a>
+        </li>
+      ),
+    )}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9375rem;
+  }
+  .breadcrumbs li + li::before {
+    content: '›';
+    margin-inline-end: 0.25rem;
+    color: var(--color-muted);
+  }
+  .breadcrumbs [aria-current='page'] {
+    font-weight: 400;
+  }
+</style>

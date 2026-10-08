@@ -1,0 +1,28 @@
+---
+import { OWNER } from '@/config/site';
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <p>
+    © {year} {OWNER.name}. {t.footer.rights}
+  </p>
+  <ul>
+    {OWNER.sameAs.map((url) => (
+      <li>
+        <a href={url} rel="me noopener" target="_blank">
+          {new URL(url).hostname.replace('www.', '')}
+        </a>
+      </li>
+    ))}
+  </ul>
+</footer>
