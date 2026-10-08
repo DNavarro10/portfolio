@@ -3,6 +3,7 @@
 import { Image } from 'astro:assets';
 import { render, type CollectionEntry } from 'astro:content';
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Section from '@/components/ui/Section.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { LANG_META, type Lang } from '@/i18n/config';
 import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
@@ -51,22 +52,26 @@ const crumbs = [
     breadcrumbSchema(crumbs),
   ]}
 >
-  <Breadcrumbs lang={lang} items={crumbs} />
-  <article>
-    <header>
-      <h1>{title}</h1>
-      <p>
-        {t.blog.publishedOn}
-        <time datetime={pubDate.toISOString()}>{dateFormat.format(pubDate)}</time>
-        {updatedDate && (
-          <>
-            · {t.blog.updatedOn}
-            <time datetime={updatedDate.toISOString()}>{dateFormat.format(updatedDate)}</time>
-          </>
-        )}
-      </p>
-    </header>
-    {heroImage && <Image src={heroImage} alt={heroAlt ?? ''} loading="eager" />}
-    <Content />
-  </article>
+  <Section narrow>
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <article>
+      <header>
+        <h1>{title}</h1>
+        <p class="text-muted">
+          {t.blog.publishedOn}
+          <time datetime={pubDate.toISOString()}>{dateFormat.format(pubDate)}</time>
+          {updatedDate && (
+            <>
+              · {t.blog.updatedOn}
+              <time datetime={updatedDate.toISOString()}>{dateFormat.format(updatedDate)}</time>
+            </>
+          )}
+        </p>
+      </header>
+      {heroImage && <Image src={heroImage} alt={heroAlt ?? ''} loading="eager" />}
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </Section>
 </BaseLayout>

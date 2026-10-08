@@ -4,6 +4,7 @@
  * as a client-side island inside the slot when each tool is built.
  */
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Section from '@/components/ui/Section.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { LANGS, type Lang } from '@/i18n/config';
 import { COLLECTION_BASE } from '@/i18n/routes';
@@ -36,7 +37,10 @@ const crumbs = [
   noindex={!tool.published}
   jsonLd={[breadcrumbSchema(crumbs)]}
 >
-  <Breadcrumbs lang={lang} items={crumbs} />
-  <h1>{tool.title[lang]}</h1>
-  <slot />
+  <Section>
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <h1>{tool.title[lang]}</h1>
+    <p class="lead">{tool.description[lang]}</p>
+    <slot />
+  </Section>
 </BaseLayout>

@@ -5,6 +5,7 @@
  * route registry, so each page file stays a one-liner.
  */
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Section from '@/components/ui/Section.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { Lang } from '@/i18n/config';
 import { ROUTES, type RouteKey } from '@/i18n/routes';
@@ -38,7 +39,9 @@ const crumbs = isHome
   bareTitle={isHome}
   jsonLd={crumbs.length ? [breadcrumbSchema(crumbs)] : []}
 >
-  {crumbs.length > 0 && <Breadcrumbs lang={lang} items={crumbs} />}
-  <h1>{meta.title}</h1>
-  <p>{t.placeholder.comingSoon}</p>
+  <Section>
+    {crumbs.length > 0 && <Breadcrumbs lang={lang} items={crumbs} />}
+    <h1>{meta.title}</h1>
+    <p class="lead">{t.placeholder.comingSoon}</p>
+  </Section>
 </BaseLayout>

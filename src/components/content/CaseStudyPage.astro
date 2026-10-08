@@ -2,7 +2,9 @@
 /** Renders one experience case study. Used by the EN and ES detail routes. */
 import { Image } from 'astro:assets';
 import { render, type CollectionEntry } from 'astro:content';
+import MetricGroup from '@/components/ui/MetricGroup.astro';
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Section from '@/components/ui/Section.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { Lang } from '@/i18n/config';
 import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
@@ -38,25 +40,20 @@ const crumbs = [
   noindex={entry.data.draft}
   jsonLd={[breadcrumbSchema(crumbs)]}
 >
-  <Breadcrumbs lang={lang} items={crumbs} />
-  <article>
-    <header>
-      <h1>{title}</h1>
-      <p>
-        {role} · {company} · {period}
-      </p>
-    </header>
-    {metrics.length > 0 && (
-      <dl>
-        {metrics.map((metric) => (
-          <div>
-            <dt>{metric.label}</dt>
-            <dd>{metric.value}</dd>
-          </div>
-        ))}
-      </dl>
-    )}
-    {heroImage && <Image src={heroImage} alt={heroAlt ?? ''} loading="eager" />}
-    <Content />
-  </article>
+  <Section narrow>
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <article>
+      <header>
+        <h1>{title}</h1>
+        <p class="text-muted">
+          {role} · {company} · {period}
+        </p>
+      </header>
+      <MetricGroup metrics={metrics} />
+      {heroImage && <Image src={heroImage} alt={heroAlt ?? ''} loading="eager" />}
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </Section>
 </BaseLayout>

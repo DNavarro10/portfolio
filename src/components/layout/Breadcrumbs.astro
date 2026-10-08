@@ -35,15 +35,16 @@ const t = useTranslations(lang);
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
-    margin: 0 0 1rem;
+    margin: 0 0 var(--space-5);
     padding: 0;
     list-style: none;
-    font-size: 0.9375rem;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
   }
   .breadcrumbs li + li::before {
     content: '›';
     margin-inline-end: 0.25rem;
-    color: var(--color-muted);
+    color: var(--color-text-muted);
   }
   .breadcrumbs [aria-current='page'] {
     font-weight: 400;
