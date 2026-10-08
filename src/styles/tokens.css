@@ -1,0 +1,98 @@
+/*
+ * Design tokens: the single place for colors, type, spacing, and shape.
+ * Components only use these variables, never raw values, so changing the
+ * brand later means editing this file only.
+ *
+ * Theme: "Signal green". Light by default; dark follows the visitor's
+ * device setting (prefers-color-scheme). Contrast ratios are noted next to
+ * each text color (WCAG AA needs 4.5:1 for text, 3:1 for large text/UI).
+ */
+
+:root {
+  /* ---------- Color: light ---------- */
+  --color-bg: #fafaf9; /* page background */
+  --color-surface: #ffffff; /* cards */
+  --color-surface-2: #f1f2ef; /* subtle panels, code blocks */
+  --color-border: #e2e4df; /* hairlines (decorative) */
+  --color-border-strong: #8a8f98; /* outlines on controls: 3.2:1 on bg */
+
+  --color-text: #16181d; /* 17.0:1 on bg */
+  --color-text-muted: #5a5f6b; /* 6.1:1 on bg */
+
+  --color-accent: #0a6b4b; /* links, primary buttons: 6.3:1 on bg */
+  --color-accent-hover: #075239; /* 8.9:1 on bg */
+  --color-on-accent: #ffffff; /* text on accent: 6.5:1 */
+  --color-accent-soft: #e3f2ea; /* tinted backgrounds (tags) */
+  --color-on-accent-soft: #075239; /* text on accent-soft: 8.1:1 */
+
+  --color-focus: #0a6b4b;
+
+  /* ---------- Typography ---------- */
+  --font-sans:
+    'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Fluid sizes: grow smoothly from phone (~360px) to desktop (~1280px). */
+  --fs-xs: 0.8125rem; /* 13px: mono labels */
+  --fs-sm: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  --fs-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --fs-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --fs-xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --fs-2xl: clamp(1.75rem, 1.45rem + 1.4vw, 2.5rem);
+  --fs-3xl: clamp(2.25rem, 1.7rem + 2.6vw, 3.75rem);
+
+  --lh-tight: 1.15;
+  --lh-snug: 1.3;
+  --lh-body: 1.65;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --section-gap: clamp(3rem, 2rem + 4vw, 6rem);
+
+  /* ---------- Layout ---------- */
+  --width-prose: 68ch; /* comfortable reading line */
+  --width-page: 72rem; /* 1152px max content */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+
+  /* ---------- Shape & motion ---------- */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+  --transition: 150ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f1115;
+    --color-surface: #171a20;
+    --color-surface-2: #1e222a;
+    --color-border: #2a2f38;
+    --color-border-strong: #6b7280; /* 3.7:1 on bg */
+
+    --color-text: #e8eaed; /* 15.7:1 on bg */
+    --color-text-muted: #9ba1ac; /* 7.3:1 on bg */
+
+    --color-accent: #4fd1a1; /* 9.9:1 on bg */
+    --color-accent-hover: #7fe0bc;
+    --color-on-accent: #0f1115; /* 9.9:1 */
+    --color-accent-soft: #12332a;
+    --color-on-accent-soft: #7fe0bc; /* 9.4:1 on accent-soft */
+
+    --color-focus: #4fd1a1;
+  }
+}
