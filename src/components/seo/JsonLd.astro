@@ -1,0 +1,19 @@
+---
+/**
+ * Outputs structured data as a single JSON-LD <script> using @graph.
+ * "<" is escaped so content can never break out of the script tag.
+ */
+import type { JsonLdNode } from '@/lib/schema';
+
+interface Props {
+  nodes: JsonLdNode[];
+}
+
+const { nodes } = Astro.props;
+const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes }).replace(
+  /</g,
+  '\\u003c',
+);
+---
+
+{nodes.length > 0 && <script is:inline type="application/ld+json" set:html={json} />}
