@@ -1,0 +1,38 @@
+---
+/**
+ * Page section: a <section> landmark with consistent vertical spacing and
+ * the page container. Pass `labelledby` with the id of the section heading.
+ */
+interface Props {
+  labelledby?: string;
+  /** Narrow reading width instead of full page width. */
+  narrow?: boolean;
+  /** Subtle tinted background to separate sections. */
+  tinted?: boolean;
+  id?: string;
+}
+
+const { labelledby, narrow = false, tinted = false, id } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={['section', { 'section--tinted': tinted }]}
+  aria-labelledby={labelledby}
+>
+  <div class:list={['container', { 'container--prose': narrow }]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-gap);
+  }
+  .section:first-child {
+    padding-top: var(--space-6);
+  }
+  .section--tinted {
+    background: var(--color-surface-2);
+  }
+</style>

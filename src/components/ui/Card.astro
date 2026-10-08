@@ -1,0 +1,128 @@
+---
+/**
+ * Content card for case studies, blog posts, and tools.
+ *
+ * When `href` is set, the whole card is clickable, but only the title is a
+ * real link (one link per card is cleaner for screen readers and SEO).
+ *
+ * Choose `headingLevel` to keep the page's heading order logical:
+ * cards under an <h2> section use h3 (the default).
+ */
+import TagList from './TagList.astro';
+
+interface Props {
+  title: string;
+  href?: string;
+  description?: string;
+  /** Small mono label above the title, e.g. "Case study" or a date. */
+  eyebrow?: string;
+  /** Line under the description, e.g. "8 min read". */
+  meta?: string;
+  tags?: readonly string[];
+  tagsLabel?: string;
+  headingLevel?: 'h2' | 'h3' | 'h4';
+}
+
+const {
+  title,
+  href,
+  description,
+  eyebrow,
+  meta,
+  tags = [],
+  tagsLabel,
+  headingLevel = 'h3',
+} = Astro.props;
+const Heading = headingLevel;
+---
+
+<article class:list={['card', { 'card--link': href }]}>
+  {eyebrow && <p class="card__eyebrow mono-label">{eyebrow}</p>}
+  <Heading class="card__title">{href ? <a href={href}>{title}</a> : title}</Heading>
+  {description && <p class="card__description">{description}</p>}
+  <slot />
+  {(meta || tags.length > 0) && (
+    <div class="card__footer">
+      {meta && <p class="card__meta">{meta}</p>}
+      <TagList tags={tags} label={tagsLabel} />
+    </div>
+  )}
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    height: 100%;
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    transition:
+      border-color var(--transition),
+      transform var(--transition);
+  }
+  .card__eyebrow,
+  .card__title,
+  .card__description,
+  .card__meta {
+    margin: 0;
+  }
+  .card__title {
+    font-size: var(--fs-lg);
+    line-height: var(--lh-snug);
+  }
+  .card__title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  /* Stretch the title link over the whole card. */
+  .card--link .card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .card--link:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  .card--link:hover .card__title a {
+    color: var(--color-accent);
+  }
+  .card--link:focus-within {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+  .card__title a:focus-visible {
+    outline: none;
+  }
+  .card__description {
+    color: var(--color-text-muted);
+    font-size: var(--fs-sm);
+  }
+  .card__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-3);
+  }
+  .card__meta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+  }
+  /* Tags sit above the stretched link so they stay readable/selectable. */
+  .card__footer :global(.tag-list) {
+    position: relative;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card--link:hover {
+      transform: none;
+    }
+  }
+</style>

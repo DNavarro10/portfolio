@@ -1,0 +1,137 @@
+---
+/**
+ * Button or link styled as a button.
+ * - With `href` it renders an <a> (navigation, downloads).
+ * - Without `href` it renders a <button> (forms, actions).
+ *
+ * Variants: primary (one per view, e.g. "Download CV"), secondary, ghost.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'secondary' | 'ghost';
+type Size = 'md' | 'lg';
+
+interface Props {
+  href?: string;
+  variant?: Variant;
+  size?: Size;
+  /** For file links: suggests a download (optionally with a file name). */
+  download?: boolean | string;
+  type?: 'button' | 'submit' | 'reset';
+  /** Shows a small icon after the label. */
+  icon?: 'arrow' | 'download' | 'external';
+  class?: string;
+  rest?: HTMLAttributes<'a'> & HTMLAttributes<'button'>;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  download,
+  type = 'button',
+  icon,
+  class: className,
+  rest = {},
+} = Astro.props;
+
+const classes = ['btn', `btn--${variant}`, `btn--${size}`, className];
+const isExternal = href?.startsWith('http');
+---
+
+{href ? (
+  <a
+    href={href}
+    class:list={classes}
+    download={download}
+    rel={isExternal ? 'noopener' : undefined}
+    {...rest}
+  >
+    <slot />
+    {icon && <span class={`btn__icon btn__icon--${icon}`} aria-hidden="true" />}
+  </a>
+) : (
+  <button type={type} class:list={classes} {...rest}>
+    <slot />
+    {icon && <span class={`btn__icon btn__icon--${icon}`} aria-hidden="true" />}
+  </button>
+)}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 44px; /* comfortable touch target */
+    padding: var(--space-2) var(--space-5);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--transition),
+      border-color var(--transition),
+      color var(--transition),
+      transform var(--transition);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn--lg {
+    min-height: 52px;
+    padding-inline: var(--space-6);
+    font-size: var(--fs-base);
+  }
+
+  .btn--primary {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .btn--primary:hover {
+    background: var(--color-accent-hover);
+    color: var(--color-on-accent);
+  }
+
+  .btn--secondary {
+    border-color: var(--color-border-strong);
+    background: transparent;
+    color: var(--color-text);
+  }
+  .btn--secondary:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .btn--ghost {
+    padding-inline: var(--space-3);
+    background: transparent;
+    color: var(--color-accent);
+  }
+  .btn--ghost:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-on-accent-soft);
+  }
+
+  /* Icons drawn with CSS masks: no extra files or requests. */
+  .btn__icon {
+    width: 1em;
+    height: 1em;
+    flex: none;
+    background: currentColor;
+    mask: var(--icon) center / contain no-repeat;
+  }
+  .btn__icon--arrow {
+    --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  }
+  .btn__icon--download {
+    --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11M7 10l5 5 5-5M5 20h14'/%3E%3C/svg%3E");
+  }
+  .btn__icon--external {
+    --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 5h5v5M19 5l-8 8M18 14v5H5V6h5'/%3E%3C/svg%3E");
+  }
+</style>

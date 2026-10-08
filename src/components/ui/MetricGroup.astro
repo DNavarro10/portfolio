@@ -1,0 +1,59 @@
+---
+/**
+ * Headline results, e.g. "120+ links/month".
+ *
+ * Built as a description list (<dl>): screen readers hear the label and
+ * then the value, while sighted visitors see the big number first.
+ */
+interface Metric {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  metrics: readonly Metric[];
+}
+
+const { metrics } = Astro.props;
+---
+
+{metrics.length > 0 && (
+  <dl class="metrics">
+    {metrics.map((metric) => (
+      <div class="metric">
+        <dt class="metric__label">{metric.label}</dt>
+        <dd class="metric__value">{metric.value}</dd>
+      </div>
+    ))}
+  </dl>
+)}
+
+<style>
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+    gap: var(--space-4);
+    margin: 0 0 var(--space-6);
+  }
+  .metric {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-surface);
+  }
+  .metric__value {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-medium);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-accent);
+  }
+  .metric__label {
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+</style>

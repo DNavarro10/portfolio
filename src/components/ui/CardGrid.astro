@@ -1,0 +1,24 @@
+---
+/** Responsive grid of cards: 1 column on phones, up to 3 on desktop. */
+interface Props {
+  /** Minimum card width before wrapping. */
+  min?: string;
+}
+
+const { min = '18rem' } = Astro.props;
+---
+
+<ul class="card-grid" style={`--card-min: ${min}`}>
+  <slot />
+</ul>
+
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--card-min)), 1fr));
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>
