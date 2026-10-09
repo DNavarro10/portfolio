@@ -37,6 +37,7 @@ npm run deploy       # build and deploy to Cloudflare
 ```
 src/
   config/site.ts          Single source of truth: SITE_URL, owner info, brand name
+  config/crawlers.ts      robots.txt policy: AI search crawlers allowed, AI training blocked
   i18n/
     config.ts             Languages (en default, es), hreflang and og:locale codes
     en.ts / es.ts         ALL UI strings (es is typed against en: missing keys fail the build)
@@ -45,6 +46,7 @@ src/
   lib/
     schema.ts             JSON-LD builders (Person, WebSite, BreadcrumbList, BlogPosting)
     content.ts            Collection helpers: by language, entry URLs, hreflang alternates
+    pages.ts              All published pages (feeds sitemap.xml and llms.txt)
   data/tools.ts           Registry of free SEO tools (code, not Markdown)
   components/
     seo/SeoHead.astro     Every SEO <head> tag; pages never write these by hand
@@ -57,7 +59,8 @@ src/
   layouts/BaseLayout.astro  <html lang>, head, fonts, skip link, header/main/footer
   content.config.ts       Collection schemas (blog, experience)
   content/{blog,experience}/{en,es}/*.md
-  pages/                  Routes (EN at root, ES under /es/), sitemap.xml.ts, robots.txt.ts, 404
+  pages/                  Routes (EN at root, ES under /es/), sitemap.xml.ts, robots.txt.ts,
+                          llms.txt.ts, 404
   styles/tokens.css       Design tokens: colors (light + dark), type scale, spacing, radii
   styles/global.css       Base styles: reset, typography, links, .container, .prose, utilities
   pages/styleguide.astro  Private style guide (noindex, not in sitemap or menu)
@@ -87,6 +90,20 @@ public/                   Static files served as-is (favicon; CV PDF later)
 - **Sitemap** (`/sitemap.xml`) is generated from the route registry, collections, and tools.
   Unpublished pages (`published: false`, `draft: true`) are `noindex` and excluded from it.
 - Never auto-redirect by browser language; the language switcher is a normal link.
+
+## AI search (GEO/AEO) rules
+
+- `/llms.txt`, `/sitemap.xml`, and hreflang all come from `src/lib/pages.ts`. Never hand-edit
+  generated files; publish pages through the route registry or collections instead.
+- `robots.txt` policy lives in `src/config/crawlers.ts`: search engines and AI search/answer
+  crawlers allowed; AI training crawlers blocked (owner's choice, revisit after launch).
+- Every new page should be "answer-ready":
+  - A clear one- or two-sentence summary near the top that answers "what is this page?"
+  - Descriptive, question-like headings where natural; short self-contained paragraphs that can
+    be quoted on their own.
+  - The same facts about Diego everywhere (name, title, years, markets) as in `site.ts` and
+    the home page. Don't invent new numbers; claims must come from the resumes.
+  - The right JSON-LD for the page type; concrete numbers and dates where available.
 
 ## i18n rules
 
