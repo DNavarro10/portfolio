@@ -17,7 +17,7 @@ import type { Lang } from './config';
  * when the page has real content.
  */
 export const ROUTES = {
-  home: { en: '/', es: '/es/', published: false },
+  home: { en: '/', es: '/es/', published: true },
   about: { en: '/about/', es: '/es/sobre-mi/', published: false },
   experience: { en: '/experience/', es: '/es/experiencia/', published: false },
   blog: { en: '/blog/', es: '/es/blog/', published: false },

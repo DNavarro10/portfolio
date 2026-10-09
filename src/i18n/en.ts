@@ -36,11 +36,93 @@ export const en = {
     publishedOn: 'Published on',
     updatedOn: 'Updated on',
   },
+  home: {
+    eyebrow: 'Diego Navarro · Costa Rica',
+    headline: "Senior SEO Specialist with an engineer's mindset",
+    summary:
+      '6+ years leading SEO for competitive US and UK brands like RotoWire and Bookies.com, from technical audits and site architecture to digital PR and AI search.',
+    openToWork: 'Open to new roles',
+    actions: {
+      downloadCv: 'Download CV',
+      viewExperience: 'View my experience',
+      contact: 'Contact me',
+    },
+    profile: {
+      label: 'Profile summary',
+      role: 'role',
+      roleValue: 'Senior SEO Specialist',
+      focus: 'focus',
+      focusValue: 'technical SEO, digital PR, AEO',
+      markets: 'markets',
+      marketsValue: 'US, UK',
+      languages: 'languages',
+      languagesValue: 'Spanish (native), English (C1)',
+      education: 'education',
+      educationValue: 'Informatics Engineering',
+    },
+    results: {
+      eyebrow: 'Track record',
+      title: 'Results that compound',
+      metrics: [
+        { value: '6+', label: 'Years in SEO strategy and execution' },
+        { value: '120+', label: 'Backlinks per month, avg. DR 45' },
+        { value: '8–12', label: 'State-level domains launched in the US' },
+        { value: '7', label: 'Team members led, hired, and mentored' },
+      ],
+    },
+    pillars: {
+      eyebrow: 'What I do',
+      title: 'Three ways I grow organic search',
+      items: [
+        {
+          title: 'Technical SEO',
+          description:
+            'Site architecture, crawlability, indexation, structured data, and Core Web Vitals, implemented hand in hand with developers.',
+        },
+        {
+          title: 'Content and digital PR',
+          description:
+            'Keyword research mapped to search intent, content that ranks, and outreach to a network of 5,000+ publishers.',
+        },
+        {
+          title: 'AI search and AEO',
+          description:
+            'Entity-driven SEO, featured snippets, and visibility in AI answers from tools like ChatGPT, Gemini, and Perplexity.',
+        },
+      ],
+    },
+    brands: {
+      eyebrow: 'Brands',
+      title: "Sites I've helped grow",
+      note: 'Competitive sports and iGaming markets in the US and UK.',
+    },
+    caseStudies: {
+      eyebrow: 'Case studies',
+      title: 'Selected work',
+      viewAll: 'All case studies',
+    },
+    tools: {
+      eyebrow: 'Free tools',
+      title: 'SEO tools I built',
+      viewAll: 'All tools',
+    },
+    posts: {
+      eyebrow: 'Blog',
+      title: 'Latest writing',
+      viewAll: 'All posts',
+    },
+    about: {
+      eyebrow: 'About',
+      title: 'Engineer by training, SEO by trade',
+      text: 'I studied Informatics Engineering, and it still shapes how I work: I treat SEO as a system to measure, test, and improve. I work in English and Spanish, from Costa Rica, with teams in the US and UK.',
+      link: 'More about me',
+    },
+  },
   pages: {
     home: {
-      title: 'Diego Navarro — Senior SEO Specialist',
+      title: 'Diego Navarro | Senior SEO Specialist & Technical SEO',
       description:
-        'Senior SEO Specialist with an engineering background: technical SEO, strategy, and free SEO tools.',
+        'Senior SEO Specialist and Informatics Engineer with 6+ years growing organic traffic for competitive US and UK brands: technical SEO, digital PR, and AEO.',
     },
     about: {
       title: 'About',
