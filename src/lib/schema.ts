@@ -23,6 +23,24 @@ export function personSchema(): JsonLdNode {
     sameAs: OWNER.profiles.map((profile) => profile.url),
     address: { '@type': 'PostalAddress', addressCountry: 'CR' },
     knowsLanguage: LANGS.map((lang) => LANG_META[lang].hreflang),
+    knowsAbout: [...OWNER.knowsAbout],
+    alumniOf: { '@type': 'CollegeOrUniversity', name: OWNER.alumniOf },
+  };
+}
+
+/**
+ * ProfilePage: tells search engines the home page is about one person.
+ * https://developers.google.com/search/docs/appearance/structured-data/profile-page
+ */
+export function profilePageSchema(path: string, lang: Lang): JsonLdNode {
+  const url = absoluteUrl(path);
+  return {
+    '@type': 'ProfilePage',
+    '@id': `${url}#profilepage`,
+    url,
+    inLanguage: LANG_META[lang].hreflang,
+    isPartOf: { '@id': WEBSITE_ID },
+    mainEntity: { '@id': PERSON_ID },
   };
 }
 

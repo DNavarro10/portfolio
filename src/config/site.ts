@@ -16,7 +16,39 @@ export const OWNER = {
   location: 'Costa Rica',
   /** Public profiles: shown in the footer and used for JSON-LD `sameAs`. */
   profiles: [{ label: 'LinkedIn', url: 'https://www.linkedin.com/in/diegonavarro10/' }],
+  /** Shows an "Open to new roles" badge on the home page when true. */
+  openToWork: false,
+  /**
+   * CV files in /public, per language (e.g. '/cv/diego-navarro-cv-en.pdf').
+   * Leave empty until the file exists: the "Download CV" button only shows when set.
+   */
+  cv: { en: '', es: '' },
+  /** Topics for JSON-LD `knowsAbout` (helps search engines understand expertise). */
+  knowsAbout: [
+    'Search engine optimization',
+    'Technical SEO',
+    'Structured data',
+    'Core Web Vitals',
+    'Keyword research',
+    'Digital PR',
+    'Link building',
+    'Answer engine optimization',
+    'Generative engine optimization',
+    'Entity SEO',
+  ],
+  alumniOf: 'Universidad Metropolitana Castro Carazo',
 } as const;
+
+/** Brands worked on (text only: no logos, which are trademarks). */
+export const BRANDS = [
+  'RotoWire',
+  'Bookies.com',
+  'SportsbookReview',
+  'BetMichigan',
+  'BetOhio',
+  'BetArizona',
+  'BetOntario',
+] as const;
 
 export const SITE = {
   /** Brand name shown in titles: "Page title | SITE.name". */
