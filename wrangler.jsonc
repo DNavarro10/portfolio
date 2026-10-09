@@ -3,7 +3,7 @@
 // Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "portofolio",
+  "name": "portfolio",
   "compatibility_date": "2026-10-01",
   "observability": { "enabled": true },
 }

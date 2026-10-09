@@ -19,8 +19,8 @@ built to be fast, accessible, and technically sound for search engines.
 Requirements: [Node.js](https://nodejs.org) 22 LTS or newer, and Git.
 
 ```bash
-git clone https://github.com/DNavarro10/portofolio.git
-cd portofolio
+git clone https://github.com/DNavarro10/portfolio.git
+cd portfolio
 npm install
 npm run dev
 ```

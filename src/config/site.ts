@@ -26,5 +26,5 @@ export const SITE = {
   /** Twitter/X handle without "@", or empty if none. */
   twitterHandle: '',
   /** Public source code of this site (shown in the footer). */
-  sourceUrl: 'https://github.com/DNavarro10/portofolio',
+  sourceUrl: 'https://github.com/DNavarro10/portfolio',
 } as const;
