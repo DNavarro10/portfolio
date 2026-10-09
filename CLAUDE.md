@@ -93,8 +93,9 @@ public/                   Static files served as-is (favicon; CV PDF later)
 
 ## AI search (GEO/AEO) rules
 
-- `/llms.txt`, `/sitemap.xml`, and hreflang all come from `src/lib/pages.ts`. Never hand-edit
-  generated files; publish pages through the route registry or collections instead.
+- `/llms.txt` and `/sitemap.xml` are generated from `src/lib/pages.ts`, which reads the same
+  sources as hreflang (route registry, collections, tools). Never hand-write these files; publish
+  pages through the route registry or collections instead.
 - `robots.txt` policy lives in `src/config/crawlers.ts`: search engines and AI search/answer
   crawlers allowed; AI training crawlers blocked (owner's choice, revisit after launch).
 - Every new page should be "answer-ready":
