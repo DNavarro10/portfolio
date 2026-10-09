@@ -12,7 +12,11 @@ export default defineConfig({
   // about/index.html, and Cloudflare serves those natively at /about/,
   // so canonical URLs never need a redirect hop.
   trailingSlash: 'always',
-  build: { format: 'directory' },
+  build: {
+    format: 'directory',
+    // Inline the (small) CSS into each page: no render-blocking request.
+    inlineStylesheets: 'always',
+  },
 
   i18n: {
     locales: ['en', 'es'],
