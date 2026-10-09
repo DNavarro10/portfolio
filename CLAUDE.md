@@ -130,7 +130,7 @@ public/                   Static files served as-is (favicon; CV PDF later)
 ## Privacy and secrets
 
 - Never put the owner's email address or phone number in code or content. Contact happens via a
-  form (to be built); public profiles go in `OWNER.sameAs`.
+  form (to be built); public profiles go in `OWNER.profiles`.
 - Secrets go in `.env` / `.dev.vars` (git-ignored). Document variable names in `.env.example`.
 
 ## Workflow
