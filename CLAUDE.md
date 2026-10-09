@@ -145,7 +145,7 @@ public/                   Static files served as-is (favicon; CV PDF later)
 
 1. ✅ Foundation
 2. ✅ Design system (Signal green, IBM Plex, components, style guide)
-3. Home page
+3. ✅ Home page (hiring-team focus; CTA for services moves to Contact later)
 4. About + Experience case studies (from the CV; anonymize metrics if confidential)
 5. Contact form + CV download (`/public`, track clicks)
 6. Blog launch posts
