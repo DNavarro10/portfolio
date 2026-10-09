@@ -1,0 +1,381 @@
+---
+/**
+ * Home page, shared by "/" (English) and "/es/" (Spanish).
+ *
+ * Audience: hiring teams. Order: who I am (hero) → proof (results) →
+ * skills (pillars) → brands → featured work → about me.
+ * Case studies, tools, and posts only render once they have content.
+ */
+import { BRANDS, OWNER } from '@/config/site';
+import { TOOLS } from '@/data/tools';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Card from '@/components/ui/Card.astro';
+import CardGrid from '@/components/ui/CardGrid.astro';
+import MetricGroup from '@/components/ui/MetricGroup.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { LANG_META, type Lang } from '@/i18n/config';
+import { COLLECTION_BASE } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { entryPath, getPublishedEntries } from '@/lib/content';
+import { profilePageSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const h = t.home;
+const cvFile = OWNER.cv[lang];
+
+const caseStudies = (await getPublishedEntries('experience', lang))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+const posts = (await getPublishedEntries('blog', lang))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+const tools = TOOLS.filter((tool) => tool.published).slice(0, 3);
+
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, { dateStyle: 'medium' });
+
+const profileRows = [
+  [h.profile.role, h.profile.roleValue],
+  [h.profile.focus, h.profile.focusValue],
+  [h.profile.markets, h.profile.marketsValue],
+  [h.profile.languages, h.profile.languagesValue],
+  [h.profile.education, h.profile.educationValue],
+];
+---
+
+<BaseLayout
+  title={t.pages.home.title}
+  description={t.pages.home.description}
+  lang={lang}
+  alternates={routeAlternates('home')}
+  bareTitle
+  ogType="profile"
+  jsonLd={[profilePageSchema(routePath('home', lang), lang)]}
+>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__inner">
+      <div class="hero__text">
+        <p class="hero__eyebrow mono-label">{h.eyebrow}</p>
+        <h1 id="hero-title" class="hero__title">
+          {h.headline}
+        </h1>
+        <p class="hero__summary lead">{h.summary}</p>
+        {OWNER.openToWork && (
+          <p class="hero__status">
+            <span class="hero__status-dot" aria-hidden="true" />
+            {h.openToWork}
+          </p>
+        )}
+        <div class="hero__actions">
+          {cvFile ? (
+            <>
+              <Button href={cvFile} size="lg" icon="download" download>
+                {h.actions.downloadCv}
+              </Button>
+              <Button href={routePath('experience', lang)} size="lg" variant="secondary">
+                {h.actions.viewExperience}
+              </Button>
+            </>
+          ) : (
+            <Button href={routePath('experience', lang)} size="lg" icon="arrow">
+              {h.actions.viewExperience}
+            </Button>
+          )}
+          <Button href={routePath('contact', lang)} size="lg" variant="secondary">
+            {h.actions.contact}
+          </Button>
+        </div>
+      </div>
+
+      <aside class="profile" aria-label={h.profile.label}>
+        <p class="profile__bar" aria-hidden="true">
+          <span class="profile__dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          ~/diego-navarro
+        </p>
+        <dl class="profile__list">
+          {profileRows.map(([key, value]) => (
+            <div class="profile__row">
+              <dt>{key}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <Section labelledby="results-title" tinted>
+    <SectionHeading id="results-title" eyebrow={h.results.eyebrow} title={h.results.title} />
+    <MetricGroup metrics={h.results.metrics} />
+  </Section>
+
+  <!-- What I do -->
+  <Section labelledby="pillars-title">
+    <SectionHeading id="pillars-title" eyebrow={h.pillars.eyebrow} title={h.pillars.title} />
+    <CardGrid>
+      {h.pillars.items.map((item, index) => (
+        <li>
+          <Card
+            eyebrow={String(index + 1).padStart(2, '0')}
+            title={item.title}
+            description={item.description}
+          />
+        </li>
+      ))}
+    </CardGrid>
+  </Section>
+
+  <!-- Brands -->
+  <Section labelledby="brands-title" tinted>
+    <SectionHeading
+      id="brands-title"
+      eyebrow={h.brands.eyebrow}
+      title={h.brands.title}
+      description={h.brands.note}
+    />
+    <ul class="brands">
+      {BRANDS.map((brand) => (
+        <li>{brand}</li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- Featured case studies (step 4) -->
+  {caseStudies.length > 0 && (
+    <Section labelledby="cases-title">
+      <SectionHeading
+        id="cases-title"
+        eyebrow={h.caseStudies.eyebrow}
+        title={h.caseStudies.title}
+      />
+      <CardGrid>
+        {caseStudies.map((entry) => (
+          <li>
+            <Card
+              href={entryPath('experience', entry)}
+              eyebrow={entry.data.company}
+              title={entry.data.title}
+              description={entry.data.description}
+              tags={entry.data.tags}
+            />
+          </li>
+        ))}
+      </CardGrid>
+      <p class="section-more">
+        <Button href={routePath('experience', lang)} variant="ghost" icon="arrow">
+          {h.caseStudies.viewAll}
+        </Button>
+      </p>
+    </Section>
+  )}
+
+  <!-- Free tools (step 8) -->
+  {tools.length > 0 && (
+    <Section labelledby="tools-title" tinted>
+      <SectionHeading id="tools-title" eyebrow={h.tools.eyebrow} title={h.tools.title} />
+      <CardGrid>
+        {tools.map((tool) => (
+          <li>
+            <Card
+              href={`${COLLECTION_BASE.tools[lang]}${tool.slug[lang]}/`}
+              title={tool.title[lang]}
+              description={tool.description[lang]}
+            />
+          </li>
+        ))}
+      </CardGrid>
+      <p class="section-more">
+        <Button href={routePath('tools', lang)} variant="ghost" icon="arrow">
+          {h.tools.viewAll}
+        </Button>
+      </p>
+    </Section>
+  )}
+
+  <!-- Latest posts (step 6) -->
+  {posts.length > 0 && (
+    <Section labelledby="posts-title">
+      <SectionHeading id="posts-title" eyebrow={h.posts.eyebrow} title={h.posts.title} />
+      <CardGrid>
+        {posts.map((entry) => (
+          <li>
+            <Card
+              href={entryPath('blog', entry)}
+              eyebrow={dateFormat.format(entry.data.pubDate)}
+              title={entry.data.title}
+              description={entry.data.description}
+              tags={entry.data.tags}
+            />
+          </li>
+        ))}
+      </CardGrid>
+      <p class="section-more">
+        <Button href={routePath('blog', lang)} variant="ghost" icon="arrow">
+          {h.posts.viewAll}
+        </Button>
+      </p>
+    </Section>
+  )}
+
+  <!-- About teaser -->
+  <Section labelledby="about-title" narrow>
+    <SectionHeading id="about-title" eyebrow={h.about.eyebrow} title={h.about.title} />
+    <p class="about__text">{h.about.text}</p>
+    <Button href={routePath('about', lang)} variant="ghost" icon="arrow">
+      {h.about.link}
+    </Button>
+  </Section>
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-block: clamp(3rem, 2rem + 5vw, 7rem);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .hero__inner {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .hero__eyebrow {
+    margin-bottom: var(--space-4);
+  }
+  .hero__eyebrow::before {
+    content: '// ' / '';
+    opacity: 0.7;
+  }
+  .hero__title {
+    max-width: 18ch;
+    margin-bottom: var(--space-5);
+  }
+  .hero__summary {
+    max-width: 60ch;
+    margin-bottom: var(--space-5);
+  }
+  .hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--color-accent-soft);
+    color: var(--color-on-accent-soft);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+  }
+  .hero__status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  /* Profile panel: a "spec sheet" in mono, placeholder for a future photo. */
+  .profile {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    overflow: hidden;
+  }
+  .profile__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+    color: var(--color-text-muted);
+    font-size: var(--fs-xs);
+  }
+  .profile__dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+  .profile__dots span {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: var(--color-border-strong);
+    opacity: 0.5;
+  }
+  .profile__list {
+    margin: 0;
+    padding: var(--space-4) var(--space-5);
+  }
+  .profile__row {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, auto) 1fr;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+  }
+  .profile__row + .profile__row {
+    border-top: 1px dashed var(--color-border);
+  }
+  .profile__row dt {
+    color: var(--color-accent);
+  }
+  .profile__row dt::after {
+    content: ':' / '';
+  }
+  .profile__row dd {
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  @media (min-width: 60rem) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--space-8);
+    }
+  }
+
+  /* ---------- Brands ---------- */
+  .brands {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .brands li {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    font-weight: var(--fw-semibold);
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Misc ---------- */
+  .section-more {
+    margin: var(--space-5) 0 0;
+  }
+  .about__text {
+    font-size: var(--fs-lg);
+    margin-bottom: var(--space-4);
+  }
+</style>

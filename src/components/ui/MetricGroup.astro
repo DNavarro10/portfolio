@@ -35,9 +35,13 @@ const { metrics } = Astro.props;
     gap: var(--space-4);
     margin: 0 0 var(--space-6);
   }
+  .metrics:last-child {
+    margin-bottom: 0;
+  }
   .metric {
     display: flex;
     flex-direction: column-reverse;
+    justify-content: flex-end; /* keep numbers top-aligned across cards */
     gap: var(--space-1);
     padding: var(--space-4) var(--space-5);
     border-left: 3px solid var(--color-accent);
