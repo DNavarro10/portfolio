@@ -12,13 +12,15 @@ interface Metric {
 
 interface Props {
   metrics: readonly Metric[];
+  /** Maximum columns on wide screens (fewer on small screens). */
+  columns?: number;
 }
 
-const { metrics } = Astro.props;
+const { metrics, columns = 4 } = Astro.props;
 ---
 
 {metrics.length > 0 && (
-  <dl class="metrics">
+  <dl class="metrics" style={`--metric-cols: ${columns}`}>
     {metrics.map((metric) => (
       <div class="metric">
         <dt class="metric__label">{metric.label}</dt>
@@ -31,7 +33,17 @@ const { metrics } = Astro.props;
 <style>
   .metrics {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+    /* At most --metric-cols per row, never narrower than 10rem. */
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(
+        min(
+          100%,
+          max(10rem, (100% - (var(--metric-cols) - 1) * var(--space-4)) / var(--metric-cols))
+        ),
+        1fr
+      )
+    );
     gap: var(--space-4);
     margin: 0 0 var(--space-6);
   }

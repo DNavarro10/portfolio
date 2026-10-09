@@ -41,7 +41,7 @@ export const es: UiStrings = {
     eyebrow: 'Diego Navarro · Costa Rica',
     headline: 'Especialista SEO Senior con mentalidad de ingeniero',
     summary:
-      'Más de 6 años liderando el SEO y GEO de marcas competitivas en EE. UU. y Reino Unido, como RotoWire.com y Bookies.com: desde auditorías técnicas y datos estructurados hasta digital PR y visibilidad en buscadores con IA.',
+      'Más de 6 años liderando el SEO y GEO de marcas competitivas en EE. UU. y Reino Unido, como RotoWire.com y Bookies.com: desde auditorías técnicas y datos estructurados hasta link building, outreach digital y visibilidad en buscadores con IA.',
     openToWork: 'Disponible para nuevos retos',
     actions: {
       downloadCv: 'Descargar CV',
@@ -51,9 +51,9 @@ export const es: UiStrings = {
     profile: {
       label: 'Resumen del perfil',
       role: 'rol',
-      roleValue: 'Especialista SEO Senior',
+      roleValue: 'Especialista SEO Senior, especialista en backlinks',
       focus: 'enfoque',
-      focusValue: 'SEO, SEO técnico, digital PR, AEO/GEO',
+      focusValue: 'SEO, SEO técnico, link building, outreach digital, AEO/GEO',
       markets: 'mercados',
       marketsValue: 'EE. UU., Reino Unido, Latinoamérica',
       languages: 'idiomas',
@@ -64,26 +64,35 @@ export const es: UiStrings = {
     results: {
       eyebrow: 'Trayectoria',
       title: 'Resultados que se acumulan',
+      description:
+        'La mayor parte de mi impacto viene de construir autoridad: enlaces conseguidos con outreach a escala, cada uno revisado por calidad.',
       metrics: [
         { value: '6+', label: 'Años en estrategia y ejecución SEO' },
-        { value: '120+', label: 'Backlinks al mes, DR promedio de 45' },
+        { value: '120+', label: 'Backlinks conseguidos al mes' },
+        { value: 'DR 45', label: 'Domain Rating promedio de los enlaces' },
+        { value: '5000+', label: 'Medios en mi red de outreach' },
         { value: '8–12', label: 'Dominios estatales lanzados en EE. UU.' },
         { value: '7', label: 'Personas a cargo: contratación y mentoría' },
       ],
     },
     pillars: {
       eyebrow: 'Qué hago',
-      title: 'Tres formas en que hago crecer la visibilidad en buscadores',
+      title: 'Cuatro formas en que hago crecer la visibilidad en buscadores',
       items: [
+        {
+          title: 'Link building y outreach',
+          description:
+            'Mi mayor fortaleza: estrategia de backlinks y outreach digital con una red de más de 5000 medios, revisando cada enlace por autoridad, tráfico y relevancia temática.',
+        },
         {
           title: 'SEO técnico',
           description:
             'Arquitectura web, rastreo, indexación, datos estructurados y Core Web Vitals, implementados de la mano con desarrollo.',
         },
         {
-          title: 'Contenido y digital PR',
+          title: 'Contenido y SEO on-page',
           description:
-            'Investigación de palabras clave según la intención de búsqueda, contenido que posiciona y outreach con una red de más de 5000 medios.',
+            'Investigación de palabras clave según la intención de búsqueda, análisis de brechas frente a la competencia, enlazado interno y optimización de contenido que posiciona.',
         },
         {
           title: 'Búsqueda con IA: GEO y AEO',
@@ -136,7 +145,7 @@ export const es: UiStrings = {
     home: {
       title: 'Diego Navarro | Especialista SEO Senior, SEO Técnico y GEO',
       description:
-        'Especialista SEO Senior e ingeniero informático con más de 6 años impulsando la visibilidad orgánica y en buscadores con IA de marcas en EE. UU. y Reino Unido.',
+        'Especialista SEO Senior y en backlinks: más de 6 años impulsando marcas de EE. UU. y Reino Unido con link building, SEO técnico y GEO.',
     },
     about: {
       title: 'Sobre mí',

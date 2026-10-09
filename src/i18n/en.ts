@@ -40,7 +40,7 @@ export const en = {
     eyebrow: 'Diego Navarro · Costa Rica',
     headline: "Senior SEO Specialist with an engineer's mindset",
     summary:
-      '6+ years leading SEO and GEO for competitive US and UK brands like RotoWire.com and Bookies.com, from technical audits and structured data to digital PR and visibility in AI search.',
+      '6+ years leading SEO and GEO for competitive US and UK brands like RotoWire.com and Bookies.com, from technical audits and structured data to link building, digital outreach, and visibility in AI search.',
     openToWork: 'Open to new roles',
     actions: {
       downloadCv: 'Download CV',
@@ -50,9 +50,9 @@ export const en = {
     profile: {
       label: 'Profile summary',
       role: 'role',
-      roleValue: 'Senior SEO Specialist',
+      roleValue: 'Senior SEO Specialist, Backlinks Specialist',
       focus: 'focus',
-      focusValue: 'SEO, technical SEO, digital PR, AEO/GEO',
+      focusValue: 'SEO, technical SEO, link building, digital outreach, AEO/GEO',
       markets: 'markets',
       marketsValue: 'US, UK, LatAm',
       languages: 'languages',
@@ -63,26 +63,35 @@ export const en = {
     results: {
       eyebrow: 'Track record',
       title: 'Results that compound',
+      description:
+        'Most of my impact comes from building authority: links earned through outreach at scale, each one vetted for quality.',
       metrics: [
         { value: '6+', label: 'Years in SEO strategy and execution' },
-        { value: '120+', label: 'Backlinks per month, avg. DR 45' },
+        { value: '120+', label: 'Backlinks secured per month' },
+        { value: 'DR 45', label: 'Average domain rating of placements' },
+        { value: '5,000+', label: 'Publishers in my outreach network' },
         { value: '8–12', label: 'State-level domains launched in the US' },
         { value: '7', label: 'Team members led, hired, and mentored' },
       ],
     },
     pillars: {
       eyebrow: 'What I do',
-      title: 'Three ways I grow search visibility',
+      title: 'Four ways I grow search visibility',
       items: [
+        {
+          title: 'Link building and outreach',
+          description:
+            'My strongest area: backlink strategy and digital outreach across a 5,000+ publisher network, with every placement vetted for authority, traffic, and topical relevance.',
+        },
         {
           title: 'Technical SEO',
           description:
             'Site architecture, crawlability, indexation, structured data, and Core Web Vitals, implemented hand in hand with developers.',
         },
         {
-          title: 'Content and digital PR',
+          title: 'Content and on-page SEO',
           description:
-            'Keyword research mapped to search intent, content that ranks, and outreach to a network of 5,000+ publishers.',
+            'Keyword research mapped to search intent, competitor gap analysis, internal linking, and content optimization that ranks.',
         },
         {
           title: 'AI search: GEO and AEO',
@@ -135,7 +144,7 @@ export const en = {
     home: {
       title: 'Diego Navarro | Senior SEO Specialist, Technical SEO & GEO',
       description:
-        'Senior SEO Specialist and Informatics Engineer with 6+ years growing organic and AI search visibility for US and UK brands: technical SEO, GEO, and digital PR.',
+        'Senior SEO and backlinks specialist with 6+ years growing organic and AI search visibility for US and UK brands: link building, technical SEO, and GEO.',
     },
     about: {
       title: 'About',

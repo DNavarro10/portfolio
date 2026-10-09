@@ -117,14 +117,19 @@ const profileRows = [
 
   <!-- Results -->
   <Section labelledby="results-title" tinted>
-    <SectionHeading id="results-title" eyebrow={h.results.eyebrow} title={h.results.title} />
-    <MetricGroup metrics={h.results.metrics} />
+    <SectionHeading
+      id="results-title"
+      eyebrow={h.results.eyebrow}
+      title={h.results.title}
+      description={h.results.description}
+    />
+    <MetricGroup metrics={h.results.metrics} columns={3} />
   </Section>
 
   <!-- What I do -->
   <Section labelledby="pillars-title">
     <SectionHeading id="pillars-title" eyebrow={h.pillars.eyebrow} title={h.pillars.title} />
-    <CardGrid>
+    <CardGrid min="15rem">
       {h.pillars.items.map((item, index) => (
         <li>
           <Card
