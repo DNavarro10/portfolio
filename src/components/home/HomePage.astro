@@ -149,6 +149,7 @@ const profileRows = [
       {BRANDS.map((brand) => (
         <li>{brand}</li>
       ))}
+      <li class="brands__more">{h.brands.more}</li>
     </ul>
   </Section>
 
@@ -360,6 +361,12 @@ const profileRows = [
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+  .brands .brands__more {
+    border-style: dashed;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-weight: var(--fw-medium);
   }
   .brands li {
     padding: var(--space-2) var(--space-4);

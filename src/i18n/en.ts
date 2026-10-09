@@ -40,7 +40,7 @@ export const en = {
     eyebrow: 'Diego Navarro · Costa Rica',
     headline: "Senior SEO Specialist with an engineer's mindset",
     summary:
-      '6+ years leading SEO for competitive US and UK brands like RotoWire and Bookies.com, from technical audits and site architecture to digital PR and AI search.',
+      '6+ years leading SEO and GEO for competitive US and UK brands like RotoWire.com and Bookies.com, from technical audits and structured data to digital PR and visibility in AI search.',
     openToWork: 'Open to new roles',
     actions: {
       downloadCv: 'Download CV',
@@ -52,9 +52,9 @@ export const en = {
       role: 'role',
       roleValue: 'Senior SEO Specialist',
       focus: 'focus',
-      focusValue: 'technical SEO, digital PR, AEO',
+      focusValue: 'SEO, technical SEO, digital PR, AEO/GEO',
       markets: 'markets',
-      marketsValue: 'US, UK',
+      marketsValue: 'US, UK, LatAm',
       languages: 'languages',
       languagesValue: 'Spanish (native), English (C1)',
       education: 'education',
@@ -72,7 +72,7 @@ export const en = {
     },
     pillars: {
       eyebrow: 'What I do',
-      title: 'Three ways I grow organic search',
+      title: 'Three ways I grow search visibility',
       items: [
         {
           title: 'Technical SEO',
@@ -85,16 +85,17 @@ export const en = {
             'Keyword research mapped to search intent, content that ranks, and outreach to a network of 5,000+ publishers.',
         },
         {
-          title: 'AI search and AEO',
+          title: 'AI search: GEO and AEO',
           description:
-            'Entity-driven SEO, featured snippets, and visibility in AI answers from tools like ChatGPT, Gemini, and Perplexity.',
+            'GEO roadmaps, structured data, and content architecture that earn visibility and citations in Google AI Overviews, ChatGPT, Gemini, and Perplexity.',
         },
       ],
     },
     brands: {
       eyebrow: 'Brands',
       title: "Sites I've helped grow",
-      note: 'Competitive sports and iGaming markets in the US and UK.',
+      note: 'Competitive sports and iGaming markets in the US and UK, including 8–12 state-level launches.',
+      more: '+ more state sites',
     },
     caseStudies: {
       eyebrow: 'Case studies',
@@ -120,9 +121,9 @@ export const en = {
   },
   pages: {
     home: {
-      title: 'Diego Navarro | Senior SEO Specialist & Technical SEO',
+      title: 'Diego Navarro | Senior SEO Specialist, Technical SEO & GEO',
       description:
-        'Senior SEO Specialist and Informatics Engineer with 6+ years growing organic traffic for competitive US and UK brands: technical SEO, digital PR, and AEO.',
+        'Senior SEO Specialist and Informatics Engineer with 6+ years growing organic and AI search visibility for US and UK brands: technical SEO, GEO, and digital PR.',
     },
     about: {
       title: 'About',

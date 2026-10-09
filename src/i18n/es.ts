@@ -41,7 +41,7 @@ export const es: UiStrings = {
     eyebrow: 'Diego Navarro · Costa Rica',
     headline: 'Especialista SEO Senior con mentalidad de ingeniero',
     summary:
-      'Más de 6 años liderando el SEO de marcas competitivas en EE. UU. y Reino Unido, como RotoWire y Bookies.com: desde auditorías técnicas y arquitectura web hasta digital PR y búsqueda con IA.',
+      'Más de 6 años liderando el SEO y GEO de marcas competitivas en EE. UU. y Reino Unido, como RotoWire.com y Bookies.com: desde auditorías técnicas y datos estructurados hasta digital PR y visibilidad en buscadores con IA.',
     openToWork: 'Disponible para nuevos retos',
     actions: {
       downloadCv: 'Descargar CV',
@@ -53,9 +53,9 @@ export const es: UiStrings = {
       role: 'rol',
       roleValue: 'Especialista SEO Senior',
       focus: 'enfoque',
-      focusValue: 'SEO técnico, digital PR, AEO',
+      focusValue: 'SEO, SEO técnico, digital PR, AEO/GEO',
       markets: 'mercados',
-      marketsValue: 'EE. UU., Reino Unido',
+      marketsValue: 'EE. UU., Reino Unido, Latinoamérica',
       languages: 'idiomas',
       languagesValue: 'español (nativo), inglés (C1)',
       education: 'formación',
@@ -73,7 +73,7 @@ export const es: UiStrings = {
     },
     pillars: {
       eyebrow: 'Qué hago',
-      title: 'Tres formas en que hago crecer el tráfico orgánico',
+      title: 'Tres formas en que hago crecer la visibilidad en buscadores',
       items: [
         {
           title: 'SEO técnico',
@@ -86,16 +86,17 @@ export const es: UiStrings = {
             'Investigación de palabras clave según la intención de búsqueda, contenido que posiciona y outreach con una red de más de 5000 medios.',
         },
         {
-          title: 'Búsqueda con IA y AEO',
+          title: 'Búsqueda con IA: GEO y AEO',
           description:
-            'SEO basado en entidades, fragmentos destacados y visibilidad en respuestas de IA como ChatGPT, Gemini y Perplexity.',
+            'Estrategias GEO, datos estructurados y arquitectura de contenido para ganar visibilidad y citas en Google AI Overviews, ChatGPT, Gemini y Perplexity.',
         },
       ],
     },
     brands: {
       eyebrow: 'Marcas',
       title: 'Sitios que he ayudado a crecer',
-      note: 'Mercados competitivos de deportes e iGaming en EE. UU. y Reino Unido.',
+      note: 'Mercados competitivos de deportes e iGaming en EE. UU. y Reino Unido, incluidos 8–12 lanzamientos estatales.',
+      more: '+ más sitios estatales',
     },
     caseStudies: {
       eyebrow: 'Casos de estudio',
@@ -121,9 +122,9 @@ export const es: UiStrings = {
   },
   pages: {
     home: {
-      title: 'Diego Navarro | Especialista SEO Senior y SEO Técnico',
+      title: 'Diego Navarro | Especialista SEO Senior, SEO Técnico y GEO',
       description:
-        'Especialista SEO Senior e ingeniero informático con más de 6 años impulsando el tráfico orgánico de marcas competitivas en EE. UU. y Reino Unido.',
+        'Especialista SEO Senior e ingeniero informático con más de 6 años impulsando la visibilidad orgánica y en buscadores con IA de marcas en EE. UU. y Reino Unido.',
     },
     about: {
       title: 'Sobre mí',

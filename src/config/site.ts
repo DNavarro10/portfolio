@@ -34,6 +34,9 @@ export const OWNER = {
     'Link building',
     'Answer engine optimization',
     'Generative engine optimization',
+    'AI search optimization',
+    'Google AI Overviews',
+    'Schema.org',
     'Entity SEO',
   ],
   alumniOf: 'Universidad Metropolitana Castro Carazo',
@@ -41,13 +44,13 @@ export const OWNER = {
 
 /** Brands worked on (text only: no logos, which are trademarks). */
 export const BRANDS = [
-  'RotoWire',
+  'RotoWire.com',
   'Bookies.com',
-  'SportsbookReview',
-  'BetMichigan',
-  'BetOhio',
-  'BetArizona',
-  'BetOntario',
+  'SportsbookReview.com',
+  'BetMichigan.com',
+  'BetOhio.com',
+  'BetArizona.com',
+  'BetOntario.com',
 ] as const;
 
 export const SITE = {
