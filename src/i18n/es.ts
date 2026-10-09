@@ -120,6 +120,18 @@ export const es: UiStrings = {
       link: 'Más sobre mí',
     },
   },
+  llms: {
+    language: 'Español',
+    kinds: {
+      page: 'Páginas',
+      experience: 'Casos de estudio',
+      blog: 'Artículos',
+      tool: 'Herramientas SEO gratuitas',
+    },
+    profile: 'Perfil',
+    expertise: 'Especialidades',
+    profiles: 'Perfiles públicos',
+  },
   pages: {
     home: {
       title: 'Diego Navarro | Especialista SEO Senior, SEO Técnico y GEO',

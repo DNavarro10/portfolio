@@ -119,6 +119,18 @@ export const en = {
       link: 'More about me',
     },
   },
+  llms: {
+    language: 'English',
+    kinds: {
+      page: 'Pages',
+      experience: 'Case studies',
+      blog: 'Articles',
+      tool: 'Free SEO tools',
+    },
+    profile: 'Profile',
+    expertise: 'Core expertise',
+    profiles: 'Public profiles',
+  },
   pages: {
     home: {
       title: 'Diego Navarro | Senior SEO Specialist, Technical SEO & GEO',
