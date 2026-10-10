@@ -46,6 +46,11 @@ const experience = defineCollection({
   schema: ({ image }) =>
     z.object({
       ...seoFields,
+      /**
+       * Two- or three-sentence answer to "what was this project?", shown at the
+       * top of the page. Written to be quoted on its own (search and AI answers).
+       */
+      summary: z.string().min(80).max(420),
       company: z.string(),
       role: z.string(),
       /** e.g. "2023 – 2026" */
@@ -55,6 +60,12 @@ const experience = defineCollection({
       /** Headline results, e.g. { label: 'Links per month', value: '120+' }. */
       metrics: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
       tags: z.array(z.string()).default([]),
+      /** Tools used, shown as tags. */
+      tools: z.array(z.string()).default([]),
+      /** Short Q&A shown at the end of the page and marked up as FAQPage. */
+      faq: z
+        .array(z.object({ question: z.string().min(10), answer: z.string().min(30) }))
+        .default([]),
       heroImage: image().optional(),
       heroAlt: z.string().optional(),
     }),

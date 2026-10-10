@@ -72,6 +72,63 @@ export function breadcrumbSchema(items: BreadcrumbItem[]): JsonLdNode {
   };
 }
 
+export interface ArticleInput {
+  title: string;
+  description: string;
+  path: string;
+  lang: Lang;
+  keywords?: readonly string[];
+}
+
+/** Case studies: an Article written by (and about the work of) Diego. */
+export function articleSchema(article: ArticleInput): JsonLdNode {
+  const url = absoluteUrl(article.path);
+  return {
+    '@type': 'Article',
+    '@id': `${url}#article`,
+    headline: article.title,
+    description: article.description,
+    url,
+    mainEntityOfPage: url,
+    inLanguage: LANG_META[article.lang].hreflang,
+    author: { '@id': PERSON_ID },
+    publisher: { '@id': PERSON_ID },
+    isPartOf: { '@id': WEBSITE_ID },
+    ...(article.keywords?.length ? { keywords: article.keywords.join(', ') } : {}),
+  };
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+/** Q&A blocks. Visible on the page too: never mark up hidden content. */
+export function faqSchema(items: readonly FaqItem[], path: string): JsonLdNode {
+  return {
+    '@type': 'FAQPage',
+    '@id': `${absoluteUrl(path)}#faq`,
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  };
+}
+
+/** About page: tells search engines the page is about Diego. */
+export function aboutPageSchema(path: string, lang: Lang): JsonLdNode {
+  const url = absoluteUrl(path);
+  return {
+    '@type': 'AboutPage',
+    '@id': `${url}#aboutpage`,
+    url,
+    inLanguage: LANG_META[lang].hreflang,
+    isPartOf: { '@id': WEBSITE_ID },
+    mainEntity: { '@id': PERSON_ID },
+  };
+}
+
 export interface BlogPostingInput {
   title: string;
   description: string;

@@ -129,6 +129,176 @@ export const es: UiStrings = {
       link: 'Más sobre mí',
     },
   },
+  experience: {
+    eyebrow: 'Experiencia',
+    title: 'Experiencia y casos de estudio',
+    intro:
+      'Más de 6 años en SEO en tres roles: desde el SEO integral de un solo sitio hasta liderar link building, SEO técnico y GEO para marcas principales. Empieza por los casos de estudio o ve directo a mi trayectoria.',
+    caseStudies: {
+      eyebrow: 'Casos de estudio',
+      title: 'Trabajo destacado',
+    },
+    history: {
+      eyebrow: 'Carrera',
+      title: 'Trayectoria profesional',
+      roles: [
+        {
+          role: 'Especialista SEO Senior',
+          company: 'Gambling.com Group',
+          period: '2023 – 2026',
+          location: 'Costa Rica',
+          points: [
+            'Lideré el link building y el outreach digital: más de 120 backlinks al mes con un DR promedio de 45.',
+            'Lideré la implementación de SEO técnico y las hojas de ruta de SEO y GEO de RotoWire.com y Bookies.com.',
+            'Dirigí un equipo de 7 personas: contratación, formación, control de calidad y evaluaciones de desempeño.',
+          ],
+        },
+        {
+          role: 'Analista SEO (contratista remoto)',
+          company: 'Gambling.com Group',
+          period: '2021 – 2023',
+          location: 'Remoto, Estados Unidos',
+          points: [
+            'Apoyé el SEO de 8 a 12 dominios estatales en lanzamientos de mercado a ritmo acelerado.',
+            'Investigación de palabras clave, análisis de brechas frente a la competencia y optimización on-page.',
+            'Ascenso a un rol de liderazgo de equipo.',
+          ],
+        },
+        {
+          role: 'Analista SEO',
+          company: 'Advision Development',
+          period: '2019 – 2021',
+          location: 'Costa Rica',
+          points: [
+            'Llevé el SEO integral de SportsbookReview.com en WordPress.',
+            'Auditorías técnicas, Google Tag Manager, optimización on-page y outreach.',
+          ],
+        },
+      ],
+    },
+    education: {
+      title: 'Formación',
+      degree: 'Bachillerato en Ingeniería Informática',
+      school: 'Universidad Metropolitana Castro Carazo',
+    },
+  },
+  about: {
+    eyebrow: 'Sobre mí',
+    title: 'Sobre Diego Navarro',
+    intro:
+      'Soy Diego Navarro, especialista SEO senior y especialista en backlinks, desde Costa Rica. Desde hace más de 6 años ayudo a marcas competitivas de EE. UU. y Reino Unido a crecer en Google y, cada vez más, en los buscadores con IA.',
+    story: {
+      title: 'De la ingeniería al SEO',
+      paragraphs: [
+        'Estudié Ingeniería Informática en la Universidad Metropolitana Castro Carazo. Me dejó una forma de pensar que uso todos los días: dividir un problema en sistemas, medirlos y mejorarlos paso a paso.',
+        'Empecé en SEO en 2019 en Advision Development, llevando el SEO integral de SportsbookReview.com. En 2021 entré a Gambling.com Group como analista SEO remoto, apoyando de 8 a 12 lanzamientos de mercados estatales, y ascendí a un rol de liderazgo de equipo.',
+        'De 2023 a 2026, como especialista SEO senior, lideré el link building, el SEO técnico y las hojas de ruta de SEO y GEO de RotoWire.com y Bookies.com, y dirigí un equipo de 7 personas.',
+      ],
+    },
+    principles: {
+      title: 'Cómo trabajo',
+      items: [
+        {
+          title: 'Calidad antes que volumen',
+          text: 'Cada enlace, página y corrección se revisa contra estándares claros antes de salir. El volumen solo importa si se sostiene.',
+        },
+        {
+          title: 'Medir y después decidir',
+          text: 'Mis recomendaciones salen de los datos, como Search Console, la analítica y las herramientas SEO, y se priorizan por impacto y esfuerzo.',
+        },
+        {
+          title: 'Trabajar con desarrollo',
+          text: 'El SEO técnico solo cuenta cuando se implementa. Trabajo de la mano con los equipos de desarrollo e integro el SEO en su flujo de trabajo.',
+        },
+        {
+          title: 'Documentar y enseñar',
+          text: 'Convierto los procesos en estándares escritos y formo al equipo con ellos, para que la calidad no dependa de una sola persona.',
+        },
+      ],
+    },
+    skills: {
+      title: 'Habilidades',
+      levels: [
+        {
+          label: 'Trabajo diario',
+          items: [
+            'Link building y outreach digital',
+            'Auditorías e implementación de SEO técnico',
+            'Investigación de palabras clave e intención de búsqueda',
+            'SEO on-page y de contenido',
+            'Datos estructurados (Schema.org, JSON-LD)',
+            'Estrategia GEO y AEO',
+            'Reportes SEO y KPI',
+            'Liderazgo de equipo y control de calidad',
+          ],
+        },
+        {
+          label: 'Conocimiento práctico',
+          items: [
+            'Apoyo en pruebas A/B y CRO',
+            'Scripts en Python (nivel básico a intermedio)',
+            'HTML, CSS y JavaScript',
+            'WordPress y Google Tag Manager',
+            'Configuración de Cloudflare',
+            'SQL básico',
+          ],
+        },
+        {
+          label: 'Aprendiendo ahora',
+          items: [
+            'Grafos de conocimiento',
+            'Generación aumentada por recuperación (RAG)',
+            'IA agéntica',
+            'Looker Studio',
+          ],
+        },
+      ],
+    },
+    tools: {
+      title: 'Herramientas',
+    },
+    languages: {
+      title: 'Idiomas',
+      items: ['Español: nativo', 'Inglés: C1, nivel profesional avanzado'],
+    },
+    faq: {
+      title: 'Preguntas y respuestas',
+      items: [
+        {
+          question: '¿En qué se especializa Diego Navarro?',
+          answer:
+            'En link building y outreach digital, SEO técnico y GEO (optimización para motores generativos). Diego ha conseguido más de 120 backlinks al mes con un Domain Rating promedio de 45, y lideró el SEO técnico y las hojas de ruta de búsqueda con IA de RotoWire.com y Bookies.com.',
+        },
+        {
+          question: '¿Dónde vive Diego y en qué mercados ha trabajado?',
+          answer:
+            'Diego vive en Costa Rica y trabaja de forma remota con equipos de EE. UU., incluso en horario de la costa este. Su experiencia abarca los mercados de EE. UU. y Reino Unido, y Latinoamérica como enfoque adicional.',
+        },
+        {
+          question: '¿En qué idiomas trabaja Diego?',
+          answer:
+            'En español (nativo) e inglés (C1, nivel profesional avanzado). Este sitio es completamente bilingüe.',
+        },
+        {
+          question: '¿Qué herramientas usa Diego?',
+          answer:
+            'Ahrefs, SEMrush, Screaming Frog, Google Search Console y Google Analytics 4 en el día a día, además de Majestic, Moz, SurferSEO, Google Tag Manager, Salesforce y Jira. También usa herramientas de IA como ChatGPT, Gemini y Claude para agilizar auditorías, investigación y análisis.',
+        },
+      ],
+    },
+    links: {
+      experience: 'Ver mis casos de estudio',
+      contact: 'Contactarme',
+    },
+  },
+  caseStudy: {
+    inShort: 'En resumen',
+    keyResults: 'Resultados clave',
+    tools: 'Herramientas usadas',
+    topics: 'Temas',
+    faq: 'Preguntas y respuestas',
+    draft: 'Borrador: solo visible en desarrollo, aún no publicado.',
+  },
   llms: {
     language: 'Español',
     kinds: {
@@ -148,12 +318,14 @@ export const es: UiStrings = {
         'Especialista SEO Senior y en backlinks: más de 6 años impulsando marcas de EE. UU. y Reino Unido con link building, SEO técnico y GEO.',
     },
     about: {
-      title: 'Sobre mí',
-      description: 'Trayectoria, habilidades y enfoque SEO de Diego Navarro.',
+      title: 'Sobre Diego Navarro, especialista SEO senior',
+      description:
+        'Diego Navarro es especialista SEO senior y en backlinks desde Costa Rica, con más de 6 años en link building, SEO técnico y GEO para EE. UU. y Reino Unido.',
     },
     experience: {
-      title: 'Experiencia',
-      description: 'Casos de estudio SEO: retos, estrategia y resultados medibles.',
+      title: 'Experiencia y casos de estudio SEO',
+      description:
+        'Casos de estudio SEO de Diego Navarro: link building a escala, 8 a 12 lanzamientos estatales, SEO técnico y GEO, y SEO integral.',
     },
     blog: {
       title: 'Blog',

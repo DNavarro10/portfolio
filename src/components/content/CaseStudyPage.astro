@@ -1,15 +1,23 @@
 ---
-/** Renders one experience case study. Used by the EN and ES detail routes. */
+/**
+ * One experience case study. Used by the EN and ES detail routes.
+ *
+ * Structure (answer-ready for search and AI):
+ *   h1 title → role/company/period → "In short" summary → key results →
+ *   story (Markdown body, starts at h2) → tools → Q&A.
+ * JSON-LD: Article + BreadcrumbList (+ FAQPage when the entry has Q&A).
+ */
 import { Image } from 'astro:assets';
 import { render, type CollectionEntry } from 'astro:content';
-import MetricGroup from '@/components/ui/MetricGroup.astro';
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import MetricGroup from '@/components/ui/MetricGroup.astro';
 import Section from '@/components/ui/Section.astro';
+import TagList from '@/components/ui/TagList.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { Lang } from '@/i18n/config';
 import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
 import { entryPath } from '@/lib/content';
-import { breadcrumbSchema } from '@/lib/schema';
+import { articleSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 interface Props {
   entry: CollectionEntry<'experience'>;
@@ -20,12 +28,34 @@ interface Props {
 const { entry, alternates, lang } = Astro.props;
 const { Content } = await render(entry);
 const t = useTranslations(lang);
-const { title, description, company, role, period, metrics, heroImage, heroAlt } = entry.data;
+const c = t.caseStudy;
+const {
+  title,
+  description,
+  summary,
+  company,
+  role,
+  period,
+  metrics,
+  tags,
+  tools,
+  faq,
+  heroImage,
+  heroAlt,
+  draft,
+} = entry.data;
+const path = entryPath('experience', entry);
 
 const crumbs = [
   { name: t.nav.home, path: routePath('home', lang) },
   { name: t.nav.experience, path: routePath('experience', lang) },
-  { name: title, path: entryPath('experience', entry) },
+  { name: title, path },
+];
+
+const jsonLd = [
+  articleSchema({ title, description, path, lang, keywords: tags }),
+  breadcrumbSchema(crumbs),
+  ...(faq.length ? [faqSchema(faq, path)] : []),
 ];
 ---
 
@@ -37,23 +67,116 @@ const crumbs = [
   ogType="article"
   ogImage={heroImage?.src}
   ogImageAlt={heroAlt}
-  noindex={entry.data.draft}
-  jsonLd={[breadcrumbSchema(crumbs)]}
+  noindex={draft}
+  jsonLd={jsonLd}
 >
   <Section narrow>
     <Breadcrumbs lang={lang} items={crumbs} />
+    {draft && <p class="draft-notice">{c.draft}</p>}
     <article>
-      <header>
+      <header class="case__header">
+        <p class="mono-label">{company}</p>
         <h1>{title}</h1>
         <p class="text-muted">
-          {role} · {company} · {period}
+          {role} · {period}
         </p>
+        <TagList tags={tags} label={c.topics} />
       </header>
-      <MetricGroup metrics={metrics} />
+
+      <aside class="case__summary" aria-labelledby="case-summary">
+        <h2 id="case-summary" class="mono-label">
+          {c.inShort}
+        </h2>
+        <p>{summary}</p>
+      </aside>
+
+      {metrics.length > 0 && (
+        <section class="case__results" aria-labelledby="case-results">
+          <h2 id="case-results" class="visually-hidden">
+            {c.keyResults}
+          </h2>
+          <MetricGroup metrics={metrics} columns={metrics.length > 3 ? 2 : metrics.length} />
+        </section>
+      )}
+
       {heroImage && <Image src={heroImage} alt={heroAlt ?? ''} loading="eager" />}
+
       <div class="prose">
         <Content />
       </div>
+
+      {tools.length > 0 && (
+        <section class="case__tools" aria-labelledby="case-tools">
+          <h2 id="case-tools">{c.tools}</h2>
+          <TagList tags={tools} />
+        </section>
+      )}
+
+      {faq.length > 0 && (
+        <section class="case__faq" aria-labelledby="case-faq">
+          <h2 id="case-faq">{c.faq}</h2>
+          {faq.map((item) => (
+            <div class="faq-item">
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </div>
+          ))}
+        </section>
+      )}
     </article>
   </Section>
 </BaseLayout>
+
+<style>
+  .draft-notice {
+    padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+  }
+  .case__header {
+    margin-bottom: var(--space-6);
+  }
+  .case__header h1 {
+    margin-block: var(--space-2) var(--space-3);
+  }
+  .case__summary {
+    margin-bottom: var(--space-6);
+    padding: var(--space-5);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    background: var(--color-surface-2);
+  }
+  .case__summary h2 {
+    margin: 0 0 var(--space-2);
+  }
+  .case__summary p {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+  .case__results {
+    margin-bottom: var(--space-7);
+  }
+  .case__tools,
+  .case__faq {
+    margin-top: var(--space-7);
+  }
+  .case__tools h2,
+  .case__faq h2 {
+    font-size: var(--fs-xl);
+  }
+  .faq-item {
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+  .faq-item h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-lg);
+  }
+  .faq-item p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+</style>

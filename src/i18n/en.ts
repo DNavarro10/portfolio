@@ -128,6 +128,176 @@ export const en = {
       link: 'More about me',
     },
   },
+  experience: {
+    eyebrow: 'Experience',
+    title: 'Experience and case studies',
+    intro:
+      '6+ years in SEO across three roles: from end-to-end SEO for a single site to leading link building, technical SEO, and GEO for flagship brands. Start with the case studies, or jump to my work history.',
+    caseStudies: {
+      eyebrow: 'Case studies',
+      title: 'Selected work',
+    },
+    history: {
+      eyebrow: 'Career',
+      title: 'Work history',
+      roles: [
+        {
+          role: 'Senior SEO Specialist',
+          company: 'Gambling.com Group',
+          period: '2023 – 2026',
+          location: 'Costa Rica',
+          points: [
+            'Led link building and digital outreach: 120+ backlinks a month at an average DR of 45.',
+            'Led hands-on technical SEO and SEO/GEO roadmaps for RotoWire.com and Bookies.com.',
+            'Led a team of 7 through hiring, training, QA, and performance reviews.',
+          ],
+        },
+        {
+          role: 'SEO Analyst (remote contractor)',
+          company: 'Gambling.com Group',
+          period: '2021 – 2023',
+          location: 'Remote, United States',
+          points: [
+            'Supported SEO for 8–12 state-level domains during fast-paced market launches.',
+            'Keyword research, competitor gap analysis, and on-page optimization.',
+            'Promoted into a team leadership role.',
+          ],
+        },
+        {
+          role: 'SEO Analyst',
+          company: 'Advision Development',
+          period: '2019 – 2021',
+          location: 'Costa Rica',
+          points: [
+            'Ran end-to-end SEO for SportsbookReview.com on WordPress.',
+            'Technical audits, Google Tag Manager, on-page optimization, and outreach.',
+          ],
+        },
+      ],
+    },
+    education: {
+      title: 'Education',
+      degree: "Bachelor's degree in Informatics Engineering",
+      school: 'Universidad Metropolitana Castro Carazo',
+    },
+  },
+  about: {
+    eyebrow: 'About',
+    title: 'About Diego Navarro',
+    intro:
+      "I'm Diego Navarro, a Senior SEO Specialist and backlinks specialist based in Costa Rica. For 6+ years I've helped competitive US and UK brands grow in Google and, more recently, in AI search.",
+    story: {
+      title: 'From engineering to SEO',
+      paragraphs: [
+        'I studied Informatics Engineering at Universidad Metropolitana Castro Carazo. It gave me a way of thinking I still use every day: break a problem into systems, measure them, and improve them one step at a time.',
+        'I started in SEO in 2019 at Advision Development, running end-to-end SEO for SportsbookReview.com. In 2021 I joined Gambling.com Group as a remote SEO analyst, supporting 8–12 state-level market launches, and was promoted into a team leadership role.',
+        'From 2023 to 2026, as Senior SEO Specialist, I led link building, technical SEO, and SEO and GEO roadmaps for RotoWire.com and Bookies.com, and led a team of 7.',
+      ],
+    },
+    principles: {
+      title: 'How I work',
+      items: [
+        {
+          title: 'Quality before volume',
+          text: 'Every link, page, and fix is checked against clear standards before it ships. Volume only matters if it lasts.',
+        },
+        {
+          title: 'Measure, then decide',
+          text: 'Recommendations come from data, like Search Console, analytics, and SEO tools, and are prioritized by impact and effort.',
+        },
+        {
+          title: 'Work with developers',
+          text: 'Technical SEO only counts once it ships. I partner with development teams and build SEO into their workflow.',
+        },
+        {
+          title: 'Document and teach',
+          text: "I turn processes into written standards and train the team on them, so quality doesn't depend on one person.",
+        },
+      ],
+    },
+    skills: {
+      title: 'Skills',
+      levels: [
+        {
+          label: 'Hands-on, every day',
+          items: [
+            'Link building and digital outreach',
+            'Technical SEO audits and implementation',
+            'Keyword research and search intent',
+            'On-page and content SEO',
+            'Structured data (Schema.org, JSON-LD)',
+            'GEO and AEO strategy',
+            'SEO reporting and KPIs',
+            'Team leadership and QA',
+          ],
+        },
+        {
+          label: 'Working knowledge',
+          items: [
+            'A/B testing and CRO support',
+            'Python scripting (basic to intermediate)',
+            'HTML, CSS, and JavaScript',
+            'WordPress and Google Tag Manager',
+            'Cloudflare configuration',
+            'Basic SQL',
+          ],
+        },
+        {
+          label: 'Currently learning',
+          items: [
+            'Knowledge graphs',
+            'Retrieval-augmented generation (RAG)',
+            'Agentic AI',
+            'Looker Studio',
+          ],
+        },
+      ],
+    },
+    tools: {
+      title: 'Tools',
+    },
+    languages: {
+      title: 'Languages',
+      items: ['Spanish: native', 'English: C1, advanced professional proficiency'],
+    },
+    faq: {
+      title: 'Questions and answers',
+      items: [
+        {
+          question: 'What does Diego Navarro specialize in?',
+          answer:
+            'Link building and digital outreach, technical SEO, and GEO (generative engine optimization). Diego has secured 120+ backlinks a month at an average Domain Rating of 45, and led technical SEO and AI search roadmaps for RotoWire.com and Bookies.com.',
+        },
+        {
+          question: 'Where is Diego based, and which markets has he worked in?',
+          answer:
+            'Diego is based in Costa Rica and works remotely with US-based teams, including on EST-aligned schedules. His experience covers the US and UK markets, with Latin America as an additional focus.',
+        },
+        {
+          question: 'Which languages does Diego work in?',
+          answer:
+            'Spanish (native) and English (C1, advanced professional proficiency). This site is fully bilingual.',
+        },
+        {
+          question: 'What tools does Diego use?',
+          answer:
+            'Ahrefs, SEMrush, Screaming Frog, Google Search Console, and Google Analytics 4 day to day, plus Majestic, Moz, SurferSEO, Google Tag Manager, Salesforce, and Jira. He also uses AI tools like ChatGPT, Gemini, and Claude to speed up audits, research, and analysis.',
+        },
+      ],
+    },
+    links: {
+      experience: 'See my case studies',
+      contact: 'Get in touch',
+    },
+  },
+  caseStudy: {
+    inShort: 'In short',
+    keyResults: 'Key results',
+    tools: 'Tools used',
+    topics: 'Topics',
+    faq: 'Questions and answers',
+    draft: 'Draft: only visible in development, not published yet.',
+  },
   llms: {
     language: 'English',
     kinds: {
@@ -147,12 +317,14 @@ export const en = {
         'Senior SEO and backlinks specialist with 6+ years growing organic and AI search visibility for US and UK brands: link building, technical SEO, and GEO.',
     },
     about: {
-      title: 'About',
-      description: 'Background, skills, and approach to SEO of Diego Navarro.',
+      title: 'About Diego Navarro, Senior SEO Specialist',
+      description:
+        'Diego Navarro is a Senior SEO and backlinks specialist from Costa Rica with 6+ years in link building, technical SEO, and GEO for US and UK brands.',
     },
     experience: {
-      title: 'Experience',
-      description: 'SEO case studies: challenges, strategy, and measurable results.',
+      title: 'Experience and SEO case studies',
+      description:
+        'SEO case studies by Diego Navarro: link building at scale, 8–12 state market launches, technical SEO and GEO, and end-to-end SEO.',
     },
     blog: {
       title: 'Blog',
