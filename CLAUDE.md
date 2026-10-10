@@ -164,7 +164,7 @@ public/                   Static files served as-is (favicon; CV PDF later)
 1. ✅ Foundation
 2. ✅ Design system (Signal green, IBM Plex, components, style guide)
 3. ✅ Home page (hiring-team focus; CTA for services moves to Contact later)
-4. 🟡 About + Experience: drafted (4 case studies, EN + ES), awaiting owner review before publishing
+4. ✅ About + Experience (4 case studies, EN + ES), published
 5. Contact form + CV download (`/public`, track clicks)
 6. Blog launch posts
 7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console

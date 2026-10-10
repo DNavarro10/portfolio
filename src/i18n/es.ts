@@ -71,7 +71,7 @@ export const es: UiStrings = {
         { value: '120+', label: 'Backlinks conseguidos al mes' },
         { value: 'DR 45', label: 'Domain Rating promedio de los enlaces' },
         { value: '5000+', label: 'Medios en mi red de outreach' },
-        { value: '8–12', label: 'Dominios estatales lanzados en EE. UU.' },
+        { value: '8–12', label: 'Dominios estatales y provinciales lanzados' },
         { value: '7', label: 'Personas a cargo: contratación y mentoría' },
       ],
     },

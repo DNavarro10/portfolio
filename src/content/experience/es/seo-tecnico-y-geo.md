@@ -3,7 +3,7 @@ title: 'SEO técnico y GEO para RotoWire.com y Bookies.com'
 description: Cómo lideré el SEO técnico y definí estrategias GEO para ganar visibilidad en Google y en buscadores con IA para RotoWire.com y Bookies.com.
 summary: En RotoWire.com y Bookies.com lideré la implementación de SEO técnico, incluidas URL canónicas, enlazado interno, datos estructurados, rastreo y Core Web Vitals, trabajando directamente con desarrollo. También definí hojas de ruta de SEO y GEO para ganar visibilidad y citas en Google AI Overviews, ChatGPT, Gemini y Perplexity.
 translationKey: technical-geo
-draft: true
+draft: false
 company: Gambling.com Group
 role: Especialista SEO Senior
 period: 2023 – 2026

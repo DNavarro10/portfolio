@@ -3,7 +3,7 @@ title: 'Link building a escala: más de 120 backlinks al mes'
 description: Cómo dirigí el link building y el outreach de RotoWire.com y Bookies.com, con más de 120 backlinks revisados al mes y un DR promedio de 45.
 summary: Dirigí el link building y el outreach digital de RotoWire.com y Bookies.com, con más de 120 backlinks al mes y un Domain Rating promedio de 45, a partir de una red de más de 5000 medios. Cada enlace pasaba un control de calidad de autoridad, tráfico orgánico y relevancia temática antes de publicarse.
 translationKey: link-building
-draft: true
+draft: false
 company: Gambling.com Group
 role: Especialista SEO Senior
 period: 2023 – 2026

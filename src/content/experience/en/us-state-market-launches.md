@@ -3,7 +3,7 @@ title: 'SEO for 8–12 state-level market launches'
 description: How I supported SEO for 8–12 state-level domains like BetArizona.com, BetOhio.com, and BetMichigan.com during fast-paced market launches.
 summary: As an SEO analyst, I supported SEO for 8–12 state-level domains, including BetArizona.com, BetOhio.com, BetMichigan.com, and BetOntario.com, during fast-paced, competitive market launches. Consistent delivery across these concurrent projects led to my promotion into a team leadership role.
 translationKey: state-launches
-draft: true
+draft: false
 company: Gambling.com Group
 role: SEO Analyst (remote contractor, US)
 period: 2021 – 2023

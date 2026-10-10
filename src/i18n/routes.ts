@@ -18,8 +18,8 @@ import type { Lang } from './config';
  */
 export const ROUTES = {
   home: { en: '/', es: '/es/', published: true },
-  about: { en: '/about/', es: '/es/sobre-mi/', published: false },
-  experience: { en: '/experience/', es: '/es/experiencia/', published: false },
+  about: { en: '/about/', es: '/es/sobre-mi/', published: true },
+  experience: { en: '/experience/', es: '/es/experiencia/', published: true },
   blog: { en: '/blog/', es: '/es/blog/', published: false },
   tools: { en: '/tools/', es: '/es/herramientas/', published: false },
   contact: { en: '/contact/', es: '/es/contacto/', published: false },

@@ -70,7 +70,7 @@ export const en = {
         { value: '120+', label: 'Backlinks secured per month' },
         { value: 'DR 45', label: 'Average domain rating of placements' },
         { value: '5,000+', label: 'Publishers in my outreach network' },
-        { value: '8–12', label: 'State-level domains launched in the US' },
+        { value: '8–12', label: 'State and provincial domains launched' },
         { value: '7', label: 'Team members led, hired, and mentored' },
       ],
     },
