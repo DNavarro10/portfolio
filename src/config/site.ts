@@ -41,6 +41,28 @@ export const OWNER = {
     'Entity SEO',
   ],
   alumniOf: 'Universidad Metropolitana Castro Carazo',
+  /** Tools listed on the About page (names aren't translated). */
+  tools: [
+    'Ahrefs',
+    'SEMrush',
+    'Majestic',
+    'Moz',
+    'Screaming Frog',
+    'Google Search Console',
+    'Google Analytics 4',
+    'Google Tag Manager',
+    'SurferSEO',
+    'Yoast SEO',
+    'WordPress',
+    'Salesforce',
+    'Jira',
+    'Confluence',
+    'Lighthouse',
+    'Git',
+    'ChatGPT',
+    'Gemini',
+    'Claude',
+  ],
 } as const;
 
 /** Brands worked on (text only: no logos, which are trademarks). */

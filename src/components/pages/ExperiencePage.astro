@@ -1,0 +1,157 @@
+---
+/**
+ * Experience page, shared by /experience/ and /es/experiencia/.
+ * Order: answer-ready intro → case study cards → work history → education.
+ * Case studies come from the "experience" collection (drafts show only in dev).
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Card from '@/components/ui/Card.astro';
+import CardGrid from '@/components/ui/CardGrid.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang } from '@/i18n/config';
+import { ROUTES } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { entryPath, getPublishedEntries } from '@/lib/content';
+import { breadcrumbSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const x = t.experience;
+
+const caseStudies = (await getPublishedEntries('experience', lang)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.experience, path: routePath('experience', lang) },
+];
+---
+
+<BaseLayout
+  title={t.pages.experience.title}
+  description={t.pages.experience.description}
+  lang={lang}
+  alternates={routeAlternates('experience')}
+  noindex={!ROUTES.experience.published}
+  jsonLd={[breadcrumbSchema(crumbs)]}
+>
+  <Section labelledby="experience-title">
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <SectionHeading
+      level="h1"
+      id="experience-title"
+      eyebrow={x.eyebrow}
+      title={x.title}
+      description={x.intro}
+    />
+  </Section>
+
+  {caseStudies.length > 0 && (
+    <Section labelledby="cases-title" tinted>
+      <SectionHeading
+        id="cases-title"
+        eyebrow={x.caseStudies.eyebrow}
+        title={x.caseStudies.title}
+      />
+      <CardGrid min="26rem">
+        {caseStudies.map((entry) => (
+          <li>
+            <Card
+              href={entryPath('experience', entry)}
+              eyebrow={`${entry.data.company} · ${entry.data.period}`}
+              title={entry.data.title}
+              description={entry.data.description}
+              tags={entry.data.tags}
+              tagsLabel={t.caseStudy.topics}
+            />
+          </li>
+        ))}
+      </CardGrid>
+    </Section>
+  )}
+
+  <Section labelledby="history-title">
+    <SectionHeading id="history-title" eyebrow={x.history.eyebrow} title={x.history.title} />
+    <ol class="timeline">
+      {x.history.roles.map((job) => (
+        <li class="timeline__item">
+          <p class="timeline__period mono-label">{job.period}</p>
+          <h3 class="timeline__role">{job.role}</h3>
+          <p class="timeline__meta text-muted">
+            {job.company} · {job.location}
+          </p>
+          <ul class="timeline__points">
+            {job.points.map((point) => (
+              <li>{point}</li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
+
+    <h3 class="education__title">{x.education.title}</h3>
+    <p>
+      <strong>{x.education.degree}</strong>
+      <br />
+      <span class="text-muted">{x.education.school}</span>
+    </p>
+  </Section>
+</BaseLayout>
+
+<style>
+  .timeline {
+    position: relative;
+    margin: 0 0 var(--space-7);
+    padding: 0;
+    list-style: none;
+    max-width: var(--width-prose);
+  }
+  .timeline__item {
+    position: relative;
+    padding: 0 0 var(--space-6) var(--space-6);
+    border-left: 2px solid var(--color-border);
+  }
+  .timeline__item:last-child {
+    padding-bottom: 0;
+  }
+  .timeline__item::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 0.2rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent);
+    background: var(--color-bg);
+  }
+  .timeline__period {
+    margin: 0 0 var(--space-1);
+  }
+  .timeline__role {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+  .timeline__meta {
+    margin: 0 0 var(--space-3);
+    font-size: var(--fs-sm);
+  }
+  .timeline__points {
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+  .timeline__points li + li {
+    margin-top: var(--space-1);
+  }
+  .education__title {
+    font-size: var(--fs-lg);
+    margin-bottom: var(--space-2);
+  }
+</style>

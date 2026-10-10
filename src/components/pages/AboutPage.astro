@@ -1,0 +1,190 @@
+---
+/**
+ * About page, shared by /about/ and /es/sobre-mi/.
+ * Order: answer-ready intro → story → how I work → skills by honest level →
+ * tools, languages, education → Q&A (also marked up as FAQPage).
+ * JSON-LD: AboutPage (main entity: Person) + BreadcrumbList + FAQPage.
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Button from '@/components/ui/Button.astro';
+import Card from '@/components/ui/Card.astro';
+import CardGrid from '@/components/ui/CardGrid.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import TagList from '@/components/ui/TagList.astro';
+import { OWNER } from '@/config/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang } from '@/i18n/config';
+import { ROUTES } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { aboutPageSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const a = t.about;
+const path = routePath('about', lang);
+
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.about, path },
+];
+---
+
+<BaseLayout
+  title={t.pages.about.title}
+  description={t.pages.about.description}
+  lang={lang}
+  alternates={routeAlternates('about')}
+  noindex={!ROUTES.about.published}
+  bareTitle
+  ogType="profile"
+  jsonLd={[aboutPageSchema(path, lang), breadcrumbSchema(crumbs), faqSchema(a.faq.items, path)]}
+>
+  <Section labelledby="about-title" narrow>
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <SectionHeading
+      level="h1"
+      id="about-title"
+      eyebrow={a.eyebrow}
+      title={a.title}
+      description={a.intro}
+    />
+
+    <h2 id="story-title">{a.story.title}</h2>
+    {a.story.paragraphs.map((paragraph) => (
+      <p>{paragraph}</p>
+    ))}
+  </Section>
+
+  <Section labelledby="principles-title" tinted>
+    <SectionHeading id="principles-title" title={a.principles.title} />
+    <CardGrid min="15rem">
+      {a.principles.items.map((item, index) => (
+        <li>
+          <Card
+            eyebrow={String(index + 1).padStart(2, '0')}
+            title={item.title}
+            description={item.text}
+          />
+        </li>
+      ))}
+    </CardGrid>
+  </Section>
+
+  <Section labelledby="skills-title">
+    <SectionHeading id="skills-title" title={a.skills.title} />
+    <div class="skills">
+      {a.skills.levels.map((level) => (
+        <div class="skills__level">
+          <h3 class="mono-label">{level.label}</h3>
+          <ul>
+            {level.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="facts">
+      <div>
+        <h3>{a.tools.title}</h3>
+        <TagList tags={OWNER.tools} />
+      </div>
+      <div>
+        <h3>{a.languages.title}</h3>
+        <ul>
+          {a.languages.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h3>{t.experience.education.title}</h3>
+        <p>
+          {t.experience.education.degree}
+          <br />
+          <span class="text-muted">{t.experience.education.school}</span>
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <Section labelledby="faq-title" tinted narrow>
+    <SectionHeading id="faq-title" title={a.faq.title} />
+    {a.faq.items.map((item) => (
+      <div class="faq-item">
+        <h3>{item.question}</h3>
+        <p>{item.answer}</p>
+      </div>
+    ))}
+    <div class="about__links">
+      <Button href={routePath('experience', lang)} icon="arrow">
+        {a.links.experience}
+      </Button>
+      <Button href={routePath('contact', lang)} variant="secondary">
+        {a.links.contact}
+      </Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-5);
+    margin-bottom: var(--space-7);
+  }
+  .skills__level {
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+  .skills__level h3 {
+    margin-bottom: var(--space-3);
+  }
+  .skills__level ul {
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+  .skills__level li + li {
+    margin-top: var(--space-1);
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-6);
+  }
+  .facts h3 {
+    font-size: var(--fs-lg);
+    margin-bottom: var(--space-3);
+  }
+  .facts ul {
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+  .faq-item {
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+  .faq-item h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-lg);
+  }
+  .faq-item p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  .about__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+</style>
