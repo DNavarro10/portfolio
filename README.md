@@ -3,7 +3,7 @@
 Personal website of Luis Diego Navarro Morales, Senior SEO Specialist. Bilingual (English / Spanish),
 built to be fast, accessible, and technically sound for search engines.
 
-**Stack:** [Astro](https://astro.build) · TypeScript · Cloudflare Workers (static assets)
+**Stack:** [Astro](https://astro.build) · TypeScript · static HTML (Cloudflare hosting planned)
 
 ## Features
 
@@ -37,8 +37,7 @@ Then open http://localhost:4321.
 | `npm run lint`    | Run ESLint                                            |
 | `npm run format`  | Format all files with Prettier                        |
 | `npm run verify`  | Check, lint, format check, and build (before commits) |
-| `npm run preview` | Build and run locally in the Cloudflare runtime       |
-| `npm run deploy`  | Build and deploy to Cloudflare Workers                |
+| `npm run preview` | Build and serve the production output locally         |
 
 ## Configuration
 

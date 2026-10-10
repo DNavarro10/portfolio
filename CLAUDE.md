@@ -14,7 +14,10 @@ The owner is new to modern web development: explain changes in simple terms and 
 ## Stack
 
 - **Astro 7** (static output by default), **TypeScript strict**.
-- **Cloudflare Workers with static assets** via `@astrojs/cloudflare` (`wrangler.jsonc`).
+- **Fully static build** (`dist/`), no adapter for now. Hosting will be **Cloudflare Workers with static
+  assets**; the `@astrojs/cloudflare` adapter and `wrangler` are added back in roadmap step 7 (deploy),
+  together with the contact form. They were removed on Oct 9 because the Workers dev runtime crashed
+  on the owner's Windows machine.
 - **ESLint** (flat config) + **Prettier** (with the Astro plugin).
 - No UI framework yet. **Ask before adding any dependency** and explain why it's needed.
 
@@ -28,8 +31,7 @@ npm run check        # TypeScript + Astro diagnostics
 npm run lint         # ESLint
 npm run format       # Prettier (write)
 npm run verify       # check + lint + format check + build (run before every commit)
-npm run preview      # build and run locally in the Cloudflare runtime
-npm run deploy       # build and deploy to Cloudflare
+npm run preview      # build and serve the production output locally
 ```
 
 ## Folder structure
