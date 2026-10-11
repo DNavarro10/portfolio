@@ -4,11 +4,9 @@
  * Cloudflare serves the nearest 404.html with an HTTP 404 status, so search engines
  * drop broken URLs (no "soft 404"). Always noindex.
  *
- * For visitors it:
- *   1. guesses the page they meant (typo-tolerant match against every published URL),
- *   2. redirects there, or to the home page, after a 10-second visible countdown,
- *   3. lets them cancel ("Stay on this page"), as WCAG 2.2.1 requires for time limits,
- *   4. lists popular pages. Without JavaScript, the links still work.
+ * For visitors: a short message, then an automatic redirect to the home page after
+ * a visible 10-second countdown they can cancel ("Stay on this page", as WCAG 2.2.1
+ * requires for time limits), plus quick links. Without JavaScript, the links still work.
  * Permanent moves of real pages belong in public/_redirects (301), not here.
  */
 import Section from '@/components/ui/Section.astro';
@@ -16,24 +14,19 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { Lang } from '@/i18n/config';
 import { NAV_ROUTES, ROUTES } from '@/i18n/routes';
 import { routePath, useTranslations } from '@/i18n/utils';
-import { getIndexablePages } from '@/lib/pages';
 
 interface Props {
   lang: Lang;
 }
 
+/** Seconds before the automatic redirect to the home page. */
+const SECONDS = 10;
+
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const n = t.pages.notFound;
 const home = routePath('home', lang);
-
-// Every published page in this language: candidates for "did you mean".
-const pages = (await getIndexablePages())
-  .map((page) => page.versions[lang])
-  .filter((version) => version !== undefined)
-  .map((version) => ({ path: version.path, title: version.title.split(' | ')[0]! }));
-
-const popular = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => ({
+const links = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => ({
   path: routePath(key, lang),
   label: t.nav[key],
 }));
@@ -50,15 +43,14 @@ const popular = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => (
     <div
       class="not-found"
       data-not-found
-      data-pages={JSON.stringify(pages)}
       data-home={home}
-      data-strings={JSON.stringify(n)}
+      data-seconds={SECONDS}
+      data-strings={JSON.stringify({ redirect: n.redirect, stayed: n.stayed })}
     >
       <p class="mono-label">404</p>
       <h1>{n.title}</h1>
       <p class="lead">{n.intro}</p>
 
-      <p class="not-found__suggestion" data-out="suggestion" hidden></p>
       <div class="not-found__redirect" data-out="redirect" hidden>
         <p data-out="countdown" aria-live="polite"></p>
         <button type="button" class="tool-button" data-stay>
@@ -71,7 +63,7 @@ const popular = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => (
         <li>
           <a href={home}>{n.backHome}</a>
         </li>
-        {popular.map((item) => (
+        {links.map((item) => (
           <li>
             <a href={item.path}>{item.label}</a>
           </li>
@@ -84,88 +76,18 @@ const popular = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => (
 <script>
   import { fill } from '@/components/tools/client';
 
-  interface Strings {
-    suggestion: string;
-    redirect: string;
-    redirectHome: string;
-    stayed: string;
-  }
-  interface Candidate {
-    path: string;
-    title: string;
-  }
-
-  const SECONDS = 10;
-
-  /** Edit distance between two strings (how many typos apart they are). */
-  const distance = (a: string, b: string): number => {
-    const row = Array.from({ length: b.length + 1 }, (_, i) => i);
-    for (let i = 1; i <= a.length; i++) {
-      let previous = row[0]!;
-      row[0] = i;
-      for (let j = 1; j <= b.length; j++) {
-        const current = row[j]!;
-        row[j] = Math.min(row[j]! + 1, row[j - 1]! + 1, previous + (a[i - 1] === b[j - 1] ? 0 : 1));
-        previous = current;
-      }
-    }
-    return row[b.length]!;
-  };
-
-  const normalize = (path: string) => {
-    let clean = path;
-    try {
-      clean = decodeURIComponent(path);
-    } catch {
-      /* keep the raw path */
-    }
-    clean = clean
-      .toLowerCase()
-      .replace(/\/index\.html?$/, '/')
-      .replace(/\.html?$/, '');
-    return clean.endsWith('/') ? clean : `${clean}/`;
-  };
-
   const root = document.querySelector<HTMLElement>('[data-not-found]');
   if (root) {
-    const s = JSON.parse(root.dataset.strings ?? '{}') as Strings;
-    const pages = JSON.parse(root.dataset.pages ?? '[]') as Candidate[];
+    const s = JSON.parse(root.dataset.strings ?? '{}') as { redirect: string; stayed: string };
     const home = root.dataset.home ?? '/';
-    const current = normalize(window.location.pathname);
-    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
-
-    // Best match: smallest edit distance relative to length; accept up to ~35% different.
-    let best: Candidate | null = null;
-    let bestScore = 0;
-    for (const page of pages) {
-      const score = 1 - distance(current, page.path) / Math.max(current.length, page.path.length);
-      if (score > bestScore) {
-        best = page;
-        bestScore = score;
-      }
-    }
-    const isErrorPage = /\/404\/?$/.test(current);
-    const suggestion =
-      !isErrorPage && best && bestScore >= 0.65 && best.path !== home ? best : null;
-
-    if (suggestion) {
-      const p = out('suggestion');
-      const link = Object.assign(document.createElement('a'), {
-        href: suggestion.path,
-        textContent: suggestion.title,
-      });
-      p.append(`${s.suggestion} `, link, '?');
-      p.hidden = false;
-    }
-
-    const target = suggestion?.path ?? home;
-    const targetName = suggestion?.title ?? s.redirectHome;
-    let remaining = SECONDS;
-    const countdown = out('countdown');
+    let remaining = Number(root.dataset.seconds ?? 10);
+    const box = root.querySelector<HTMLElement>('[data-out="redirect"]')!;
+    const countdown = root.querySelector<HTMLElement>('[data-out="countdown"]')!;
     const render = () => {
-      countdown.textContent = fill(s.redirect, { page: targetName, seconds: remaining });
+      countdown.textContent = fill(s.redirect, { seconds: remaining });
     };
-    out('redirect').hidden = false;
+
+    box.hidden = false;
     render();
     // Only the first message is announced to screen readers; later ticks update silently.
     countdown.removeAttribute('aria-live');
@@ -174,7 +96,7 @@ const popular = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => (
       remaining -= 1;
       if (remaining <= 0) {
         window.clearInterval(timer);
-        window.location.replace(target);
+        window.location.replace(home);
         return;
       }
       render();
@@ -189,10 +111,6 @@ const popular = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => (
 </script>
 
 <style>
-  .not-found__suggestion {
-    margin: var(--space-5) 0 0;
-    font-size: var(--fs-lg);
-  }
   .not-found__redirect {
     display: flex;
     flex-wrap: wrap;

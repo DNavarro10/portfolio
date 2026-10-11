@@ -1356,15 +1356,12 @@ export const es: UiStrings = {
     notFound: {
       title: 'Página no encontrada',
       description: 'La página que buscas no existe.',
-      backHome: 'Volver al inicio',
-      intro:
-        'Puede que el enlace esté roto o que la página haya cambiado de lugar. Aquí tienes algunas opciones para encontrar lo que buscas.',
-      suggestion: '¿Quisiste decir',
-      redirect: 'Te llevaremos a {page} en {seconds} segundos.',
-      redirectHome: 'la página de inicio',
+      backHome: 'Inicio',
+      intro: 'Lo sentimos, esta página no existe o cambió de lugar. Te ayudamos a volver.',
+      redirect: 'Te llevaremos a la página de inicio en {seconds} segundos.',
       stay: 'Quedarme en esta página',
-      stayed: 'Redirección cancelada. Elige una página abajo.',
-      popular: 'Páginas populares',
+      stayed: 'Redirección cancelada.',
+      popular: 'O ve a',
     },
   },
 };

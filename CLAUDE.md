@@ -107,8 +107,8 @@ integrations/             Small build steps (nested-404.mjs)
   Unpublished pages (`published: false`, `draft: true`) are `noindex` and excluded from it.
 - Never auto-redirect by browser language; the language switcher is a normal link.
 - **404s**: `/404.html` (EN) and `/es/404.html` (ES, moved there by `integrations/nested-404.mjs`)
-  keep a real 404 status, suggest the closest published URL, and redirect there (or home) after a
-  10-second countdown the visitor can cancel. Never redirect all missing URLs to the home page
+  keep a real 404 status, show a short message and quick links, and redirect to the home page
+  (same language) after a 10-second countdown the visitor can cancel. Never redirect all missing URLs to the home page
   with a 301 (soft 404). Pages that move for good get a 301 in `public/_redirects`.
 
 ## AI search (GEO/AEO) rules
