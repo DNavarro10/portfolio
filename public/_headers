@@ -1,0 +1,23 @@
+# Security and caching headers, applied by Cloudflare to every response.
+# Docs: https://developers.cloudflare.com/workers/static-assets/headers/
+#
+# Content-Security-Policy (CSP) tells browsers what the site may load:
+#   - scripts only from this site (no inline JavaScript exists in the build)
+#   - styles from this site plus inline styles (CSS is inlined for speed)
+#   - no plugins, no framing by other sites, forms only post to this site
+# When adding Cloudflare Web Analytics or Turnstile at launch, extend it:
+#   script-src  + https://static.cloudflareinsights.com https://challenges.cloudflare.com
+#   connect-src + https://cloudflareinsights.com
+#   frame-src   https://challenges.cloudflare.com
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# Built assets have a content hash in their file name, so they can be cached for a year.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
