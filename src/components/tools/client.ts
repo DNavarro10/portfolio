@@ -37,3 +37,20 @@ export async function copyText(
     button.textContent = original;
   }, 1800);
 }
+
+/**
+ * The readable content of a parsed page: <main> (or <article>, or <body>) without
+ * scripts, navigation, forms, and site-wide header/footer. Headers and footers
+ * inside an <article> are kept, since they usually hold the H1 and byline.
+ */
+export function mainContent(doc: Document): HTMLElement {
+  const source = doc.querySelector('main') ?? doc.querySelector('article') ?? doc.body;
+  const content = source.cloneNode(true) as HTMLElement;
+  content
+    .querySelectorAll('script, style, noscript, template, nav, aside, form')
+    .forEach((node) => node.remove());
+  content.querySelectorAll('header, footer').forEach((node) => {
+    if (!node.closest('article')) node.remove();
+  });
+  return content;
+}

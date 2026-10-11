@@ -1,0 +1,279 @@
+---
+/**
+ * AI bot log analyzer. Reads access log lines (upload or paste), finds the AI
+ * crawler user agents from src/data/ai-crawlers.ts (plus Googlebot and Bingbot
+ * for comparison), and reports hits per bot, errors, robots.txt fetches, and the
+ * paths AI bots requested most. Files are read locally with the File API.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.aiLogs.ui;
+---
+
+<div class="logs-tool" data-logs-tool data-strings={JSON.stringify(ui)}>
+  <div class="tool-panel logs-tool__input">
+    <div class="tool-field">
+      <label for="logs-file">{ui.file}</label>
+      <input id="logs-file" type="file" accept=".log,.txt,.csv,text/plain" />
+    </div>
+    <div class="tool-field">
+      <label for="logs-input">{ui.input}</label>
+      <textarea
+        id="logs-input"
+        rows="8"
+        spellcheck="false"
+        placeholder={ui.inputPlaceholder}
+      ></textarea>
+    </div>
+    <p class="output-status" data-out="status" aria-live="polite"></p>
+  </div>
+
+  <p class="text-muted" data-out="empty">
+    {ui.empty}
+  </p>
+
+  <div class="logs-tool__results" data-out="results" hidden>
+    <section class="tool-panel logs-tool__wide" aria-labelledby="logs-summary-title">
+      <h2 id="logs-summary-title">{ui.summary}</h2>
+      <ul class="tool-checks" data-out="summary"></ul>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="logs-bots-title">
+      <h2 id="logs-bots-title">{ui.bots}</h2>
+      <div class="tool-table-wrap">
+        <table class="tool-table">
+          <thead>
+            <tr>
+              <th scope="col">{ui.bot}</th>
+              <th scope="col">{ui.purpose}</th>
+              <th scope="col">{ui.hits}</th>
+              <th scope="col">{ui.errors}</th>
+            </tr>
+          </thead>
+          <tbody data-out="bots"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="logs-paths-title">
+      <h2 id="logs-paths-title">{ui.topPaths}</h2>
+      <div class="tool-table-wrap">
+        <table class="tool-table">
+          <thead>
+            <tr>
+              <th scope="col">{ui.path}</th>
+              <th scope="col">{ui.hits}</th>
+            </tr>
+          </thead>
+          <tbody data-out="paths"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  import { AI_CRAWLERS } from '@/data/ai-crawlers';
+  import { fill, readStrings } from './client';
+
+  type Status = 'good' | 'warn' | 'bad';
+  interface Strings {
+    lines: string;
+    noAi: string;
+    purposes: Record<string, string>;
+    errorWarning: string;
+    robotsFetched: string;
+    reading: string;
+    tooLarge: string;
+  }
+
+  const ICON: Record<Status, string> = { good: '✓', warn: '!', bad: '✕' };
+  const MAX_BYTES = 50 * 1024 * 1024;
+  // Control tokens never appear in logs; match only real crawlers.
+  const BOTS = AI_CRAWLERS.filter((bot) => bot.purpose !== 'control').map((bot) => ({
+    ...bot,
+    needle: bot.token.toLowerCase(),
+  }));
+  const SEARCH_ENGINES = ['googlebot', 'bingbot'];
+  const REQUEST = /"(?:GET|POST|HEAD|PUT|DELETE|OPTIONS|PATCH) (\S+) [^"]*" (\d{3})/;
+
+  const root = document.querySelector<HTMLElement>('[data-logs-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+    const input = root.querySelector<HTMLTextAreaElement>('#logs-input')!;
+    const fileInput = root.querySelector<HTMLInputElement>('#logs-file')!;
+    const number = new Intl.NumberFormat(document.documentElement.lang || 'en', {
+      maximumFractionDigits: 1,
+    });
+    let fileText = '';
+
+    const check = (status: Status, text: string) => {
+      const li = document.createElement('li');
+      const icon = document.createElement('span');
+      icon.className = `check-icon status--${status}`;
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = ICON[status];
+      li.append(icon, text);
+      return li;
+    };
+    const row = (cells: string[]) => {
+      const tr = document.createElement('tr');
+      cells.forEach((value, index) => {
+        const cell = document.createElement(index === 0 ? 'th' : 'td');
+        if (index === 0) cell.setAttribute('scope', 'row');
+        cell.textContent = value;
+        tr.append(cell);
+      });
+      return tr;
+    };
+
+    const analyze = () => {
+      const text = fileText || input.value;
+      const lines = text.split('\n').filter((line) => line.trim());
+      out('empty').hidden = lines.length > 0;
+      out('results').hidden = lines.length === 0;
+      if (!lines.length) return;
+
+      const hits = new Map<string, { hits: number; errors: number }>();
+      const paths = new Map<string, number>();
+      let aiTotal = 0;
+      let aiErrors = 0;
+      let searchTotal = 0;
+      let robots = 0;
+
+      for (const line of lines) {
+        const lower = line.toLowerCase();
+        const bot = BOTS.find((candidate) => lower.includes(candidate.needle));
+        if (!bot) {
+          if (SEARCH_ENGINES.some((name) => lower.includes(name))) searchTotal++;
+          continue;
+        }
+        aiTotal++;
+        const entry = hits.get(bot.token) ?? { hits: 0, errors: 0 };
+        entry.hits++;
+        const match = REQUEST.exec(line);
+        if (match) {
+          const path = match[1]!.split('?')[0]!;
+          const status = Number(match[2]);
+          if (status >= 400) {
+            entry.errors++;
+            aiErrors++;
+          }
+          if (path === '/robots.txt') robots++;
+          paths.set(path, (paths.get(path) ?? 0) + 1);
+        }
+        hits.set(bot.token, entry);
+      }
+
+      const summary = [
+        check(
+          aiTotal ? 'good' : 'warn',
+          fill(s.lines, {
+            lines: number.format(lines.length),
+            ai: number.format(aiTotal),
+            search: number.format(searchTotal),
+          }),
+        ),
+      ];
+      if (!aiTotal) summary.push(check('warn', s.noAi));
+      if (aiTotal && aiErrors) {
+        const percent = (aiErrors / aiTotal) * 100;
+        summary.push(
+          check(
+            percent > 10 ? 'bad' : 'warn',
+            fill(s.errorWarning, { percent: number.format(percent) }),
+          ),
+        );
+      }
+      if (robots)
+        summary.push(check('good', fill(s.robotsFetched, { count: number.format(robots) })));
+      out('summary').replaceChildren(...summary);
+
+      out('bots').replaceChildren(
+        ...[...hits.entries()]
+          .sort((a, b) => b[1].hits - a[1].hits)
+          .map(([token, value]) => {
+            const bot = BOTS.find((candidate) => candidate.token === token)!;
+            return row([
+              `${token} (${bot.company})`,
+              s.purposes[bot.purpose] ?? bot.purpose,
+              number.format(value.hits),
+              number.format(value.errors),
+            ]);
+          }),
+      );
+      out('paths').replaceChildren(
+        ...[...paths.entries()]
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 20)
+          .map(([path, count]) => row([path, number.format(count)])),
+      );
+    };
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      const status = out('status');
+      fileText = '';
+      if (!file) return analyze();
+      if (file.size > MAX_BYTES) {
+        status.textContent = s.tooLarge;
+        status.className = 'output-status status--bad';
+        return;
+      }
+      status.textContent = s.reading;
+      status.className = 'output-status text-muted';
+      fileText = await file.text();
+      status.textContent = file.name;
+      analyze();
+    });
+
+    let timer = 0;
+    input.addEventListener('input', () => {
+      fileText = '';
+      fileInput.value = '';
+      out('status').textContent = '';
+      window.clearTimeout(timer);
+      timer = window.setTimeout(analyze, 250);
+    });
+    analyze();
+  }
+</script>
+
+<style>
+  .logs-tool {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .logs-tool__input {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .logs-tool__input .output-status {
+    margin: 0;
+  }
+  .logs-tool textarea {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+  }
+  .logs-tool input[type='file'] {
+    min-height: 44px;
+    font-size: var(--fs-sm);
+  }
+  .logs-tool__results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .logs-tool__wide {
+    grid-column: 1 / -1;
+  }
+</style>

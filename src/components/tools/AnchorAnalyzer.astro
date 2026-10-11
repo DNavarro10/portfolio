@@ -1,0 +1,452 @@
+---
+/**
+ * Anchor text distribution analyzer. Paste an Ahrefs / Semrush export (CSV, TSV,
+ * or a table copied from a spreadsheet) or a plain list of anchors.
+ *
+ * Columns: the anchor column is the header containing "anchor"; the weight is the
+ * first numeric column whose header mentions referring domains, domains, backlinks,
+ * or links (else each row counts once).
+ * Classes, checked in this order: empty → naked URL → branded → exact → partial
+ * (≥ 60% of a keyword's words) → generic → other.
+ * Warnings (rules of thumb): exact match > 10%; branded + URL < 30%.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.anchorAnalyzer.ui;
+---
+
+<div
+  class="anchor-tool"
+  data-anchor-tool
+  data-strings={JSON.stringify({ ...ui, copied: t.toolPage.copied })}
+>
+  <div class="tool-panel anchor-tool__input">
+    <div class="tool-grid">
+      <div class="tool-field">
+        <label for="at-brand">{ui.brand}</label>
+        <input id="at-brand" type="text" placeholder={ui.brandPlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="at-domain">{ui.domain}</label>
+        <input id="at-domain" type="text" inputmode="url" placeholder={ui.domainPlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="at-keywords">{ui.keywords}</label>
+        <input id="at-keywords" type="text" placeholder={ui.keywordsPlaceholder} />
+      </div>
+    </div>
+    <div class="tool-field">
+      <label for="at-input">{ui.input}</label>
+      <textarea
+        id="at-input"
+        rows="10"
+        spellcheck="false"
+        placeholder={ui.inputPlaceholder}
+      ></textarea>
+    </div>
+  </div>
+
+  <p class="text-muted" data-out="empty">
+    {ui.empty}
+  </p>
+
+  <div class="anchor-tool__results" data-out="results" hidden>
+    <section class="tool-panel" aria-labelledby="at-dist-title">
+      <div class="output-head">
+        <h2 id="at-dist-title">{ui.distribution}</h2>
+        <button type="button" class="tool-button" data-copy>
+          {ui.copySummary}
+        </button>
+      </div>
+      <p class="output-status text-muted" data-out="meta"></p>
+      <ul class="bars" data-out="bars"></ul>
+      <ul class="tool-checks" data-out="warnings" aria-live="polite"></ul>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="at-top-title">
+      <h2 id="at-top-title">{ui.topAnchors}</h2>
+      <div class="tool-table-wrap">
+        <table class="tool-table">
+          <thead>
+            <tr>
+              <th scope="col">{ui.anchor}</th>
+              <th scope="col">{ui.category}</th>
+              <th scope="col">{ui.share}</th>
+            </tr>
+          </thead>
+          <tbody data-out="top"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  import { copyText, fill, readStrings } from './client';
+
+  type Category = 'brand' | 'url' | 'exact' | 'partial' | 'generic' | 'empty' | 'other';
+  type Status = 'good' | 'warn' | 'bad';
+  interface Strings {
+    copied: string;
+    weighting: string;
+    weightingRows: string;
+    total: string;
+    categories: Record<Category, string>;
+    warnings: Record<string, string>;
+    emptyAnchor: string;
+    distribution: string;
+  }
+
+  const ORDER: Category[] = ['brand', 'url', 'exact', 'partial', 'generic', 'other', 'empty'];
+  const ICON: Record<Status, string> = { good: '✓', warn: '!', bad: '✕' };
+  const GENERIC = new Set(
+    [
+      'click here',
+      'here',
+      'this',
+      'link',
+      'this link',
+      'website',
+      'this website',
+      'site',
+      'this site',
+      'web',
+      'read more',
+      'learn more',
+      'more',
+      'more info',
+      'more information',
+      'source',
+      'visit',
+      'visit site',
+      'visit website',
+      'official site',
+      'official website',
+      'homepage',
+      'home page',
+      'go',
+      'check it out',
+      'see more',
+      'details',
+      'view',
+      'article',
+      'this article',
+      'post',
+      'this post',
+      'aquí',
+      'aqui',
+      'haz clic aquí',
+      'clic aquí',
+      'click aquí',
+      'este enlace',
+      'enlace',
+      'sitio web',
+      'este sitio',
+      'sitio',
+      'página web',
+      'pagina web',
+      'web oficial',
+      'sitio oficial',
+      'leer más',
+      'leer mas',
+      'más información',
+      'mas informacion',
+      'ver más',
+      'ver mas',
+      'fuente',
+      'visitar',
+      'este artículo',
+      'artículo',
+      'en este enlace',
+    ].map((value) => value.toLowerCase()),
+  );
+
+  const normalize = (text: string) =>
+    text
+      .toLowerCase()
+      .replace(/["“”'’]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  const words = (text: string) => normalize(text).match(/[\p{L}\p{N}]+/gu) ?? [];
+  const list = (value: string) =>
+    value
+      .split(',')
+      .map((item) => normalize(item))
+      .filter(Boolean);
+
+  /** Minimal CSV/TSV parser that handles quoted fields. */
+  const parseRows = (text: string): string[][] => {
+    const firstLine = text.split('\n')[0] ?? '';
+    const counts = { '\t': 0, ',': 0, ';': 0 } as Record<string, number>;
+    for (const char of firstLine) if (char in counts) counts[char]! += 1;
+    const delimiter = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]!;
+    if (delimiter[1] === 0) return text.split('\n').map((line) => [line.trim()]);
+    const sep = delimiter[0];
+    const rows: string[][] = [];
+    let row: string[] = [];
+    let field = '';
+    let quoted = false;
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i]!;
+      if (quoted) {
+        if (char === '"' && text[i + 1] === '"') {
+          field += '"';
+          i++;
+        } else if (char === '"') quoted = false;
+        else field += char;
+      } else if (char === '"' && field === '') quoted = true;
+      else if (char === sep) {
+        row.push(field.trim());
+        field = '';
+      } else if (char === '\n') {
+        row.push(field.trim());
+        rows.push(row);
+        row = [];
+        field = '';
+      } else if (char !== '\r') field += char;
+    }
+    row.push(field.trim());
+    rows.push(row);
+    return rows.filter((r) => r.some((cell) => cell !== ''));
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-anchor-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const $ = <T extends HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
+    const out = (name: string) => $(`[data-out="${name}"]`);
+    const number = new Intl.NumberFormat(document.documentElement.lang || 'en', {
+      maximumFractionDigits: 1,
+    });
+    let summary = '';
+
+    const classify = (
+      anchor: string,
+      brands: string[],
+      domain: string,
+      keywords: string[],
+    ): Category => {
+      const a = normalize(anchor);
+      if (!a || a === '""' || a === 'notext' || a === '(empty)' || a === 'img' || a === 'image')
+        return 'empty';
+      const bareDomain = domain
+        .replace(/^https?:\/\//, '')
+        .replace(/^www\./, '')
+        .replace(/\/.*$/, '');
+      if (
+        /^(https?:\/\/|www\.)/.test(a) ||
+        (bareDomain && a.includes(bareDomain)) ||
+        /^[\w-]+\.[a-z]{2,}(\/\S*)?$/.test(a)
+      ) {
+        return 'url';
+      }
+      if (brands.some((brand) => brand && a.includes(brand))) return 'brand';
+      if (keywords.includes(a)) return 'exact';
+      const anchorWords = new Set(words(a));
+      const partial = keywords.some((keyword) => {
+        const kw = words(keyword);
+        const hits = kw.filter((word) => anchorWords.has(word)).length;
+        return kw.length > 0 && hits / kw.length >= 0.6;
+      });
+      if (partial) return 'partial';
+      if (GENERIC.has(a)) return 'generic';
+      return 'other';
+    };
+
+    const check = (status: Status, text: string) => {
+      const li = document.createElement('li');
+      const icon = document.createElement('span');
+      icon.className = `check-icon status--${status}`;
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = ICON[status];
+      li.append(icon, text);
+      return li;
+    };
+
+    const analyze = () => {
+      const raw = $<HTMLTextAreaElement>('#at-input')
+        .value.replace(/^\uFEFF/, '')
+        .trim();
+      out('empty').hidden = raw.length > 0;
+      out('results').hidden = raw.length === 0;
+      if (!raw) return;
+
+      const brands = list($<HTMLInputElement>('#at-brand').value);
+      const domain = normalize($<HTMLInputElement>('#at-domain').value);
+      const keywords = list($<HTMLInputElement>('#at-keywords').value);
+
+      // Find the anchor and weight columns.
+      const rows = parseRows(raw);
+      const header = rows[0]!.map((cell) => cell.toLowerCase());
+      let anchorCol = header.findIndex((cell) => cell.includes('anchor') || cell.includes('ancla'));
+      let weightCol = -1;
+      let body = rows;
+      if (anchorCol >= 0) {
+        body = rows.slice(1);
+        weightCol = header.findIndex(
+          (cell, index) =>
+            index !== anchorCol &&
+            /referring domains|dominios|domains|backlinks|links|enlaces/.test(cell) &&
+            body.some((row) => /^\d[\d.,\s]*$/.test(row[index] ?? '')),
+        );
+      } else {
+        anchorCol = 0;
+      }
+
+      const totals = new Map<string, number>();
+      for (const row of body) {
+        const anchor = (row[anchorCol] ?? '').trim();
+        const weight =
+          weightCol >= 0 ? Number((row[weightCol] ?? '').replace(/[^\d]/g, '')) || 0 : 1;
+        if (weightCol >= 0 && weight === 0) continue;
+        const key = normalize(anchor);
+        totals.set(key, (totals.get(key) ?? 0) + weight);
+      }
+      const total = [...totals.values()].reduce((sum, value) => sum + value, 0) || 1;
+
+      const byCategory = new Map<Category, number>(ORDER.map((category) => [category, 0]));
+      const anchors = [...totals.entries()].map(([anchor, count]) => {
+        const category = classify(anchor, brands, domain, keywords);
+        byCategory.set(category, byCategory.get(category)! + count);
+        return { anchor, count, category };
+      });
+      const pct = (value: number) => (value / total) * 100;
+
+      out('meta').textContent = `${
+        weightCol >= 0 ? fill(s.weighting, { column: rows[0]![weightCol]! }) : s.weightingRows
+      } ${fill(s.total, { anchors: number.format(totals.size), total: number.format(total) })}`;
+
+      out('bars').replaceChildren(
+        ...ORDER.map((category) => {
+          const value = pct(byCategory.get(category)!);
+          const li = document.createElement('li');
+          const label = document.createElement('span');
+          label.className = 'bars__label';
+          label.textContent = s.categories[category];
+          const bar = document.createElement('span');
+          bar.className = `bars__bar bars__bar--${category}`;
+          const fillEl = document.createElement('span');
+          fillEl.style.width = `${value}%`;
+          bar.append(fillEl);
+          const val = document.createElement('span');
+          val.className = 'bars__value';
+          val.textContent = `${number.format(value)}%`;
+          li.append(label, bar, val);
+          return li;
+        }),
+      );
+
+      const exact = pct(byCategory.get('exact')!);
+      const branded = pct(byCategory.get('brand')! + byCategory.get('url')!);
+      const w = s.warnings;
+      const warnings = [
+        exact > 10
+          ? check('bad', fill(w.exactHigh!, { percent: number.format(exact) }))
+          : check('good', fill(w.exactOk!, { percent: number.format(exact) })),
+        branded < 30
+          ? check('warn', fill(w.brandLow!, { percent: number.format(branded) }))
+          : check('good', fill(w.brandOk!, { percent: number.format(branded) })),
+      ];
+      if (!brands.length || !domain || !keywords.length) warnings.push(check('warn', w.setup!));
+      out('warnings').replaceChildren(...warnings);
+
+      const top = anchors.sort((a, b) => b.count - a.count).slice(0, 20);
+      out('top').replaceChildren(
+        ...top.map((item) => {
+          const row = document.createElement('tr');
+          const cells = [
+            item.anchor || s.emptyAnchor,
+            s.categories[item.category],
+            `${number.format(pct(item.count))}%`,
+          ];
+          cells.forEach((value, index) => {
+            const cell = document.createElement(index === 0 ? 'th' : 'td');
+            if (index === 0) cell.setAttribute('scope', 'row');
+            cell.textContent = value;
+            row.append(cell);
+          });
+          return row;
+        }),
+      );
+
+      summary = [
+        `${s.distribution}:`,
+        ...ORDER.map(
+          (category) =>
+            `- ${s.categories[category]}: ${number.format(pct(byCategory.get(category)!))}%`,
+        ),
+        ...warnings.map((li) => li.textContent ?? ''),
+      ].join('\n');
+    };
+
+    let timer = 0;
+    root.addEventListener('input', () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(analyze, 250);
+    });
+    const copyButton = $<HTMLButtonElement>('[data-copy]');
+    copyButton.addEventListener('click', () => void copyText(summary, copyButton, s.copied));
+    analyze();
+  }
+</script>
+
+<style>
+  .anchor-tool {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .anchor-tool__input {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .anchor-tool textarea {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+  }
+  .anchor-tool__results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .bars {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-sm);
+  }
+  .bars :global(li) {
+    display: grid;
+    grid-template-columns: 9rem 1fr 3.5rem;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .bars :global(.bars__bar) {
+    display: block;
+    height: 0.625rem;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-2);
+  }
+  .bars :global(.bars__bar span) {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+  }
+  .bars :global(.bars__bar--exact span) {
+    background: var(--color-warning);
+  }
+  .bars :global(.bars__value) {
+    font-family: var(--font-mono);
+    text-align: right;
+  }
+</style>

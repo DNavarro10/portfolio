@@ -55,7 +55,7 @@ const ui = t.toolContent.answerReady.ui;
 </div>
 
 <script>
-  import { fill, readStrings } from './client';
+  import { fill, mainContent, readStrings } from './client';
 
   type Status = 'good' | 'warn' | 'bad';
   interface Check {
@@ -131,12 +131,7 @@ const ui = t.toolContent.answerReady.ui;
 
     const analyzeHtml = (html: string): Check[] => {
       const doc = new DOMParser().parseFromString(html, 'text/html');
-      const content = (doc.querySelector('article, main') ?? doc.body).cloneNode(
-        true,
-      ) as HTMLElement;
-      content
-        .querySelectorAll('script, style, noscript, nav, header, footer, aside, form')
-        .forEach((node) => node.remove());
+      const content = mainContent(doc);
       const results: Check[] = [];
 
       const h1s = [...doc.querySelectorAll('h1')];

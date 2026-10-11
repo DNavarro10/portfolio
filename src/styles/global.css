@@ -214,6 +214,11 @@ main {
   max-width: var(--width-prose);
 }
 
+/* The hidden attribute always wins over component display rules. */
+[hidden] {
+  display: none !important;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -349,6 +354,61 @@ main {
   margin: 0 0 var(--space-3);
   font-size: var(--fs-sm);
 }
+/* Result lists and tables. Rows are created by scripts, so these live here
+   (Astro's scoped styles don't reach elements added at runtime). */
+.tool-checks {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+}
+.tool-checks li {
+  display: flex;
+  gap: var(--space-2);
+}
+.tool-checks .check-icon {
+  flex: none;
+  width: 1.25em;
+  font-family: var(--font-mono);
+  font-weight: var(--fw-semibold);
+}
+.tool-table-wrap {
+  max-height: 32rem;
+  overflow: auto;
+}
+.tool-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.tool-table th,
+.tool-table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+.tool-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  border-bottom-color: var(--color-border-strong);
+}
+.tool-table tbody th {
+  font-weight: var(--fw-regular);
+  overflow-wrap: anywhere;
+}
+.tool-table td {
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
 .status--good {
   color: var(--color-success);
 }

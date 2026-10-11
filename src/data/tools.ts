@@ -44,6 +44,20 @@ export const TOOLS: Tool[] = [
     published: true,
   },
   {
+    key: 'anchorAnalyzer',
+    slug: { en: 'anchor-text-analyzer', es: 'analizador-anchor-text' },
+    title: {
+      en: 'Anchor Text Distribution Analyzer',
+      es: 'Analizador de anchor text (texto ancla)',
+    },
+    description: {
+      en: 'Free anchor text analyzer: paste an Ahrefs or Semrush export to see your branded, exact-match, and generic anchor mix and spot over-optimization.',
+      es: 'Analizador gratuito de anchor text: pega un export de Ahrefs o Semrush y revisa tu mezcla de anclas de marca, exactas y genéricas para evitar sobreoptimizar.',
+    },
+    category: { en: 'Link building', es: 'Link building' },
+    published: true,
+  },
+  {
     key: 'answerReady',
     slug: { en: 'ai-answer-readiness-checker', es: 'verificador-contenido-ia' },
     title: {
@@ -53,6 +67,20 @@ export const TOOLS: Tool[] = [
     description: {
       en: 'Free AEO and GEO checker: paste a page and see if it is easy for AI search to quote, from summaries and headings to schema and dates.',
       es: 'Verificador gratuito de AEO y GEO: pega una página y descubre si es fácil de citar por la búsqueda con IA, desde el resumen hasta el schema.',
+    },
+    category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    published: true,
+  },
+  {
+    key: 'aiLogs',
+    slug: { en: 'ai-bot-log-analyzer', es: 'analizador-logs-bots-ia' },
+    title: {
+      en: 'AI Bot Log Analyzer',
+      es: 'Analizador de logs de bots de IA',
+    },
+    description: {
+      en: 'Free AI bot log analyzer: upload or paste server logs and see which AI crawlers, like GPTBot or PerplexityBot, visit your site and what they crawl.',
+      es: 'Analizador gratuito de logs: sube o pega los logs de tu servidor y descubre qué bots de IA, como GPTBot o PerplexityBot, visitan tu sitio y qué rastrean.',
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
     published: true,
@@ -80,6 +108,20 @@ export const TOOLS: Tool[] = [
       es: 'Generador gratuito de llms.txt: crea el archivo Markdown que da a las herramientas de IA un resumen de tu sitio y enlaces a tus mejores páginas.',
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    published: true,
+  },
+  {
+    key: 'contentAnalyzer',
+    slug: { en: 'content-analyzer', es: 'analizador-contenido' },
+    title: {
+      en: 'SEO Content Analyzer and Keyword Density',
+      es: 'Analizador de contenido y densidad SEO',
+    },
+    description: {
+      en: 'Free SEO content analyzer: word count, reading time, readability, keyword density, keyword stuffing warnings, and HTML heading checks in one place.',
+      es: 'Analizador de contenido SEO gratuito: cuenta palabras, tiempo de lectura, legibilidad, densidad de palabras clave, relleno de keywords y encabezados HTML.',
+    },
+    category: { en: 'Content SEO', es: 'SEO de contenidos' },
     published: true,
   },
   {

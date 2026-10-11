@@ -359,6 +359,239 @@ export const en = {
     copied: 'Copied',
   },
   toolContent: {
+    contentAnalyzer: {
+      steps: [
+        'Paste your draft as plain text, or paste the page’s HTML source to also check tags.',
+        'Add the target keyword you want the page to rank for (optional).',
+        'Review the numbers: length, readability, keyword use, and the most repeated words and phrases.',
+        'Fix the warnings, then paste the new version to compare.',
+      ],
+      faq: [
+        {
+          question: 'What keyword density is best for SEO?',
+          answer:
+            'There is no ideal number, and Google does not use one. As a rule of thumb, a main keyword between about 0.5% and 2.5% reads naturally. Above roughly 3%, or when one phrase repeats in every heading, the text often reads as keyword stuffing.',
+        },
+        {
+          question: 'What is keyword stuffing?',
+          answer:
+            'Keyword stuffing is repeating a word or phrase unnaturally to try to rank. Google’s spam policies name it directly, and it makes copy harder to read. Use synonyms and related terms instead, and write for the reader first.',
+        },
+        {
+          question: 'How long should an SEO article be?',
+          answer:
+            'As long as it takes to answer the question well. Word count is not a ranking factor by itself. Compare your draft with the pages that already rank for the query, and cut anything that does not help the reader.',
+        },
+        {
+          question: 'How is readability calculated?',
+          answer:
+            'English uses the Flesch Reading Ease formula and Spanish uses the Fernández Huerta formula. Both combine sentence length and syllables per word. Syllables are counted automatically, so treat the score as an estimate.',
+        },
+      ],
+      ui: {
+        input: 'Content (HTML or plain text)',
+        inputPlaceholder: 'Paste your article or the page source here',
+        keyword: 'Target keyword (optional)',
+        keywordPlaceholder: 'link building',
+        language: 'Language of the content',
+        languages: { en: 'English', es: 'Spanish' },
+        empty: 'Paste some content to see the analysis.',
+        overview: 'Overview',
+        stats: {
+          words: 'Words',
+          characters: 'Characters',
+          sentences: 'Sentences',
+          paragraphs: 'Paragraphs',
+          readingTime: 'Reading time',
+          avgSentence: 'Average sentence',
+          readability: 'Readability',
+        },
+        minutes: '{n} min',
+        wordsPerSentence: '{n} words',
+        readabilityLevels: {
+          easy: 'Easy',
+          standard: 'Standard',
+          difficult: 'Difficult',
+          veryDifficult: 'Very difficult',
+        },
+        keywordTitle: 'Target keyword',
+        keywordChecks: {
+          density: 'Used {count} times ({density}% density).',
+          low: 'Used {count} times ({density}%): it may be too rare to be clear what the page is about.',
+          high: 'Used {count} times ({density}%): this may read as keyword stuffing. Use synonyms and related terms.',
+          inTitle: 'In the title tag.',
+          notInTitle: 'Not in the title tag.',
+          inH1: 'In the H1.',
+          notInH1: 'Not in the H1.',
+          inIntro: 'In the first 100 words.',
+          notInIntro: 'Not in the first 100 words.',
+          inHeadings: 'In {count} of {total} subheadings.',
+          headingsStuffed: 'In {count} of {total} subheadings: vary the wording.',
+          notInHeadings: 'Not in any subheading.',
+          inMeta: 'In the meta description.',
+          notInMeta: 'Not in the meta description.',
+        },
+        topWords: 'Most repeated words',
+        topPhrases: 'Most repeated phrases',
+        term: 'Term',
+        count: 'Count',
+        density: 'Density',
+        stuffingFlag: 'High',
+        sentencesTitle: 'Sentences',
+        longSentences: 'Sentences over 25 words: {count}. Split some of them.',
+        longSentencesOk: 'No sentences over 25 words.',
+        htmlTitle: 'HTML checks',
+        htmlOnly:
+          'Paste the HTML source to check tags (title, meta description, headings, images, links).',
+        html: {
+          title: 'Title tag: {length} characters.',
+          titleMissing: 'No title tag.',
+          titleLong: 'Title tag: {length} characters (may be cut; aim for 50–60).',
+          meta: 'Meta description: {length} characters.',
+          metaMissing: 'No meta description.',
+          metaLength: 'Meta description: {length} characters (aim for about 120–160).',
+          h1One: 'One H1.',
+          h1None: 'No H1.',
+          h1Many: '{count} H1 headings (use one).',
+          headingSkip: 'Heading level skipped: {from} → {to}.',
+          headingEmpty: '{count} empty headings.',
+          imagesOk: 'All {count} images have alt text.',
+          imagesAlt: '{missing} of {count} images have no alt attribute.',
+          imagesNone: 'No images.',
+          links: 'Links: {internal} internal, {external} external, {nofollow} nofollow.',
+        },
+        outline: 'Heading outline',
+      },
+    },
+    anchorAnalyzer: {
+      steps: [
+        'Export your anchors from Ahrefs (Backlinks or Anchors report), Semrush, or any tool as CSV, or copy the table from a spreadsheet.',
+        'Paste the export. The tool finds the anchor column and, if present, the referring domains or backlinks column to weigh each anchor.',
+        'Add your brand name, domain, and target keywords so anchors can be classified.',
+        'Review the distribution and warnings, then copy the summary into your link building report.',
+      ],
+      faq: [
+        {
+          question: 'What is a healthy anchor text distribution?',
+          answer:
+            'There is no official ratio and it varies by niche. Natural profiles are usually led by branded and URL anchors, with generic anchors and partial matches next, and exact-match anchors as a small share. Compare with the sites that rank in your niche.',
+        },
+        {
+          question: 'Why are too many exact-match anchors risky?',
+          answer:
+            'Many links using the exact keyword you want to rank for rarely happen naturally. Google’s spam policies cover link schemes, and an over-optimized anchor profile is a common sign of them. As a rule of thumb, look closer when exact-match anchors pass about 10%.',
+        },
+        {
+          question: 'How are anchors classified?',
+          answer:
+            'Branded anchors contain your brand. Naked URLs contain your domain or a web address. Exact match equals a target keyword. Partial match contains most of a keyword’s words. Generic covers phrases like “click here” or “website”. Empty covers image links without alt text. Everything else is “Other”.',
+        },
+        {
+          question: 'Which export formats work?',
+          answer:
+            'Comma, semicolon, and tab separated exports with a header row that includes “Anchor”. If there is a referring domains, domains, or backlinks column, it is used as the weight; otherwise each row counts once. A plain list with one anchor per line also works.',
+        },
+      ],
+      ui: {
+        input: 'Anchor export (CSV, spreadsheet table, or one anchor per line)',
+        inputPlaceholder:
+          'Anchor,Referring domains\nExample Agency,42\nexample.com,30\nclick here,12\nlink building services,9',
+        brand: 'Brand names (comma separated)',
+        brandPlaceholder: 'Example Agency, Example',
+        domain: 'Your domain',
+        domainPlaceholder: 'example.com',
+        keywords: 'Target keywords (comma separated)',
+        keywordsPlaceholder: 'link building services, seo agency',
+        empty: 'Paste an anchor export to see the distribution.',
+        distribution: 'Distribution',
+        weighting: 'Counted by: {column}.',
+        weightingRows: 'Counted by: one per row.',
+        total: '{anchors} unique anchors, {total} counted in total.',
+        categories: {
+          brand: 'Branded',
+          url: 'Naked URL',
+          exact: 'Exact match',
+          partial: 'Partial match',
+          generic: 'Generic',
+          empty: 'Empty or image',
+          other: 'Other',
+        },
+        warnings: {
+          exactHigh:
+            'Exact-match anchors are {percent}%: high for most niches. Diversify new links with branded and natural anchors.',
+          exactOk: 'Exact-match anchors are {percent}%: within a common natural range.',
+          brandLow:
+            'Branded and URL anchors are only {percent}%: most natural profiles are led by them.',
+          brandOk: 'Branded and URL anchors are {percent}%.',
+          setup: 'Add your brand, domain, and keywords for a more accurate classification.',
+        },
+        topAnchors: 'Top anchors',
+        anchor: 'Anchor',
+        category: 'Type',
+        share: 'Share',
+        emptyAnchor: '(empty)',
+        copySummary: 'Copy summary',
+      },
+    },
+    aiLogs: {
+      steps: [
+        'Download your access logs from your hosting, CDN, or server (Apache and Nginx “combined” format work best).',
+        'Upload the file or paste the lines. Everything is processed in your browser.',
+        'See which AI crawlers visited, how often, which pages they fetched, and which status codes they got.',
+        'Compare with your robots.txt rules, and fix errors on pages AI bots request often.',
+      ],
+      faq: [
+        {
+          question: 'Why check server logs for AI bots?',
+          answer:
+            'Logs show what AI crawlers actually do on your site, not what you expect. You can see whether search bots like OAI-SearchBot reach your key pages, whether training bots keep visiting after you blocked them, and which pages return errors.',
+        },
+        {
+          question: 'Can a bot fake its user agent?',
+          answer:
+            'Yes. Anyone can send a request that claims to be GPTBot. The major AI companies publish IP ranges for their crawlers, so verify the IP addresses before acting on a suspicious pattern.',
+        },
+        {
+          question: 'Why don’t I see Google-Extended or Applebot-Extended?',
+          answer:
+            'They are robots.txt control tokens, not crawlers. Google and Apple crawl with Googlebot and Applebot, so those are the names you will see in logs.',
+        },
+        {
+          question: 'Which log formats are supported?',
+          answer:
+            'Any text log with one request per line that includes the user agent, such as Apache or Nginx combined logs. Paths and status codes are read from the usual "GET /path HTTP/1.1" 200 pattern when it is present.',
+        },
+      ],
+      ui: {
+        file: 'Upload a log file',
+        input: 'Or paste log lines',
+        inputPlaceholder:
+          '66.249.66.1 - - [10/Oct/2026:13:55:36 +0000] "GET /blog/ HTTP/1.1" 200 5123 "-" "Mozilla/5.0 ... GPTBot/1.2; +https://openai.com/gptbot"',
+        empty: 'Upload or paste logs to see AI bot activity.',
+        summary: 'Summary',
+        lines:
+          '{lines} lines read, {ai} requests from AI bots, {search} from Googlebot and Bingbot.',
+        noAi: 'No AI bot requests found in these lines.',
+        bots: 'AI bots',
+        bot: 'Bot',
+        hits: 'Requests',
+        purpose: 'Purpose',
+        errors: 'Errors (4xx/5xx)',
+        purposes: {
+          training: 'Training',
+          search: 'AI search',
+          user: 'User request',
+          control: 'AI use control',
+        },
+        topPaths: 'Pages AI bots requested most',
+        path: 'Path',
+        errorWarning: '{percent}% of AI bot requests returned an error. Check the paths below.',
+        robotsFetched: 'AI bots fetched robots.txt {count} times.',
+        reading: 'Reading file…',
+        tooLarge:
+          'This file is larger than 50 MB. Upload a smaller sample (for example, one day of logs).',
+      },
+    },
     aiRobots: {
       steps: [
         'Pick a starting point: allow all AI crawlers, allow AI search but block training, or block all AI crawlers.',

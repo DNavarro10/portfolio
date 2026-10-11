@@ -360,6 +360,240 @@ export const es: UiStrings = {
     copied: 'Copiado',
   },
   toolContent: {
+    contentAnalyzer: {
+      steps: [
+        'Pega tu borrador como texto, o pega el código HTML de la página para revisar también las etiquetas.',
+        'Agrega la palabra clave para la que quieres posicionar la página (opcional).',
+        'Revisa los datos: extensión, legibilidad, uso de la palabra clave y las palabras y frases más repetidas.',
+        'Corrige las advertencias y pega la nueva versión para comparar.',
+      ],
+      faq: [
+        {
+          question: '¿Cuál es la densidad de palabra clave ideal para SEO?',
+          answer:
+            'No existe un número ideal y Google no usa uno. Como referencia, una palabra clave principal entre 0,5% y 2,5% suele leerse natural. Por encima de 3%, o cuando una frase se repite en todos los encabezados, el texto suele parecer relleno de palabras clave.',
+        },
+        {
+          question: '¿Qué es el keyword stuffing?',
+          answer:
+            'Es repetir una palabra o frase de forma poco natural para intentar posicionar. Las políticas de spam de Google lo mencionan directamente y además hace el texto más difícil de leer. Usa sinónimos y términos relacionados, y escribe primero para el lector.',
+        },
+        {
+          question: '¿Qué tan largo debe ser un artículo SEO?',
+          answer:
+            'Tan largo como haga falta para responder bien la pregunta. La cantidad de palabras no es un factor de posicionamiento por sí sola. Compara tu borrador con las páginas que ya posicionan para esa búsqueda y elimina lo que no ayude al lector.',
+        },
+        {
+          question: '¿Cómo se calcula la legibilidad?',
+          answer:
+            'En inglés se usa la fórmula Flesch Reading Ease y en español la de Fernández Huerta. Ambas combinan el largo de las oraciones y las sílabas por palabra. Las sílabas se cuentan de forma automática, así que toma la puntuación como una estimación.',
+        },
+      ],
+      ui: {
+        input: 'Contenido (HTML o texto)',
+        inputPlaceholder: 'Pega aquí tu artículo o el código fuente de la página',
+        keyword: 'Palabra clave objetivo (opcional)',
+        keywordPlaceholder: 'link building',
+        language: 'Idioma del contenido',
+        languages: { en: 'Inglés', es: 'Español' },
+        empty: 'Pega contenido para ver el análisis.',
+        overview: 'Resumen',
+        stats: {
+          words: 'Palabras',
+          characters: 'Caracteres',
+          sentences: 'Oraciones',
+          paragraphs: 'Párrafos',
+          readingTime: 'Tiempo de lectura',
+          avgSentence: 'Oración promedio',
+          readability: 'Legibilidad',
+        },
+        minutes: '{n} min',
+        wordsPerSentence: '{n} palabras',
+        readabilityLevels: {
+          easy: 'Fácil',
+          standard: 'Normal',
+          difficult: 'Difícil',
+          veryDifficult: 'Muy difícil',
+        },
+        keywordTitle: 'Palabra clave objetivo',
+        keywordChecks: {
+          density: 'Aparece {count} veces ({density}% de densidad).',
+          low: 'Aparece {count} veces ({density}%): puede no quedar claro de qué trata la página.',
+          high: 'Aparece {count} veces ({density}%): puede parecer relleno de palabras clave. Usa sinónimos y términos relacionados.',
+          inTitle: 'Está en el title.',
+          notInTitle: 'No está en el title.',
+          inH1: 'Está en el H1.',
+          notInH1: 'No está en el H1.',
+          inIntro: 'Está en las primeras 100 palabras.',
+          notInIntro: 'No está en las primeras 100 palabras.',
+          inHeadings: 'Está en {count} de {total} subtítulos.',
+          headingsStuffed: 'Está en {count} de {total} subtítulos: varía la redacción.',
+          notInHeadings: 'No está en ningún subtítulo.',
+          inMeta: 'Está en la meta description.',
+          notInMeta: 'No está en la meta description.',
+        },
+        topWords: 'Palabras más repetidas',
+        topPhrases: 'Frases más repetidas',
+        term: 'Término',
+        count: 'Veces',
+        density: 'Densidad',
+        stuffingFlag: 'Alta',
+        sentencesTitle: 'Oraciones',
+        longSentences: 'Oraciones de más de 25 palabras: {count}. Divide algunas.',
+        longSentencesOk: 'Ninguna oración supera las 25 palabras.',
+        htmlTitle: 'Revisión HTML',
+        htmlOnly:
+          'Pega el código HTML para revisar las etiquetas (title, meta description, encabezados, imágenes, enlaces).',
+        html: {
+          title: 'Title: {length} caracteres.',
+          titleMissing: 'No hay etiqueta title.',
+          titleLong: 'Title: {length} caracteres (puede cortarse; apunta a 50–60).',
+          meta: 'Meta description: {length} caracteres.',
+          metaMissing: 'No hay meta description.',
+          metaLength: 'Meta description: {length} caracteres (apunta a unos 120–160).',
+          h1One: 'Un solo H1.',
+          h1None: 'No hay H1.',
+          h1Many: '{count} encabezados H1 (usa uno).',
+          headingSkip: 'Se salta un nivel de encabezado: {from} → {to}.',
+          headingEmpty: '{count} encabezados vacíos.',
+          imagesOk: 'Las {count} imágenes tienen texto alternativo.',
+          imagesAlt: '{missing} de {count} imágenes no tienen atributo alt.',
+          imagesNone: 'No hay imágenes.',
+          links: 'Enlaces: {internal} internos, {external} externos, {nofollow} nofollow.',
+        },
+        outline: 'Estructura de encabezados',
+      },
+    },
+    anchorAnalyzer: {
+      steps: [
+        'Exporta tus anclas desde Ahrefs (informe Backlinks o Anchors), Semrush u otra herramienta en CSV, o copia la tabla desde una hoja de cálculo.',
+        'Pega el export. La herramienta detecta la columna de anclas y, si existe, la de dominios de referencia o backlinks para ponderar cada ancla.',
+        'Agrega tu marca, tu dominio y tus palabras clave para clasificar las anclas.',
+        'Revisa la distribución y las advertencias, y copia el resumen en tu reporte de link building.',
+      ],
+      faq: [
+        {
+          question: '¿Qué distribución de anchor text es saludable?',
+          answer:
+            'No hay una proporción oficial y varía según el nicho. Los perfiles naturales suelen estar liderados por anclas de marca y de URL, seguidas de anclas genéricas y de coincidencia parcial, con una parte pequeña de coincidencia exacta. Compárate con los sitios que posicionan en tu nicho.',
+        },
+        {
+          question: '¿Por qué es riesgoso tener muchas anclas exactas?',
+          answer:
+            'Que muchos enlaces usen exactamente la palabra clave que quieres posicionar casi nunca pasa de forma natural. Las políticas de spam de Google incluyen los esquemas de enlaces, y un perfil de anclas sobreoptimizado es una señal común. Como referencia, revisa con más cuidado cuando las anclas exactas superan el 10%.',
+        },
+        {
+          question: '¿Cómo se clasifican las anclas?',
+          answer:
+            'De marca: contienen tu marca. URL: contienen tu dominio o una dirección web. Exacta: igual a una palabra clave objetivo. Parcial: contiene la mayoría de las palabras de una palabra clave. Genérica: frases como “haz clic aquí” o “sitio web”. Vacía: enlaces de imagen sin texto alternativo. El resto es “Otra”.',
+        },
+        {
+          question: '¿Qué formatos de export funcionan?',
+          answer:
+            'Exports separados por comas, punto y coma o tabulaciones con una fila de encabezado que incluya “Anchor”. Si hay una columna de dominios de referencia, dominios o backlinks, se usa como peso; si no, cada fila cuenta una vez. También funciona una lista simple con un ancla por línea.',
+        },
+      ],
+      ui: {
+        input: 'Export de anclas (CSV, tabla de hoja de cálculo o un ancla por línea)',
+        inputPlaceholder:
+          'Anchor,Referring domains\nAgencia Ejemplo,42\nejemplo.com,30\nhaz clic aquí,12\nservicios de link building,9',
+        brand: 'Nombres de marca (separados por coma)',
+        brandPlaceholder: 'Agencia Ejemplo, Ejemplo',
+        domain: 'Tu dominio',
+        domainPlaceholder: 'ejemplo.com',
+        keywords: 'Palabras clave objetivo (separadas por coma)',
+        keywordsPlaceholder: 'servicios de link building, agencia seo',
+        empty: 'Pega un export de anclas para ver la distribución.',
+        distribution: 'Distribución',
+        weighting: 'Se cuenta por: {column}.',
+        weightingRows: 'Se cuenta por: una vez por fila.',
+        total: '{anchors} anclas únicas, {total} en total.',
+        categories: {
+          brand: 'De marca',
+          url: 'URL',
+          exact: 'Coincidencia exacta',
+          partial: 'Coincidencia parcial',
+          generic: 'Genérica',
+          empty: 'Vacía o imagen',
+          other: 'Otra',
+        },
+        warnings: {
+          exactHigh:
+            'Las anclas exactas son el {percent}%: alto para la mayoría de nichos. Diversifica los nuevos enlaces con anclas de marca y naturales.',
+          exactOk: 'Las anclas exactas son el {percent}%: dentro de un rango natural común.',
+          brandLow:
+            'Las anclas de marca y URL son solo el {percent}%: la mayoría de perfiles naturales están liderados por ellas.',
+          brandOk: 'Las anclas de marca y URL son el {percent}%.',
+          setup: 'Agrega tu marca, dominio y palabras clave para una clasificación más precisa.',
+        },
+        topAnchors: 'Anclas principales',
+        anchor: 'Ancla',
+        category: 'Tipo',
+        share: 'Porcentaje',
+        emptyAnchor: '(vacía)',
+        copySummary: 'Copiar resumen',
+      },
+    },
+    aiLogs: {
+      steps: [
+        'Descarga los logs de acceso de tu hosting, CDN o servidor (el formato “combined” de Apache y Nginx funciona mejor).',
+        'Sube el archivo o pega las líneas. Todo se procesa en tu navegador.',
+        'Mira qué rastreadores de IA te visitaron, con qué frecuencia, qué páginas pidieron y qué códigos de estado recibieron.',
+        'Compáralo con tus reglas de robots.txt y corrige los errores en las páginas que los bots de IA piden con frecuencia.',
+      ],
+      faq: [
+        {
+          question: '¿Por qué revisar los logs del servidor para ver bots de IA?',
+          answer:
+            'Los logs muestran lo que los rastreadores de IA realmente hacen en tu sitio, no lo que esperas. Puedes ver si los bots de búsqueda como OAI-SearchBot llegan a tus páginas clave, si los de entrenamiento siguen visitando después de bloquearlos y qué páginas devuelven errores.',
+        },
+        {
+          question: '¿Un bot puede falsificar su user agent?',
+          answer:
+            'Sí. Cualquiera puede enviar una petición diciendo que es GPTBot. Las principales empresas de IA publican los rangos de IP de sus rastreadores, así que verifica las IP antes de actuar ante un patrón sospechoso.',
+        },
+        {
+          question: '¿Por qué no veo Google-Extended ni Applebot-Extended?',
+          answer:
+            'Son tokens de control de robots.txt, no rastreadores. Google y Apple rastrean con Googlebot y Applebot, así que esos son los nombres que verás en los logs.',
+        },
+        {
+          question: '¿Qué formatos de log funcionan?',
+          answer:
+            'Cualquier log de texto con una petición por línea que incluya el user agent, como los logs combined de Apache o Nginx. Las rutas y los códigos de estado se leen del patrón habitual "GET /ruta HTTP/1.1" 200 cuando está presente.',
+        },
+      ],
+      ui: {
+        file: 'Sube un archivo de log',
+        input: 'O pega líneas del log',
+        inputPlaceholder:
+          '66.249.66.1 - - [10/Oct/2026:13:55:36 +0000] "GET /blog/ HTTP/1.1" 200 5123 "-" "Mozilla/5.0 ... GPTBot/1.2; +https://openai.com/gptbot"',
+        empty: 'Sube o pega logs para ver la actividad de los bots de IA.',
+        summary: 'Resumen',
+        lines:
+          '{lines} líneas leídas, {ai} peticiones de bots de IA y {search} de Googlebot y Bingbot.',
+        noAi: 'No se encontraron peticiones de bots de IA en estas líneas.',
+        bots: 'Bots de IA',
+        bot: 'Bot',
+        hits: 'Peticiones',
+        purpose: 'Propósito',
+        errors: 'Errores (4xx/5xx)',
+        purposes: {
+          training: 'Entrenamiento',
+          search: 'Búsqueda con IA',
+          user: 'Petición del usuario',
+          control: 'Control de uso en IA',
+        },
+        topPaths: 'Páginas que más pidieron los bots de IA',
+        path: 'Ruta',
+        errorWarning:
+          'El {percent}% de las peticiones de bots de IA devolvió un error. Revisa las rutas de abajo.',
+        robotsFetched: 'Los bots de IA pidieron el robots.txt {count} veces.',
+        reading: 'Leyendo el archivo…',
+        tooLarge:
+          'Este archivo pesa más de 50 MB. Sube una muestra más pequeña (por ejemplo, un día de logs).',
+      },
+    },
     aiRobots: {
       steps: [
         'Elige un punto de partida: permitir todos los rastreadores de IA, permitir la búsqueda con IA pero bloquear el entrenamiento, o bloquearlos todos.',

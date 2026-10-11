@@ -1,0 +1,571 @@
+---
+/**
+ * SEO content analyzer for copywriting. Paste plain text or a page's HTML source.
+ *   Overview: words, characters, sentences, paragraphs, reading time (230 wpm),
+ *             average sentence length, readability (Flesch EN / Fernández Huerta ES).
+ *   Keyword:  count and density of a target phrase; title, H1, intro, headings, meta.
+ *   Repetition: top words and 2–3 word phrases (stop words removed), flagged above 3%.
+ *   HTML:     title, meta description, H1, heading order, empty headings, image alt, links.
+ * DOMParser reads the HTML without running it. Nothing leaves the browser.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.contentAnalyzer.ui;
+const statKeys = Object.keys(ui.stats) as (keyof typeof ui.stats)[];
+---
+
+<div class="content-tool" data-content-tool data-strings={JSON.stringify(ui)}>
+  <div class="tool-panel content-tool__input">
+    <div class="tool-grid">
+      <div class="tool-field">
+        <label for="ca-keyword">{ui.keyword}</label>
+        <input id="ca-keyword" type="text" placeholder={ui.keywordPlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="ca-lang">{ui.language}</label>
+        <select id="ca-lang">
+          {Object.entries(ui.languages).map(([value, label]) => (
+            <option value={value} selected={value === lang}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+    <div class="tool-field">
+      <label for="ca-input">{ui.input}</label>
+      <textarea id="ca-input" rows="12" placeholder={ui.inputPlaceholder}></textarea>
+    </div>
+  </div>
+
+  <p class="text-muted" data-out="empty">
+    {ui.empty}
+  </p>
+
+  <div class="content-tool__results" data-out="results" hidden>
+    <section class="tool-panel content-tool__overview" aria-labelledby="ca-overview">
+      <h2 id="ca-overview">{ui.overview}</h2>
+      <dl class="stats">
+        {statKeys.map((key) => (
+          <div>
+            <dt class="mono-label">{ui.stats[key]}</dt>
+            <dd data-stat={key}></dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="ca-keyword-title" data-out="keyword-panel" hidden>
+      <h2 id="ca-keyword-title">{ui.keywordTitle}</h2>
+      <ul class="tool-checks" data-out="keyword"></ul>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="ca-html-title">
+      <h2 id="ca-html-title">{ui.htmlTitle}</h2>
+      <ul class="tool-checks" data-out="html"></ul>
+      <p class="text-muted content-tool__note" data-out="html-note">
+        {ui.htmlOnly}
+      </p>
+      <div data-out="outline-wrap" hidden>
+        <h3 class="mono-label">{ui.outline}</h3>
+        <ol class="outline" data-out="outline"></ol>
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="ca-sentences-title">
+      <h2 id="ca-sentences-title">{ui.sentencesTitle}</h2>
+      <ul class="tool-checks" data-out="sentences"></ul>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="ca-words-title">
+      <h2 id="ca-words-title">{ui.topWords}</h2>
+      <table class="tool-table">
+        <thead>
+          <tr>
+            <th scope="col">{ui.term}</th>
+            <th scope="col">{ui.count}</th>
+            <th scope="col">{ui.density}</th>
+          </tr>
+        </thead>
+        <tbody data-out="words"></tbody>
+      </table>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="ca-phrases-title">
+      <h2 id="ca-phrases-title">{ui.topPhrases}</h2>
+      <table class="tool-table">
+        <thead>
+          <tr>
+            <th scope="col">{ui.term}</th>
+            <th scope="col">{ui.count}</th>
+            <th scope="col">{ui.density}</th>
+          </tr>
+        </thead>
+        <tbody data-out="phrases"></tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<script>
+  import { fill, mainContent, readStrings } from './client';
+
+  type Status = 'good' | 'warn' | 'bad';
+  type L = 'en' | 'es';
+  interface Strings {
+    minutes: string;
+    wordsPerSentence: string;
+    readabilityLevels: Record<string, string>;
+    keywordChecks: Record<string, string>;
+    longSentences: string;
+    longSentencesOk: string;
+    stuffingFlag: string;
+    html: Record<string, string>;
+  }
+
+  const ICON: Record<Status, string> = { good: '✓', warn: '!', bad: '✕' };
+  const WPM = 230;
+  const STOP: Record<L, Set<string>> = {
+    en: new Set(
+      'a about above after again all also am an and any are as at be because been before being below between both but by can could did do does doing down during each few for from further had has have having he her here hers him his how i if in into is it its itself just me more most my no nor not now of off on once only or other our ours out over own same she should so some such than that the their them then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your yours'.split(
+        ' ',
+      ),
+    ),
+    es: new Set(
+      'a al algo algunas algunos ante antes como con contra cual cuando de del desde donde durante e el ella ellas ellos en entre era eres es esa esas ese eso esos esta estas este esto estos fue fueron ha han hasta hay la las le les lo los mas más me mi mis mucho muy nada ni no nos nosotros o os otra otras otro otros para pero poco por porque que qué quien se sea ser si sí sin sobre son su sus también tan te tiene tienen todo todos tu tus un una uno unos y ya yo'.split(
+        ' ',
+      ),
+    ),
+  };
+
+  const tokenize = (text: string) =>
+    text.toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu) ?? [];
+  const splitSentences = (block: string) =>
+    block
+      .split(/(?<=[.!?…])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter((sentence) => tokenize(sentence).length > 0);
+
+  /** Approximate syllable count. */
+  const syllables = (word: string, lang: L): number => {
+    const w = word.toLowerCase().replace(/[^a-záéíóúüñ]/g, '');
+    if (!w) return 0;
+    if (lang === 'es') {
+      let count = 0;
+      for (const group of w.match(/[aeiouáéíóúü]+/g) ?? []) {
+        count += 1;
+        for (let i = 1; i < group.length; i++) {
+          const a = group[i - 1]!;
+          const b = group[i]!;
+          const strong = (c: string) => 'aeoáéó'.includes(c);
+          if ((strong(a) && strong(b)) || 'íú'.includes(a) || 'íú'.includes(b)) count += 1;
+        }
+      }
+      return Math.max(1, count);
+    }
+    if (w.length <= 3) return 1;
+    const trimmed = w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '').replace(/^y/, '');
+    return Math.max(1, (trimmed.match(/[aeiouy]{1,2}/g) ?? []).length);
+  };
+
+  const countPhrase = (tokens: string[], phrase: string[]) => {
+    if (!phrase.length) return 0;
+    let count = 0;
+    for (let i = 0; i <= tokens.length - phrase.length; i++) {
+      if (phrase.every((word, j) => tokens[i + j] === word)) count++;
+    }
+    return count;
+  };
+  const includesPhrase = (text: string, phrase: string[]) =>
+    countPhrase(tokenize(text), phrase) > 0;
+
+  const root = document.querySelector<HTMLElement>('[data-content-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const input = root.querySelector<HTMLTextAreaElement>('#ca-input')!;
+    const keywordInput = root.querySelector<HTMLInputElement>('#ca-keyword')!;
+    const langSelect = root.querySelector<HTMLSelectElement>('#ca-lang')!;
+    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+    const number = new Intl.NumberFormat(document.documentElement.lang || 'en', {
+      maximumFractionDigits: 1,
+    });
+
+    const checkItem = (status: Status, text: string) => {
+      const li = document.createElement('li');
+      const icon = document.createElement('span');
+      icon.className = `check-icon status--${status}`;
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = ICON[status];
+      li.append(icon, text);
+      return li;
+    };
+    const termRow = (term: string, count: number, density: number) => {
+      const row = document.createElement('tr');
+      const flagged = density > 3 && count >= 4;
+      [
+        term,
+        String(count),
+        `${number.format(density)}%${flagged ? ` · ${s.stuffingFlag}` : ''}`,
+      ].forEach((value, index) => {
+        const cell = document.createElement(index === 0 ? 'th' : 'td');
+        if (index === 0) cell.setAttribute('scope', 'row');
+        if (index === 2 && flagged) cell.className = 'status--warn';
+        cell.textContent = value;
+        row.append(cell);
+      });
+      return row;
+    };
+
+    const analyze = () => {
+      const raw = input.value.trim();
+      out('empty').hidden = raw.length > 0;
+      out('results').hidden = raw.length === 0;
+      if (!raw) return;
+      const lang = langSelect.value as L;
+      const stop = STOP[lang];
+
+      // 1. Extract blocks of text (paragraphs) and, for HTML, the parsed document.
+      const isHtml = /<\s*(!doctype|html|body|h[1-6]|p|div|article|main)\b/i.test(raw);
+      let doc: Document | null = null;
+      let prose: string[];
+      let blocks: string[];
+      let headings: { level: number; text: string }[] = [];
+      if (isHtml) {
+        doc = new DOMParser().parseFromString(raw, 'text/html');
+        const content = mainContent(doc);
+        const text = (el: Element) => el.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+        prose = [...content.querySelectorAll('p, blockquote')].map(text).filter(Boolean);
+        blocks = [...content.querySelectorAll('p, li, td, th, blockquote, h1, h2, h3, h4, h5, h6')]
+          .map(text)
+          .filter(Boolean);
+        if (!blocks.length) blocks = prose = [text(content)].filter(Boolean);
+        headings = [...doc.querySelectorAll('h1, h2, h3, h4, h5, h6')].map((h) => ({
+          level: Number(h.tagName[1]),
+          text: text(h),
+        }));
+      } else {
+        blocks = raw
+          .split(/\n\s*\n|\n(?=[-*•]|\d+[.)]\s)/)
+          .map((block) => block.replace(/\s+/g, ' ').trim())
+          .filter(Boolean);
+        prose = blocks.filter((block) => tokenize(block).length > 12);
+        if (!prose.length) prose = blocks;
+      }
+
+      // 2. Overview.
+      const allText = blocks.join('\n');
+      const tokens = tokenize(allText);
+      const words = tokens.length || 1;
+      const sentences = prose.flatMap(splitSentences);
+      const proseWords =
+        sentences.reduce((sum, sentence) => sum + tokenize(sentence).length, 0) || 1;
+      const sentenceCount = sentences.length || 1;
+      const sylls = sentences
+        .flatMap((sentence) => tokenize(sentence))
+        .reduce((sum, word) => sum + syllables(word, lang), 0);
+      const readability = Math.max(
+        0,
+        Math.min(
+          100,
+          lang === 'es'
+            ? 206.84 -
+                0.6 * ((sylls / proseWords) * 100) -
+                1.02 * ((sentenceCount / proseWords) * 100)
+            : 206.835 - 1.015 * (proseWords / sentenceCount) - 84.6 * (sylls / proseWords),
+        ),
+      );
+      const level =
+        readability >= 70
+          ? 'easy'
+          : readability >= 50
+            ? 'standard'
+            : readability >= 30
+              ? 'difficult'
+              : 'veryDifficult';
+      const stats: Record<string, string> = {
+        words: number.format(tokens.length),
+        characters: number.format(allText.replace(/\n/g, ' ').length),
+        sentences: number.format(sentences.length),
+        paragraphs: number.format(prose.length),
+        readingTime: fill(s.minutes, { n: Math.max(1, Math.ceil(tokens.length / WPM)) }),
+        avgSentence: fill(s.wordsPerSentence, { n: number.format(proseWords / sentenceCount) }),
+        readability: `${Math.round(readability)} · ${s.readabilityLevels[level]}`,
+      };
+      root.querySelectorAll<HTMLElement>('[data-stat]').forEach((dd) => {
+        dd.textContent = stats[dd.dataset.stat!] ?? '';
+      });
+
+      // 3. Long sentences.
+      const long = sentences.filter((sentence) => tokenize(sentence).length > 25).length;
+      out('sentences').replaceChildren(
+        long
+          ? checkItem(
+              long > sentences.length * 0.2 ? 'bad' : 'warn',
+              fill(s.longSentences, { count: long }),
+            )
+          : checkItem('good', s.longSentencesOk),
+      );
+
+      // 4. Repeated words and phrases (stop words removed).
+      const wordCounts = new Map<string, number>();
+      tokens.forEach((word) => {
+        if (word.length < 3 || stop.has(word) || /^\d/.test(word)) return;
+        wordCounts.set(word, (wordCounts.get(word) ?? 0) + 1);
+      });
+      const phraseCounts = new Map<string, number>();
+      blocks.forEach((block) => {
+        const blockTokens = tokenize(block);
+        for (const size of [2, 3]) {
+          for (let i = 0; i <= blockTokens.length - size; i++) {
+            const gram = blockTokens.slice(i, i + size);
+            if (stop.has(gram[0]!) || stop.has(gram[size - 1]!) || gram.some((w) => /^\d/.test(w)))
+              continue;
+            const key = gram.join(' ');
+            phraseCounts.set(key, (phraseCounts.get(key) ?? 0) + 1);
+          }
+        }
+      });
+      const top = (map: Map<string, number>, min: number) =>
+        [...map.entries()]
+          .filter(([, count]) => count >= min)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10);
+      out('words').replaceChildren(
+        ...top(wordCounts, 2).map(([term, count]) => termRow(term, count, (count / words) * 100)),
+      );
+      out('phrases').replaceChildren(
+        ...top(phraseCounts, 2).map(([term, count]) =>
+          termRow(term, count, ((count * term.split(' ').length) / words) * 100),
+        ),
+      );
+
+      // 5. Target keyword.
+      const keyword = tokenize(keywordInput.value);
+      out('keyword-panel').hidden = keyword.length === 0;
+      if (keyword.length) {
+        const k = s.keywordChecks;
+        const count = countPhrase(tokens, keyword);
+        const density = ((count * keyword.length) / words) * 100;
+        const values = { count, density: number.format(density) };
+        const items = [
+          density > 3
+            ? checkItem('bad', fill(k.high!, values))
+            : density < 0.5
+              ? checkItem('warn', fill(k.low!, values))
+              : checkItem('good', fill(k.density!, values)),
+          includesPhrase(tokens.slice(0, 100).join(' '), keyword)
+            ? checkItem('good', k.inIntro!)
+            : checkItem('warn', k.notInIntro!),
+        ];
+        if (doc) {
+          const title = doc.querySelector('title')?.textContent ?? '';
+          const h1 = doc.querySelector('h1')?.textContent ?? '';
+          const meta =
+            doc.querySelector<HTMLMetaElement>('meta[name="description"]')?.content ?? '';
+          const subs = headings.filter((h) => h.level > 1);
+          const inSubs = subs.filter((h) => includesPhrase(h.text, keyword)).length;
+          items.unshift(
+            includesPhrase(title, keyword)
+              ? checkItem('good', k.inTitle!)
+              : checkItem('bad', k.notInTitle!),
+            includesPhrase(h1, keyword)
+              ? checkItem('good', k.inH1!)
+              : checkItem('warn', k.notInH1!),
+          );
+          items.push(
+            includesPhrase(meta, keyword)
+              ? checkItem('good', k.inMeta!)
+              : checkItem('warn', k.notInMeta!),
+            subs.length >= 3 && inSubs / subs.length > 0.5
+              ? checkItem('warn', fill(k.headingsStuffed!, { count: inSubs, total: subs.length }))
+              : inSubs
+                ? checkItem('good', fill(k.inHeadings!, { count: inSubs, total: subs.length }))
+                : checkItem('warn', k.notInHeadings!),
+          );
+        }
+        out('keyword').replaceChildren(...items);
+      }
+
+      // 6. HTML checks.
+      out('html-note').hidden = !!doc;
+      out('outline-wrap').hidden = !doc || headings.length === 0;
+      if (!doc) {
+        out('html').replaceChildren();
+        return;
+      }
+      const h = s.html;
+      const items: HTMLLIElement[] = [];
+      const title = doc.querySelector('title')?.textContent?.trim() ?? '';
+      items.push(
+        !title
+          ? checkItem('bad', h.titleMissing!)
+          : title.length > 60
+            ? checkItem('warn', fill(h.titleLong!, { length: title.length }))
+            : checkItem('good', fill(h.title!, { length: title.length })),
+      );
+      const meta =
+        doc.querySelector<HTMLMetaElement>('meta[name="description"]')?.content.trim() ?? '';
+      items.push(
+        !meta
+          ? checkItem('bad', h.metaMissing!)
+          : meta.length < 70 || meta.length > 165
+            ? checkItem('warn', fill(h.metaLength!, { length: meta.length }))
+            : checkItem('good', fill(h.meta!, { length: meta.length })),
+      );
+      const h1Count = headings.filter((heading) => heading.level === 1).length;
+      items.push(
+        h1Count === 1
+          ? checkItem('good', h.h1One!)
+          : h1Count === 0
+            ? checkItem('bad', h.h1None!)
+            : checkItem('warn', fill(h.h1Many!, { count: h1Count })),
+      );
+      const skip = headings.findIndex(
+        (heading, i) => i > 0 && heading.level > headings[i - 1]!.level + 1,
+      );
+      if (skip > 0) {
+        items.push(
+          checkItem(
+            'warn',
+            fill(h.headingSkip!, {
+              from: `H${headings[skip - 1]!.level}`,
+              to: `H${headings[skip]!.level}`,
+            }),
+          ),
+        );
+      }
+      const emptyHeadings = headings.filter((heading) => !heading.text).length;
+      if (emptyHeadings)
+        items.push(checkItem('warn', fill(h.headingEmpty!, { count: emptyHeadings })));
+      const images = [...doc.querySelectorAll('img')];
+      const noAlt = images.filter((img) => !img.hasAttribute('alt')).length;
+      items.push(
+        images.length === 0
+          ? checkItem('good', h.imagesNone!)
+          : noAlt
+            ? checkItem('bad', fill(h.imagesAlt!, { missing: noAlt, count: images.length }))
+            : checkItem('good', fill(h.imagesOk!, { count: images.length })),
+      );
+      const canonical =
+        doc.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.getAttribute('href') ?? '';
+      let host = '';
+      try {
+        host = new URL(canonical).hostname;
+      } catch {
+        /* no canonical: treat every absolute URL as external */
+      }
+      const links = [...doc.querySelectorAll<HTMLAnchorElement>('a[href]')];
+      const external = links.filter((a) => {
+        const href = a.getAttribute('href') ?? '';
+        if (!/^https?:\/\//i.test(href)) return false;
+        try {
+          return new URL(href).hostname !== host;
+        } catch {
+          return false;
+        }
+      }).length;
+      const nofollow = links.filter((a) => /nofollow|sponsored|ugc/i.test(a.rel)).length;
+      items.push(
+        checkItem(
+          'good',
+          fill(h.links!, { internal: links.length - external, external, nofollow }),
+        ),
+      );
+      out('html').replaceChildren(...items);
+
+      out('outline').replaceChildren(
+        ...headings.slice(0, 60).map((heading) => {
+          const li = document.createElement('li');
+          li.style.setProperty('--level', String(heading.level - 1));
+          const tag = document.createElement('span');
+          tag.className = 'outline__tag';
+          tag.textContent = `H${heading.level}`;
+          li.append(tag, heading.text || '—');
+          return li;
+        }),
+      );
+    };
+
+    let timer = 0;
+    const schedule = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(analyze, 250);
+    };
+    input.addEventListener('input', schedule);
+    keywordInput.addEventListener('input', schedule);
+    langSelect.addEventListener('change', analyze);
+    analyze();
+  }
+</script>
+
+<style>
+  .content-tool {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .content-tool__input {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .content-tool__results {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .content-tool__results:not([hidden]) {
+    display: grid;
+  }
+  .content-tool__overview {
+    grid-column: 1 / -1;
+  }
+  .content-tool__results h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-lg);
+  }
+  .content-tool__results h3 {
+    margin: var(--space-5) 0 var(--space-2);
+  }
+  .content-tool__note {
+    margin: 0;
+    font-size: var(--fs-sm);
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-4);
+    margin: 0;
+  }
+  .stats dd {
+    margin: var(--space-1) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-medium);
+  }
+  .outline {
+    display: grid;
+    gap: var(--space-1);
+    max-height: 22rem;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    list-style: none;
+    font-size: var(--fs-sm);
+  }
+  .outline :global(li) {
+    padding-left: calc(var(--level, 0) * var(--space-4));
+  }
+  .outline :global(.outline__tag) {
+    display: inline-block;
+    min-width: 2.5em;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--color-accent);
+  }
+</style>
