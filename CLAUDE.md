@@ -47,19 +47,21 @@ src/
     utils.ts              useTranslations, routePath, routeAlternates, absoluteUrl
   lib/
     schema.ts             JSON-LD builders (Person, WebSite, ProfilePage, AboutPage, ContactPage,
-                          Article, FAQPage, BreadcrumbList, BlogPosting, WebApplication, ItemList)
+                          Article, FAQPage, BreadcrumbList, BlogPosting, WebApplication, ItemList,
+                          DefinedTermSet)
     content.ts            Collection helpers: by language, entry URLs, hreflang alternates
     pages.ts              All published pages (feeds sitemap.xml and llms.txt)
   data/tools.ts           Registry of free SEO tools (slug, title, description, category, published)
   data/ai-crawlers.ts     Known AI crawler tokens + purpose (training/search/user/control)
+  data/ai-referrers.ts    AI assistant referrer domains (GA4 AI traffic tool)
   components/
     seo/SeoHead.astro     Every SEO <head> tag; pages never write these by hand
     seo/JsonLd.astro      Single JSON-LD <script> with @graph
     layout/               Header, footer, language switcher, breadcrumbs
     content/              Blog post, case study, and tool page templates (shared by EN/ES)
     tools/                Interactive tool UIs (LinkScorecard, AnchorAnalyzer, AnswerReady,
-                          AiLogs, AiRobots, LlmsTxt, ContentAnalyzer, SerpPreview,
-                          SchemaGenerator) +
+                          PassageChecker, AiTraffic, AiVisibility, AiLogs, AiRobots, LlmsTxt,
+                          ContentAnalyzer, SerpPreview, SchemaGenerator) +
                           client.ts helpers. Each ships its own small <script>, loaded only on
                           that tool's page
     ui/                   Design-system components (see "Design system" below)
@@ -83,7 +85,7 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
   `/about/` natively, so canonicals never redirect. Internal links must include the trailing slash.
 - Lowercase, hyphenated slugs only.
 - English at `/`, Spanish under `/es/` with **Spanish slugs** (`/es/sobre-mi/`, `/es/experiencia/`,
-  `/es/herramientas/`, `/es/contacto/`).
+  `/es/herramientas/`, `/es/glosario/`, `/es/contacto/`).
 - New fixed pages: add them to `src/i18n/routes.ts` (both languages), add strings to `en.ts`/`es.ts`.
 
 ## SEO rules (non-negotiable, every page)
@@ -94,6 +96,9 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
 - **Unique** title (≤ ~60 chars) and meta description (~120–160 chars) per page and language.
 - **hreflang** (`en`, `es`, `x-default` → English) only when the page exists in **both** languages.
   The route registry and `translationKey` (content) are the only sources for alternates.
+- Case studies need `pubDate` (shown + Article `datePublished`); use `seoTitle` when the H1 is too
+  long for a ≤ 60-character `<title>`. Tools carry an `updated` date. Format dates with
+  `timeZone: 'UTC'`.
 - **JSON-LD**: Person + WebSite on every page (linked by `@id`); BreadcrumbList on inner pages;
   BlogPosting on posts. Visible breadcrumbs must match the BreadcrumbList.
 - **One `<h1>` per page**, headings in logical order (no skipping levels).
@@ -197,8 +202,10 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
 7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console, wire the contact
    form: `/api/contact/` server route (`prerender = false`) + Turnstile, destination email stored as a
    Cloudflare secret (never in the repo), then set `SITE.contactForm.enabled: true`
-8. 🟡 SEO tools (9, EN + ES, browser-only): ✅ link prospect scorecard, anchor text analyzer,
-   AI answer-readiness checker, AI bot log analyzer, AI crawler robots.txt generator, llms.txt
-   generator, content analyzer, SERP snippet preview, schema generator. Next after deploy: AI crawler access checker, live backlink checker,
+8. 🟡 SEO tools (12, EN + ES, browser-only): ✅ link prospect scorecard, anchor text analyzer,
+   AI answer-readiness checker, quotable passage checker, GA4 AI traffic channel, AI visibility
+   tracker, AI bot log analyzer, AI crawler robots.txt generator, llms.txt generator, content
+   analyzer, SERP snippet preview, schema generator. ✅ AI search glossary (/glossary/, EN + ES,
+   DefinedTermSet). Next after deploy: AI crawler access checker, live backlink checker,
    indexability checker (server routes, `prerender = false`)
 9. Later: `/services` for client work

@@ -20,6 +20,7 @@ export const es: UiStrings = {
     experience: 'Experiencia',
     blog: 'Blog',
     tools: 'Herramientas SEO',
+    glossary: 'Glosario',
     contact: 'Contacto',
   },
   langSwitch: {
@@ -360,6 +361,174 @@ export const es: UiStrings = {
     copied: 'Copiado',
   },
   toolContent: {
+    aiTraffic: {
+      steps: [
+        'Elige los asistentes de IA que quieres medir y ponle nombre al canal.',
+        'En GA4, ve a Administrar › Visualización de datos › Grupos de canales, crea un grupo nuevo (copia el predeterminado) y agrega un canal con la condición "Fuente coincide con la expresión regular" usando el primer bloque de código.',
+        'Arrastra el canal nuevo por encima de "Referral" para que las visitas de IA no se cuenten como referencias normales, y guarda.',
+        'Para informes en Looker Studio, agrega los campos calculados de los otros bloques de código.',
+      ],
+      faq: [
+        {
+          question: '¿Por qué el tráfico de IA necesita su propio canal?',
+          answer:
+            'Por defecto, GA4 mezcla las visitas de ChatGPT, Perplexity y otros asistentes dentro de "Referral". Un canal separado muestra cuántas visitas y conversiones traen las respuestas de IA, y si crecen con el tiempo.',
+        },
+        {
+          question: '¿Esto incluye AI Overviews y el Modo IA de Google?',
+          answer:
+            'No. Los clics desde las funciones de IA de Google se reportan como tráfico orgánico de Google, así que no se pueden separar con una regla de fuente. Esta configuración cubre asistentes que envían su propio referente o etiqueta, como ChatGPT (utm_source=chatgpt.com) y Perplexity.',
+        },
+        {
+          question: '¿Por qué los números son más bajos de lo esperado?',
+          answer:
+            'Algunas apps y navegadores no envían el referente, así que esas visitas aparecen como tráfico directo. Toma el canal de IA como un mínimo y fíjate más en la tendencia que en el número exacto.',
+        },
+        {
+          question: '¿Cambia mis datos anteriores?',
+          answer:
+            'Los grupos de canales personalizados de GA4 también se aplican a los datos históricos, así que puedes comparar meses anteriores a la creación del canal.',
+        },
+      ],
+      ui: {
+        platforms: 'Asistentes de IA a incluir',
+        channelName: 'Nombre del canal',
+        channelDefault: 'Asistentes de IA',
+        regexTitle: 'Regex para GA4 (Fuente coincide con la expresión regular)',
+        lookerChannel: 'Looker Studio: campo de canal',
+        lookerPlatform: 'Looker Studio: campo de plataforma de IA',
+        sourceField: 'Session source',
+        other: 'Otra',
+        notAi: 'No es IA',
+      },
+    },
+    passageChecker: {
+      steps: [
+        'Pega el HTML de la página (o el texto, con los encabezados en su propia línea).',
+        'La página se divide en pasajes, uno por sección H2 o H3, tal como la búsqueda con IA suele citarla.',
+        'Corrige los pasajes marcados con ! o ✕: empieza con una respuesta directa, nombra el tema en lugar de “esto” o “eso”, y agrega un dato concreto.',
+        'Pega la nueva versión y comprueba que más pasajes se entiendan por sí solos.',
+      ],
+      faq: [
+        {
+          question: '¿Por qué revisar pasajes y no la página completa?',
+          answer:
+            'Los sistemas de búsqueda con IA suelen recuperar y citar pasajes cortos, no páginas completas. Una sección que solo se entiende después de leer la anterior es difícil de citar, aunque la página en conjunto sea excelente.',
+        },
+        {
+          question: '¿Qué hace que un pasaje se entienda por sí solo?',
+          answer:
+            'Nombra su tema, responde la pregunta de su encabezado en la primera o segunda oración, incluye al menos un dato concreto y se centra en una sola idea. También ayuda a quien llega a mitad de la página.',
+        },
+        {
+          question: '¿Qué tan largo debe ser un pasaje?',
+          answer:
+            'No hay una regla fija. Las secciones de unas 40 a 300 palabras son fáciles de citar; las más largas suelen tratar más de una idea y conviene dividirlas con un subtítulo.',
+        },
+        {
+          question: '¿Mi contenido se envía a algún lado?',
+          answer: 'No. La página se analiza en tu navegador y nunca se sube.',
+        },
+      ],
+      ui: {
+        input: 'HTML o texto de la página',
+        inputPlaceholder:
+          'Pega el código fuente de la página o el texto del artículo con sus encabezados',
+        empty: 'Pega contenido para dividirlo en pasajes.',
+        summary: '{good} de {total} pasajes se entienden por sí solos.',
+        noHeadings:
+          'No hay encabezados H2 ni H3, así que el contenido se revisa como un solo pasaje. Agrega subtítulos para crear secciones citables.',
+        words: '{n} palabras',
+        intro: 'Introducción',
+        checks: {
+          vague: 'Empieza con “{word}”: nombra el tema para que el pasaje se entienda solo.',
+          answerOk: 'Empieza con una oración breve y directa.',
+          answerLong: 'La primera oración tiene {n} palabras: empieza con una respuesta más corta.',
+          long: 'Sección larga: divídela en partes más pequeñas con subtítulos.',
+          short: 'Muy corta: agrega una respuesta directa o un dato de apoyo.',
+          lengthOk: 'Extensión fácil de citar.',
+          factsOk: 'Incluye datos concretos.',
+          factsNone: 'No hay números ni datos concretos.',
+          question: 'El encabezado está escrito como pregunta.',
+        },
+      },
+    },
+    aiVisibility: {
+      steps: [
+        'Escribe tu marca, lo que ofreces y, si quieres, tu ubicación y competidores.',
+        'Edita las preguntas generadas para que suenen como búsquedas reales de tus clientes.',
+        'Elige los asistentes de IA a revisar y descarga la hoja de cálculo.',
+        'Una vez al mes, haz cada pregunta en cada asistente y anota si te mencionaron o citaron, y qué página enlazaron.',
+      ],
+      faq: [
+        {
+          question: '¿Por qué medir la visibilidad en IA a mano?',
+          answer:
+            'Las respuestas de IA cambian según la redacción, el usuario y el día, y la mayoría de asistentes no ofrecen informes como Search Console. Una lista fija de preguntas revisada con regularidad te da una tendencia simple y honesta.',
+        },
+        {
+          question: '¿Qué diferencia hay entre una mención y una cita?',
+          answer:
+            'Una mención es cuando la respuesta nombra tu marca. Una cita es cuando enlaza a una de tus páginas como fuente. Las citas traen tráfico; las menciones generan reconocimiento. Mide ambas.',
+        },
+        {
+          question: '¿Cuántas preguntas debo medir?',
+          answer:
+            'Empieza con 10 a 20 que coincidan con cómo buscan tus clientes: preguntas sobre tu marca, tu categoría y comparaciones con competidores. Mantén la lista estable para comparar meses.',
+        },
+        {
+          question: '¿Debo usar una ventana privada o sin sesión?',
+          answer:
+            'Sí, cuando sea posible. La personalización y el historial de chat pueden cambiar las respuestas, así que una sesión limpia hace más comparables los resultados de cada mes.',
+        },
+      ],
+      ui: {
+        brand: 'Marca o nombre',
+        brandPlaceholder: 'Agencia Ejemplo',
+        topic: 'Qué ofreces',
+        topicPlaceholder: 'consultor SEO',
+        location: 'Ubicación (opcional)',
+        locationPlaceholder: 'Costa Rica',
+        competitors: 'Competidores (opcional, separados por coma)',
+        competitorsPlaceholder: 'Competidor Uno, Competidor Dos',
+        engines: 'Asistentes de IA a revisar',
+        questions: 'Preguntas (una por línea, edítalas libremente)',
+        count: '{questions} preguntas × {engines} asistentes = {rows} revisiones.',
+        download: 'Descargar hoja de cálculo (CSV)',
+        regenerate: 'Volver a generar preguntas',
+        empty: 'Escribe una marca y lo que ofreces para generar preguntas.',
+        csv: {
+          question: 'Pregunta',
+          engine: 'Asistente de IA',
+          date: 'Fecha de revisión',
+          mentioned: 'Marca mencionada (sí/no)',
+          cited: 'URL citada',
+          competitors: 'Competidores mencionados',
+          notes: 'Notas',
+        },
+        templates: {
+          brand: [
+            '¿Quién es {brand}?',
+            '¿Qué hace {brand}?',
+            '¿{brand} es una buena opción como {topic}?',
+            '¿Qué opinan de {brand}?',
+          ],
+          category: [
+            '¿Cuál es el mejor {topic}?',
+            '¿Qué debo buscar en un {topic}?',
+            '¿Cómo elegir un buen {topic}?',
+          ],
+          local: [
+            'Mejor {topic} en {location}',
+            '¿Cuáles son las mejores opciones de {topic} en {location}?',
+          ],
+          competitor: [
+            '{brand} vs {competitor}',
+            '¿Cuáles son las mejores alternativas a {competitor}?',
+          ],
+        },
+      },
+    },
     contentAnalyzer: {
       steps: [
         'Pega tu borrador como texto, o pega el código HTML de la página para revisar también las etiquetas.',
@@ -990,6 +1159,143 @@ export const es: UiStrings = {
       },
     },
   },
+  glossary: {
+    eyebrow: 'Glosario',
+    title: 'Glosario de búsqueda con IA',
+    intro:
+      'Definiciones claras de los términos de la optimización para búsqueda con IA (GEO y AEO), desde AI Overviews y grounding hasta llms.txt y query fan-out. Cada entrada es lo bastante breve para citarse y enlaza a una herramienta gratuita cuando existe.',
+    index: 'Ir a un término',
+    tryTool: 'Pruébalo:',
+    updated: 'Actualizado',
+    terms: [
+      {
+        id: 'aeo',
+        term: 'AEO (optimización para motores de respuesta)',
+        definition:
+          'El AEO es la práctica de estructurar el contenido para que los buscadores y asistentes de IA puedan extraer una respuesta directa. Se centra en preguntas claras, respuestas breves que se entienden solas y datos estructurados.',
+        tool: 'answerReady',
+      },
+      {
+        id: 'ai-mode',
+        term: 'AI Mode (Modo IA)',
+        definition:
+          'AI Mode es una experiencia de búsqueda conversacional de Google que responde preguntas complejas con una respuesta generada por IA y enlaces, y permite hacer preguntas de seguimiento.',
+        tool: '',
+      },
+      {
+        id: 'ai-overviews',
+        term: 'AI Overviews (resúmenes de IA)',
+        definition:
+          'Los AI Overviews son resúmenes generados por IA que aparecen arriba de algunos resultados de Google, con enlaces a las páginas usadas como fuente. Sus clics se reportan como tráfico orgánico normal de Google.',
+        tool: '',
+      },
+      {
+        id: 'cita',
+        term: 'Cita (en respuestas de IA)',
+        definition:
+          'Una cita es un enlace que una respuesta de IA muestra como fuente. A diferencia de una mención, que solo nombra una marca, una cita puede enviar visitas a la página citada.',
+        tool: 'aiVisibility',
+      },
+      {
+        id: 'datos-estructurados',
+        term: 'Datos estructurados (schema markup)',
+        definition:
+          'Los datos estructurados son código, normalmente JSON-LD con el vocabulario de schema.org, que describe una página de forma legible para las máquinas: un artículo, un producto, una persona o unas preguntas frecuentes. Pueden hacer que una página sea elegible para resultados enriquecidos y aclaran datos sobre entidades.',
+        tool: 'schemaGenerator',
+      },
+      {
+        id: 'e-e-a-t',
+        term: 'E-E-A-T',
+        definition:
+          'E-E-A-T son las siglas en inglés de experiencia, conocimiento, autoridad y confiabilidad. Google usa estas ideas en sus pautas para evaluadores de calidad para describir contenido útil y fiable; la confianza es la más importante de las cuatro.',
+        tool: '',
+      },
+      {
+        id: 'entidad',
+        term: 'Entidad',
+        definition:
+          'Una entidad es algo identificable de forma única, como una persona, empresa, lugar o producto. Los buscadores y sistemas de IA asocian datos a entidades, así que describir la tuya de forma coherente en tu sitio y tus perfiles les ayuda a entender quién eres.',
+        tool: '',
+      },
+      {
+        id: 'geo',
+        term: 'GEO (optimización para motores generativos)',
+        definition:
+          'El GEO es la práctica de mejorar la frecuencia y la precisión con que una marca aparece en respuestas generadas por IA. Parte del SEO y se enfoca en pasajes citables, claridad de la entidad y acceso para los rastreadores de IA.',
+        tool: 'answerReady',
+      },
+      {
+        id: 'google-extended',
+        term: 'Google-Extended',
+        definition:
+          'Google-Extended es un token de robots.txt, no un rastreador aparte. Controla si el contenido que Google rastrea puede usarse para los modelos de Gemini y para grounding. Bloquearlo no afecta el posicionamiento en Google Search.',
+        tool: 'aiRobots',
+      },
+      {
+        id: 'grounding',
+        term: 'Grounding (anclaje en fuentes)',
+        definition:
+          'El grounding ocurre cuando un modelo de IA basa su respuesta en información obtenida al momento de la pregunta, como resultados de búsqueda, y no solo en lo que aprendió al entrenarse. Las respuestas con grounding suelen incluir citas.',
+        tool: '',
+      },
+      {
+        id: 'llms-txt',
+        term: 'llms.txt',
+        definition:
+          'llms.txt es un estándar propuesto: un archivo Markdown en la raíz de un sitio web con un resumen breve y enlaces a sus páginas más útiles, pensado para herramientas de IA. El soporte varía y ningún buscador importante lo usa para posicionar.',
+        tool: 'llmsTxt',
+      },
+      {
+        id: 'motor-de-respuestas',
+        term: 'Motor de respuestas',
+        definition:
+          'Un motor de respuestas es un sistema de búsqueda que responde con un texto en lugar de solo una lista de enlaces. La búsqueda de ChatGPT, Perplexity y las funciones de IA de Google son ejemplos.',
+        tool: '',
+      },
+      {
+        id: 'pasaje',
+        term: 'Pasaje (fragmento o chunk)',
+        definition:
+          'Un pasaje es una sección corta de una página que un sistema de búsqueda o de IA puede recuperar y citar por sí sola. Los pasajes que nombran su tema y responden una pregunta con claridad son más fáciles de citar.',
+        tool: 'passageChecker',
+      },
+      {
+        id: 'query-fan-out',
+        term: 'Query fan-out (expansión de consultas)',
+        definition:
+          'El query fan-out ocurre cuando un sistema de búsqueda con IA divide una pregunta en varias búsquedas relacionadas, las ejecuta y combina los resultados en una sola respuesta. Una página puede citarse por subpreguntas que el usuario nunca escribió.',
+        tool: '',
+      },
+      {
+        id: 'rag',
+        term: 'RAG (generación aumentada por recuperación)',
+        definition:
+          'RAG es una técnica en la que un sistema primero recupera documentos o pasajes relevantes y luego un modelo de lenguaje redacta la respuesta a partir de ellos. La mayoría de experiencias de búsqueda con IA funcionan así.',
+        tool: '',
+      },
+      {
+        id: 'rastreador-de-ia',
+        term: 'Rastreador de IA',
+        definition:
+          'Un rastreador de IA es un bot que descarga páginas web para una empresa de IA. Los de entrenamiento, como GPTBot o ClaudeBot, recopilan contenido para entrenar modelos; los de búsqueda, como OAI-SearchBot o PerplexityBot, indexan páginas para que los asistentes las citen; y los agentes de usuario, como ChatGPT-User, descargan una página cuando alguien pregunta por ella.',
+        tool: 'aiRobots',
+      },
+      {
+        id: 'busqueda-sin-clics',
+        term: 'Búsqueda sin clics (zero-click)',
+        definition:
+          'Una búsqueda sin clics es aquella en la que el usuario obtiene lo que necesita en la página de resultados o en una respuesta de IA y no hace clic en ningún resultado. Hace que las menciones y citas de marca importen más que los clics por sí solos.',
+        tool: '',
+      },
+      {
+        id: 'trafico-de-ia',
+        term: 'Tráfico de referencia de IA',
+        definition:
+          'El tráfico de referencia de IA son las visitas que llegan desde enlaces en asistentes de IA como ChatGPT, Perplexity, Gemini o Copilot. Las herramientas de analítica lo agrupan con otras referencias, a menos que crees un canal aparte.',
+        tool: 'aiTraffic',
+      },
+    ],
+  },
   caseStudy: {
     inShort: 'En resumen',
     keyResults: 'Resultados clave',
@@ -1034,6 +1340,11 @@ export const es: UiStrings = {
       title: 'Herramientas SEO gratuitas de Diego Navarro',
       description:
         'Herramientas gratuitas de SEO y búsqueda con IA: evaluador de prospectos, verificador de contenido para IA y generadores de robots.txt y llms.txt.',
+    },
+    glossary: {
+      title: 'Glosario de búsqueda con IA: GEO, AEO y más',
+      description:
+        'Glosario de búsqueda con IA en español: GEO, AEO, AI Overviews, grounding, llms.txt, query fan-out, rastreadores de IA y más, con herramientas gratis.',
     },
     contact: {
       title: 'Contactar a Diego Navarro, especialista SEO senior',

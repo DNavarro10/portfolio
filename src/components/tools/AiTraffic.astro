@@ -1,0 +1,170 @@
+---
+/**
+ * GA4 AI traffic channel generator. Builds:
+ *   1. a regex for a GA4 custom channel ("Source matches regex"),
+ *   2. a Looker Studio CASE field that adds the AI channel to the default grouping,
+ *   3. a Looker Studio CASE field that names the AI platform.
+ * Dots are written as [.] so the same pattern works in GA4 and Looker Studio
+ * without backslash escaping. Referrer list: src/data/ai-referrers.ts.
+ */
+import { AI_REFERRERS } from '@/data/ai-referrers';
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.aiTraffic.ui;
+const blocks = [
+  { id: 'regex', title: ui.regexTitle },
+  { id: 'channel', title: ui.lookerChannel },
+  { id: 'platform', title: ui.lookerPlatform },
+];
+---
+
+<div
+  class="traffic-tool"
+  data-traffic-tool
+  data-strings={JSON.stringify({ ...ui, copy: t.toolPage.copy, copied: t.toolPage.copied })}
+>
+  <form class="traffic-tool__form" novalidate>
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.platforms}</legend>
+      <div class="platforms">
+        {AI_REFERRERS.map((ref) => (
+          <label class="tool-check">
+            <input type="checkbox" name="platform" value={ref.name} checked />
+            <span>
+              {ref.name}
+              <span class="platform-domains">{ref.domains.join(', ')}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+    <div class="tool-panel tool-field">
+      <label for="tt-channel">{ui.channelName}</label>
+      <input id="tt-channel" name="channel" type="text" value={ui.channelDefault} />
+    </div>
+  </form>
+
+  <div class="traffic-tool__outputs">
+    {blocks.map((block) => (
+      <section class="tool-panel" aria-labelledby={`tt-${block.id}-title`}>
+        <div class="output-head">
+          <h2 id={`tt-${block.id}-title`}>{block.title}</h2>
+          <button type="button" class="tool-button" data-copy={block.id}>
+            {t.toolPage.copy}
+          </button>
+        </div>
+        <pre class="tool-code"><code data-out={block.id}></code></pre>
+      </section>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { AI_REFERRERS } from '@/data/ai-referrers';
+  import { copyText, readStrings } from './client';
+
+  interface Strings {
+    copied: string;
+    channelDefault: string;
+    sourceField: string;
+    notAi: string;
+  }
+
+  /** "chat.openai.com" -> "chat[.]openai[.]com" (no backslashes needed). */
+  const pattern = (domains: string[]) => domains.map((d) => d.replace(/\./g, '[.]')).join('|');
+
+  const root = document.querySelector<HTMLElement>('[data-traffic-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const form = root.querySelector('form')!;
+    const outputs: Record<string, string> = {};
+
+    const render = () => {
+      const picked = [
+        ...form.querySelectorAll<HTMLInputElement>('input[name="platform"]:checked'),
+      ].map((box) => box.value);
+      const refs = AI_REFERRERS.filter((ref) => picked.includes(ref.name));
+      const channel =
+        (form.elements.namedItem('channel') as HTMLInputElement).value.trim().replace(/"/g, "'") ||
+        s.channelDefault;
+      const all = `.*(${pattern(refs.flatMap((ref) => ref.domains))}).*`;
+      const field = s.sourceField;
+
+      outputs.regex = refs.length ? all : '';
+      outputs.channel = refs.length
+        ? [
+            'CASE',
+            `  WHEN REGEXP_MATCH(${field}, "${all}") THEN "${channel}"`,
+            '  ELSE Session default channel group',
+            'END',
+          ].join('\n')
+        : '';
+      outputs.platform = refs.length
+        ? [
+            'CASE',
+            ...refs.map(
+              (ref) =>
+                `  WHEN REGEXP_MATCH(${field}, ".*(${pattern(ref.domains)}).*") THEN "${ref.name}"`,
+            ),
+            `  ELSE "${s.notAi}"`,
+            'END',
+          ].join('\n')
+        : '';
+      for (const [id, value] of Object.entries(outputs)) {
+        root.querySelector<HTMLElement>(`[data-out="${id}"]`)!.textContent = value;
+      }
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
+      button.addEventListener(
+        'click',
+        () => void copyText(outputs[button.dataset.copy!] ?? '', button, s.copied),
+      );
+    });
+    form.addEventListener('input', render);
+    form.addEventListener('change', render);
+    form.addEventListener('submit', (event) => event.preventDefault());
+    render();
+  }
+</script>
+
+<style>
+  .traffic-tool {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 64rem) {
+    .traffic-tool {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    }
+  }
+  .traffic-tool__form,
+  .traffic-tool__outputs {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .platforms {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    column-gap: var(--space-4);
+  }
+  .platform-domains {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+  .traffic-tool .tool-code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+</style>

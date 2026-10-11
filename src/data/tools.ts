@@ -77,6 +77,45 @@ export const TOOLS: Tool[] = [
     published: true,
   },
   {
+    key: 'aiTraffic',
+    slug: { en: 'ga4-ai-traffic-setup', es: 'trafico-ia-ga4' },
+    title: { en: 'GA4 AI Traffic Channel Generator', es: 'Canal de tráfico de IA para GA4' },
+    description: {
+      en: 'Free GA4 regex generator for AI traffic: track visits from ChatGPT, Perplexity, Gemini, Copilot, and Claude in their own channel, plus Looker Studio fields.',
+      es: 'Generador gratuito de regex para GA4: mide las visitas de ChatGPT, Perplexity, Gemini, Copilot y Claude en un canal propio, con campos para Looker Studio.',
+    },
+    category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    updated: '2026-10-10',
+    published: true,
+  },
+  {
+    key: 'passageChecker',
+    slug: { en: 'ai-passage-checker', es: 'verificador-pasajes-ia' },
+    title: {
+      en: 'Quotable Passage Checker for AI Search',
+      es: 'Verificador de pasajes citables por IA',
+    },
+    description: {
+      en: 'Free GEO tool: split a page into the passages AI search quotes and see which ones stand on their own, with fixes for vague openings, length, and facts.',
+      es: 'Herramienta GEO gratuita: divide una página en los pasajes que cita la búsqueda con IA y descubre cuáles se entienden solos, con mejoras concretas.',
+    },
+    category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    updated: '2026-10-10',
+    published: true,
+  },
+  {
+    key: 'aiVisibility',
+    slug: { en: 'ai-visibility-tracker', es: 'seguimiento-visibilidad-ia' },
+    title: { en: 'AI Visibility Tracker Template', es: 'Plantilla de visibilidad en IA' },
+    description: {
+      en: 'Free AI visibility tracker: generate the questions to check in ChatGPT, Perplexity, Gemini, and AI Overviews, and download a monthly tracking sheet.',
+      es: 'Plantilla gratuita de visibilidad en IA: genera las preguntas a revisar en ChatGPT, Perplexity, Gemini y AI Overviews, y descarga una hoja de seguimiento.',
+    },
+    category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    updated: '2026-10-10',
+    published: true,
+  },
+  {
     key: 'aiLogs',
     slug: { en: 'ai-bot-log-analyzer', es: 'analizador-logs-bots-ia' },
     title: {

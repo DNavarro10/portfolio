@@ -18,6 +18,7 @@ export const en = {
     experience: 'Experience',
     blog: 'Blog',
     tools: 'SEO Tools',
+    glossary: 'Glossary',
     contact: 'Contact',
   },
   langSwitch: {
@@ -359,6 +360,170 @@ export const en = {
     copied: 'Copied',
   },
   toolContent: {
+    aiTraffic: {
+      steps: [
+        'Pick the AI assistants you want to track and name the channel.',
+        'In GA4, go to Admin › Data display › Channel groups, create a new group (copy the default one), and add a channel with the condition "Source matches regex" using the first code block.',
+        'Drag the new channel above "Referral" so AI visits are not counted as normal referrals, then save.',
+        'For Looker Studio reports, add the calculated fields from the other code blocks.',
+      ],
+      faq: [
+        {
+          question: 'Why does AI traffic need its own channel?',
+          answer:
+            'By default GA4 mixes visits from ChatGPT, Perplexity, and other assistants into "Referral". A separate channel shows how many visits and conversions AI answers bring, and whether they grow over time.',
+        },
+        {
+          question: 'Does this count Google AI Overviews and AI Mode?',
+          answer:
+            'No. Clicks from Google’s AI features are reported as Google organic traffic, so they can’t be separated with a source rule. This setup covers assistants that send their own referrer or tag, like ChatGPT (utm_source=chatgpt.com) and Perplexity.',
+        },
+        {
+          question: 'Why are the numbers lower than expected?',
+          answer:
+            'Some apps and browsers don’t pass a referrer, so those visits show up as direct traffic. Treat the AI channel as a minimum, and watch the trend more than the exact number.',
+        },
+        {
+          question: 'Does it change my past data?',
+          answer:
+            'Custom channel groups in GA4 apply to historical data too, so you can compare months that happened before you created the channel.',
+        },
+      ],
+      ui: {
+        platforms: 'AI assistants to include',
+        channelName: 'Channel name',
+        channelDefault: 'AI assistants',
+        regexTitle: 'GA4 regex (Source matches regex)',
+        lookerChannel: 'Looker Studio: channel field',
+        lookerPlatform: 'Looker Studio: AI platform field',
+        sourceField: 'Session source',
+        other: 'Other',
+        notAi: 'Not AI',
+      },
+    },
+    passageChecker: {
+      steps: [
+        'Paste the page HTML (or plain text with headings on their own lines).',
+        'The page is split into passages, one per H2 or H3 section, the way AI search often quotes it.',
+        'Fix passages marked with ! or ✕: start with a direct answer, name the subject instead of “this” or “it”, and add a concrete fact.',
+        'Paste the new version and check that more passages stand on their own.',
+      ],
+      faq: [
+        {
+          question: 'Why check passages instead of the whole page?',
+          answer:
+            'AI search systems usually retrieve and quote short passages, not full pages. A section that only makes sense after reading the previous one is hard to quote, even if the page as a whole is excellent.',
+        },
+        {
+          question: 'What makes a passage stand on its own?',
+          answer:
+            'It names its subject, answers the question in its heading in the first sentence or two, includes at least one concrete fact, and stays focused on one idea. Readers who land mid-page benefit too.',
+        },
+        {
+          question: 'How long should a passage be?',
+          answer:
+            'There is no fixed rule. Sections between roughly 40 and 300 words are easy to quote; longer ones usually cover more than one idea and are better split with a subheading.',
+        },
+        {
+          question: 'Is my content sent anywhere?',
+          answer: 'No. The page is analyzed in your browser and never uploaded.',
+        },
+      ],
+      ui: {
+        input: 'Page HTML or text',
+        inputPlaceholder: 'Paste the page source or the article text with its headings',
+        empty: 'Paste content to split it into passages.',
+        summary: '{good} of {total} passages stand on their own.',
+        noHeadings:
+          'No H2 or H3 headings found, so the content is checked as one passage. Add subheadings to create quotable sections.',
+        words: '{n} words',
+        intro: 'Introduction',
+        checks: {
+          vague: 'Starts with “{word}”: name the subject so the passage makes sense on its own.',
+          answerOk: 'Opens with a short, direct sentence.',
+          answerLong: 'The first sentence has {n} words: lead with a shorter answer.',
+          long: 'Long section: split it into smaller parts with subheadings.',
+          short: 'Very short: add a direct answer or a supporting fact.',
+          lengthOk: 'Length is easy to quote.',
+          factsOk: 'Includes concrete data.',
+          factsNone: 'No numbers or concrete facts.',
+          question: 'Heading is phrased as a question.',
+        },
+      },
+    },
+    aiVisibility: {
+      steps: [
+        'Enter your brand, what you offer, and optionally your location and competitors.',
+        'Edit the generated questions so they sound like real searches from your customers.',
+        'Pick the AI assistants to check and download the spreadsheet.',
+        'Once a month, ask each question in each assistant and record whether you were mentioned or cited, and which page was linked.',
+      ],
+      faq: [
+        {
+          question: 'Why track AI visibility by hand?',
+          answer:
+            'AI answers change with the wording, the user, and the day, and most assistants don’t offer search-console-style reports. A fixed list of questions checked on a schedule gives you a simple, honest trend line.',
+        },
+        {
+          question: 'What is the difference between a mention and a citation?',
+          answer:
+            'A mention is when the answer names your brand. A citation is when it links to one of your pages as a source. Citations send traffic; mentions build awareness. Track both.',
+        },
+        {
+          question: 'How many questions should I track?',
+          answer:
+            'Start with 10 to 20 that match how customers search: questions about your brand, your category, and comparisons with competitors. Keep the list stable so months can be compared.',
+        },
+        {
+          question: 'Should I use a logged-out or private window?',
+          answer:
+            'Yes, when possible. Personalization and chat history can change answers, so a clean session makes month-to-month results more comparable.',
+        },
+      ],
+      ui: {
+        brand: 'Brand or name',
+        brandPlaceholder: 'Example Agency',
+        topic: 'What you offer',
+        topicPlaceholder: 'SEO consultant',
+        location: 'Location (optional)',
+        locationPlaceholder: 'Costa Rica',
+        competitors: 'Competitors (optional, comma separated)',
+        competitorsPlaceholder: 'Competitor One, Competitor Two',
+        engines: 'AI assistants to check',
+        questions: 'Questions (one per line, edit freely)',
+        count: '{questions} questions × {engines} assistants = {rows} checks.',
+        download: 'Download spreadsheet (CSV)',
+        regenerate: 'Regenerate questions',
+        empty: 'Enter a brand and what you offer to generate questions.',
+        csv: {
+          question: 'Question',
+          engine: 'AI assistant',
+          date: 'Date checked',
+          mentioned: 'Brand mentioned (yes/no)',
+          cited: 'Cited URL',
+          competitors: 'Competitors mentioned',
+          notes: 'Notes',
+        },
+        templates: {
+          brand: [
+            'Who is {brand}?',
+            'What does {brand} do?',
+            'Is {brand} a good choice for {a} {topic}?',
+            'What do people say about {brand}?',
+          ],
+          category: [
+            'Who is the best {topic}?',
+            'What should I look for in {a} {topic}?',
+            'How do I choose {a} {topic}?',
+          ],
+          local: ['Best {topic} in {location}', 'Who are the top {topic} options in {location}?'],
+          competitor: [
+            '{brand} vs {competitor}',
+            'What are the best alternatives to {competitor}?',
+          ],
+        },
+      },
+    },
     contentAnalyzer: {
       steps: [
         'Paste your draft as plain text, or paste the page’s HTML source to also check tags.',
@@ -982,6 +1147,143 @@ export const en = {
       },
     },
   },
+  glossary: {
+    eyebrow: 'Glossary',
+    title: 'AI search glossary',
+    intro:
+      'Plain-language definitions of the terms used in AI search optimization (GEO and AEO), from AI Overviews and grounding to llms.txt and query fan-out. Each entry is short enough to quote and links to a free tool when there is one.',
+    index: 'Jump to a term',
+    tryTool: 'Try it:',
+    updated: 'Updated',
+    terms: [
+      {
+        id: 'aeo',
+        term: 'AEO (answer engine optimization)',
+        definition:
+          'AEO is the practice of structuring content so search engines and AI assistants can pull a direct answer from it. It focuses on clear questions, short self-contained answers, and structured data.',
+        tool: 'answerReady',
+      },
+      {
+        id: 'ai-crawler',
+        term: 'AI crawler',
+        definition:
+          'An AI crawler is a bot that fetches web pages for an AI company. Training crawlers, like GPTBot or ClaudeBot, collect content to train models; search crawlers, like OAI-SearchBot or PerplexityBot, index pages so assistants can cite them; user agents, like ChatGPT-User, fetch a page when a person asks about it.',
+        tool: 'aiRobots',
+      },
+      {
+        id: 'ai-mode',
+        term: 'AI Mode',
+        definition:
+          'AI Mode is a conversational search experience in Google Search that answers complex questions with an AI-generated response and links, and supports follow-up questions.',
+        tool: '',
+      },
+      {
+        id: 'ai-overviews',
+        term: 'AI Overviews',
+        definition:
+          'AI Overviews are AI-generated summaries shown at the top of some Google results, with links to the pages used as sources. Clicks from them are reported as regular Google organic traffic.',
+        tool: '',
+      },
+      {
+        id: 'ai-referral-traffic',
+        term: 'AI referral traffic',
+        definition:
+          'AI referral traffic is visits that come from links in AI assistants such as ChatGPT, Perplexity, Gemini, or Copilot. Analytics tools group it with other referrals unless you create a separate channel.',
+        tool: 'aiTraffic',
+      },
+      {
+        id: 'answer-engine',
+        term: 'Answer engine',
+        definition:
+          'An answer engine is a search system that replies with a written answer instead of only a list of links. ChatGPT search, Perplexity, and Google’s AI features are examples.',
+        tool: '',
+      },
+      {
+        id: 'citation',
+        term: 'Citation (in AI answers)',
+        definition:
+          'A citation is a link an AI answer shows as a source. Unlike a mention, which only names a brand, a citation can send visitors to the cited page.',
+        tool: 'aiVisibility',
+      },
+      {
+        id: 'e-e-a-t',
+        term: 'E-E-A-T',
+        definition:
+          'E-E-A-T stands for experience, expertise, authoritativeness, and trustworthiness. Google uses these ideas in its quality rater guidelines to describe helpful, reliable content; trust is the most important of the four.',
+        tool: '',
+      },
+      {
+        id: 'entity',
+        term: 'Entity',
+        definition:
+          'An entity is a uniquely identifiable thing, such as a person, company, place, or product. Search engines and AI systems connect facts to entities, so describing yours consistently across your site and profiles helps them understand who you are.',
+        tool: '',
+      },
+      {
+        id: 'geo',
+        term: 'GEO (generative engine optimization)',
+        definition:
+          'GEO is the practice of improving how often and how accurately a brand appears in AI-generated answers. It builds on SEO with a focus on citable passages, entity clarity, and access for AI crawlers.',
+        tool: 'answerReady',
+      },
+      {
+        id: 'google-extended',
+        term: 'Google-Extended',
+        definition:
+          'Google-Extended is a robots.txt token, not a separate crawler. It controls whether content Google crawls may be used for Gemini models and grounding. Blocking it does not affect Google Search rankings.',
+        tool: 'aiRobots',
+      },
+      {
+        id: 'grounding',
+        term: 'Grounding',
+        definition:
+          'Grounding is when an AI model bases its answer on information retrieved at the time of the question, such as search results, instead of only on what it learned in training. Grounded answers usually include citations.',
+        tool: '',
+      },
+      {
+        id: 'llms-txt',
+        term: 'llms.txt',
+        definition:
+          'llms.txt is a proposed standard: a Markdown file at the root of a website with a short summary and links to its most useful pages, written for AI tools. Support varies, and no major search engine uses it for ranking.',
+        tool: 'llmsTxt',
+      },
+      {
+        id: 'passage',
+        term: 'Passage (chunk)',
+        definition:
+          'A passage is a short section of a page that a search or AI system can retrieve and quote on its own. Passages that name their subject and answer one question clearly are easier to cite.',
+        tool: 'passageChecker',
+      },
+      {
+        id: 'query-fan-out',
+        term: 'Query fan-out',
+        definition:
+          'Query fan-out is when an AI search system splits one question into several related searches, runs them, and combines the results into one answer. Pages can be cited for sub-questions the user never typed.',
+        tool: '',
+      },
+      {
+        id: 'rag',
+        term: 'RAG (retrieval-augmented generation)',
+        definition:
+          'RAG is a technique where a system first retrieves relevant documents or passages and then has a language model write an answer from them. Most AI search experiences work this way.',
+        tool: '',
+      },
+      {
+        id: 'structured-data',
+        term: 'Structured data (schema markup)',
+        definition:
+          'Structured data is code, usually JSON-LD using the schema.org vocabulary, that describes a page in a machine-readable way: an article, a product, a person, or an FAQ. It can make pages eligible for rich results and clarifies facts about entities.',
+        tool: 'schemaGenerator',
+      },
+      {
+        id: 'zero-click-search',
+        term: 'Zero-click search',
+        definition:
+          'A zero-click search is one where the user gets what they need on the results page or in an AI answer and does not click any result. It makes brand mentions and citations more important than clicks alone.',
+        tool: '',
+      },
+    ],
+  },
   caseStudy: {
     inShort: 'In short',
     keyResults: 'Key results',
@@ -1026,6 +1328,11 @@ export const en = {
       title: 'Free SEO Tools by Diego Navarro',
       description:
         'Free, browser-based SEO and AI search tools by Diego Navarro: link prospect scorecard, AI answer-readiness checker, robots.txt and llms.txt generators.',
+    },
+    glossary: {
+      title: 'AI Search Glossary: GEO, AEO, AI Overviews',
+      description:
+        'Plain-language AI search glossary: GEO, AEO, AI Overviews, grounding, llms.txt, query fan-out, AI crawlers, and more, with links to free tools.',
     },
     contact: {
       title: 'Contact Diego Navarro, Senior SEO Specialist',

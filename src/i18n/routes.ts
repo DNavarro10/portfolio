@@ -22,13 +22,21 @@ export const ROUTES = {
   experience: { en: '/experience/', es: '/es/experiencia/', published: true },
   blog: { en: '/blog/', es: '/es/blog/', published: false },
   tools: { en: '/tools/', es: '/es/herramientas/', published: true },
+  glossary: { en: '/glossary/', es: '/es/glosario/', published: true },
   contact: { en: '/contact/', es: '/es/contacto/', published: true },
 } as const satisfies Record<string, Partial<Record<Lang, string>> & { published: boolean }>;
 
 export type RouteKey = keyof typeof ROUTES;
 
 /** Pages shown in the main navigation, in order. */
-export const NAV_ROUTES: RouteKey[] = ['about', 'experience', 'blog', 'tools', 'contact'];
+export const NAV_ROUTES: RouteKey[] = [
+  'about',
+  'experience',
+  'blog',
+  'tools',
+  'glossary',
+  'contact',
+];
 
 /**
  * Base path for collection detail pages (blog posts, case studies, tools).

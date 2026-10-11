@@ -1,0 +1,236 @@
+---
+/**
+ * AI visibility tracker template. Generates questions from templates in the
+ * translation files ({brand}, {topic}, {location}, {competitor}), lets the user
+ * edit them, and downloads a CSV with one row per question × AI assistant to
+ * fill in each month (mentioned, cited URL, competitors, notes).
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.aiVisibility.ui;
+const ENGINES = [
+  'ChatGPT',
+  'Perplexity',
+  'Gemini',
+  'Google AI Overviews',
+  'Google AI Mode',
+  'Claude',
+  'Copilot',
+];
+---
+
+<div class="visibility-tool" data-visibility-tool data-strings={JSON.stringify(ui)}>
+  <form class="visibility-tool__form" novalidate>
+    <div class="tool-panel tool-grid">
+      <div class="tool-field">
+        <label for="av-brand">{ui.brand}</label>
+        <input id="av-brand" name="brand" type="text" placeholder={ui.brandPlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="av-topic">{ui.topic}</label>
+        <input id="av-topic" name="topic" type="text" placeholder={ui.topicPlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="av-location">{ui.location}</label>
+        <input id="av-location" name="location" type="text" placeholder={ui.locationPlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="av-competitors">{ui.competitors}</label>
+        <input
+          id="av-competitors"
+          name="competitors"
+          type="text"
+          placeholder={ui.competitorsPlaceholder}
+        />
+      </div>
+    </div>
+
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.engines}</legend>
+      <div class="engines">
+        {ENGINES.map((engine) => (
+          <label class="tool-check">
+            <input
+              type="checkbox"
+              name="engine"
+              value={engine}
+              checked={engine !== 'Google AI Mode'}
+            />
+            <span>{engine}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="tool-panel" aria-labelledby="av-questions-label">
+    <div class="output-head">
+      <h2 id="av-questions-label">
+        <label for="av-questions">{ui.questions}</label>
+      </h2>
+      <div class="output-actions">
+        <button type="button" class="tool-button" data-regenerate>
+          {ui.regenerate}
+        </button>
+        <button type="button" class="tool-button" data-download>
+          {ui.download}
+        </button>
+      </div>
+    </div>
+    <p class="output-status text-muted" data-out="count" aria-live="polite">
+      {ui.empty}
+    </p>
+    <textarea id="av-questions" class="visibility-tool__questions" rows="12"></textarea>
+  </section>
+</div>
+
+<script>
+  import { fill, readStrings } from './client';
+
+  interface Strings {
+    count: string;
+    empty: string;
+    csv: Record<string, string>;
+    templates: Record<'brand' | 'category' | 'local' | 'competitor', string[]>;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-visibility-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const form = root.querySelector('form')!;
+    const questions = root.querySelector<HTMLTextAreaElement>('#av-questions')!;
+    const count = root.querySelector<HTMLElement>('[data-out="count"]')!;
+    const value = (name: string) =>
+      (form.elements.namedItem(name) as HTMLInputElement).value.trim();
+    let edited = false;
+
+    const engines = () =>
+      [...form.querySelectorAll<HTMLInputElement>('input[name="engine"]:checked')].map(
+        (box) => box.value,
+      );
+    const lines = () =>
+      questions.value
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+    const updateCount = () => {
+      const q = lines().length;
+      const e = engines().length;
+      count.textContent = q ? fill(s.count, { questions: q, engines: e, rows: q * e }) : s.empty;
+    };
+
+    const generate = () => {
+      const brand = value('brand');
+      const topic = value('topic');
+      const location = value('location');
+      const competitors = value('competitors')
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+      const vars = { brand, topic, location, a: article(topic) };
+      const result: string[] = [];
+      if (brand)
+        s.templates.brand.forEach(
+          (tpl) => (!tpl.includes('{topic}') || topic) && result.push(fill(tpl, vars)),
+        );
+      if (topic) s.templates.category.forEach((tpl) => result.push(fill(tpl, vars)));
+      if (topic && location) s.templates.local.forEach((tpl) => result.push(fill(tpl, vars)));
+      if (brand) {
+        competitors.forEach((competitor) =>
+          s.templates.competitor.forEach((tpl) => result.push(fill(tpl, { ...vars, competitor }))),
+        );
+      }
+      questions.value = [...new Set(result)].join('\n');
+      edited = false;
+      updateCount();
+    };
+
+    /**
+     * English "a" / "an" before the topic (only used by English templates):
+     * "an" before a vowel sound, including acronyms like "SEO" or "MBA".
+     */
+    const article = (word: string) => {
+      const first = word.split(/\s+/)[0] ?? '';
+      const acronym = /^[A-Z]{2,}/.test(first);
+      return (acronym ? /^[AEFHILMNORSX]/ : /^[aeiou]/i).test(first) ? 'an' : 'a';
+    };
+
+    /** Quotes a CSV cell when needed. */
+    const cell = (text: string) => (/[",\n;]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text);
+
+    const download = () => {
+      const header = [
+        'question',
+        'engine',
+        'date',
+        'mentioned',
+        'cited',
+        'competitors',
+        'notes',
+      ].map((key) => s.csv[key]!);
+      const rows = lines().flatMap((question) =>
+        engines().map((engine) => [question, engine, '', '', '', '', '']),
+      );
+      const csv = [header, ...rows].map((row) => row.map(cell).join(',')).join('\r\n');
+      // The BOM helps Excel open accented characters correctly.
+      const url = URL.createObjectURL(
+        new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' }),
+      );
+      const link = Object.assign(document.createElement('a'), {
+        href: url,
+        download: 'ai-visibility-tracker.csv',
+      });
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    form.addEventListener('input', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.name === 'engine') return updateCount();
+      if (!edited || !questions.value.trim()) generate();
+    });
+    form.addEventListener('change', updateCount);
+    form.addEventListener('submit', (event) => event.preventDefault());
+    questions.addEventListener('input', () => {
+      edited = true;
+      updateCount();
+    });
+    root.querySelector('[data-regenerate]')!.addEventListener('click', generate);
+    root.querySelector('[data-download]')!.addEventListener('click', download);
+  }
+</script>
+
+<style>
+  .visibility-tool {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .visibility-tool__form {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .engines {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    column-gap: var(--space-4);
+  }
+  .visibility-tool__questions {
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    font-size: var(--fs-sm);
+    line-height: 1.7;
+    resize: vertical;
+  }
+</style>

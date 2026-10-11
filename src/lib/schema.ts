@@ -172,6 +172,35 @@ export function webApplicationSchema(input: {
   };
 }
 
+/** A glossary: a DefinedTermSet whose terms each have their own #anchor URL. */
+export function definedTermSetSchema(input: {
+  name: string;
+  description: string;
+  path: string;
+  lang: Lang;
+  terms: { id: string; term: string; definition: string }[];
+}): JsonLdNode {
+  const url = absoluteUrl(input.path);
+  return {
+    '@type': 'DefinedTermSet',
+    '@id': `${url}#glossary`,
+    name: input.name,
+    description: input.description,
+    url,
+    inLanguage: LANG_META[input.lang].hreflang,
+    author: { '@id': PERSON_ID },
+    isPartOf: { '@id': WEBSITE_ID },
+    hasDefinedTerm: input.terms.map((term) => ({
+      '@type': 'DefinedTerm',
+      '@id': `${url}#${term.id}`,
+      name: term.term,
+      description: term.definition,
+      url: `${url}#${term.id}`,
+      inDefinedTermSet: { '@id': `${url}#glossary` },
+    })),
+  };
+}
+
 /** An ordered list of links, e.g. the tools index. */
 export function itemListSchema(items: { name: string; path: string }[]): JsonLdNode {
   return {

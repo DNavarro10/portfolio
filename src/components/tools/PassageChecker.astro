@@ -1,0 +1,287 @@
+---
+/**
+ * Quotable passage checker (GEO). Splits a page into passages, one per H2/H3
+ * section (or heading-like line in plain text), and checks each one:
+ *   - opens with a vague word ("this", "it", "esto"...) → doesn't stand alone
+ *   - first sentence ≤ 35 words (direct answer)
+ *   - length 40–300 words
+ *   - contains a number or concrete fact
+ *   - heading phrased as a question (bonus, never a penalty)
+ * A passage "stands alone" with no vague opening and at most one warning.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.passageChecker.ui;
+---
+
+<div class="passage-tool" data-passage-tool data-strings={JSON.stringify(ui)}>
+  <div class="tool-panel tool-field">
+    <label for="pc-input">{ui.input}</label>
+    <textarea
+      id="pc-input"
+      rows="10"
+      spellcheck="false"
+      placeholder={ui.inputPlaceholder}
+    ></textarea>
+  </div>
+  <p class="text-muted" data-out="empty">
+    {ui.empty}
+  </p>
+  <div data-out="results" hidden>
+    <p class="passage-tool__summary" data-out="summary" aria-live="polite"></p>
+    <p class="text-muted passage-tool__note" data-out="note" hidden>
+      {ui.noHeadings}
+    </p>
+    <ol class="passages" data-out="passages"></ol>
+  </div>
+</div>
+
+<script>
+  import { fill, mainContent, readStrings } from './client';
+
+  type Status = 'good' | 'warn' | 'bad';
+  interface Strings {
+    summary: string;
+    words: string;
+    intro: string;
+    checks: Record<string, string>;
+  }
+  interface Passage {
+    heading: string;
+    text: string[];
+  }
+
+  const ICON: Record<Status, string> = { good: '✓', warn: '!', bad: '✕' };
+  const VAGUE = new Set(
+    'this it they these those that here there he she its esto este esta estos estas eso ese esa esos esas ello él ella ellos ellas aquí allí así'.split(
+      ' ',
+    ),
+  );
+  const QUESTION_START =
+    /^(¿|how|what|why|when|where|which|who|can|does|do|is|are|should|will|cómo|qué|por qué|cuándo|dónde|cuál|cuáles|quién|cuánto)/i;
+
+  const tokenize = (text: string) => text.match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu) ?? [];
+  const firstSentence = (text: string) => text.split(/(?<=[.!?…])\s+/)[0] ?? '';
+
+  const fromHtml = (
+    html: string,
+    introLabel: string,
+  ): { passages: Passage[]; headings: number } => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const content = mainContent(doc);
+    const passages: Passage[] = [{ heading: introLabel, text: [] }];
+    let headings = 0;
+    content.querySelectorAll('h2, h3, p, li, blockquote, dd, td').forEach((el) => {
+      const text = el.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+      if (!text) return;
+      if (el.tagName === 'H2' || el.tagName === 'H3') {
+        headings++;
+        passages.push({ heading: text, text: [] });
+      } else if (!(el.tagName === 'LI' && el.querySelector('p'))) {
+        passages.at(-1)!.text.push(text);
+      }
+    });
+    return { passages, headings };
+  };
+
+  const fromText = (raw: string, introLabel: string): { passages: Passage[]; headings: number } => {
+    const passages: Passage[] = [{ heading: introLabel, text: [] }];
+    let headings = 0;
+    const lines = raw
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean);
+    lines.forEach((line, index) => {
+      const isHeading =
+        tokenize(line).length <= 12 &&
+        !/[.,;:]$/.test(line) &&
+        !/^([-*•]|\d+[.)])\s/.test(line) &&
+        index < lines.length - 1;
+      if (isHeading) {
+        headings++;
+        passages.push({ heading: line, text: [] });
+      } else {
+        passages.at(-1)!.text.push(line.replace(/^([-*•]|\d+[.)])\s+/, ''));
+      }
+    });
+    return { passages, headings };
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-passage-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const c = s.checks;
+    const input = root.querySelector<HTMLTextAreaElement>('#pc-input')!;
+    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+
+    const item = (status: Status, text: string) => {
+      const li = document.createElement('li');
+      const icon = document.createElement('span');
+      icon.className = `check-icon status--${status}`;
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = ICON[status];
+      li.append(icon, text);
+      return li;
+    };
+
+    const analyze = () => {
+      const raw = input.value.trim();
+      out('empty').hidden = raw.length > 0;
+      out('results').hidden = raw.length === 0;
+      if (!raw) return;
+
+      const isHtml = /<\s*(!doctype|html|body|h[1-6]|p|div|article|main)\b/i.test(raw);
+      const { passages, headings } = isHtml ? fromHtml(raw, s.intro) : fromText(raw, s.intro);
+      const list = passages.filter((passage) => passage.text.length > 0);
+      out('note').hidden = headings > 0;
+
+      let standalone = 0;
+      const cards = list.map((passage) => {
+        const body = passage.text.join(' ');
+        const words = tokenize(body).length;
+        const first = firstSentence(passage.text[0] ?? '');
+        const firstWords = tokenize(first).length;
+        const opener = (tokenize(first)[0] ?? '').toLowerCase();
+        const checks: { status: Status; text: string }[] = [];
+
+        const vague = VAGUE.has(opener);
+        if (vague)
+          checks.push({
+            status: 'bad',
+            text: fill(c.vague!, { word: tokenize(first)[0] ?? opener }),
+          });
+        checks.push(
+          firstWords <= 35
+            ? { status: 'good', text: c.answerOk! }
+            : { status: 'warn', text: fill(c.answerLong!, { n: firstWords }) },
+        );
+        checks.push(
+          words > 300
+            ? { status: 'warn', text: c.long! }
+            : words < 40
+              ? { status: 'warn', text: c.short! }
+              : { status: 'good', text: c.lengthOk! },
+        );
+        checks.push(
+          /\d/.test(body)
+            ? { status: 'good', text: c.factsOk! }
+            : { status: 'warn', text: c.factsNone! },
+        );
+        if (passage.heading.trim().endsWith('?') || QUESTION_START.test(passage.heading.trim())) {
+          checks.push({ status: 'good', text: c.question! });
+        }
+
+        const warnings = checks.filter((check) => check.status !== 'good').length;
+        const status: Status = vague
+          ? warnings > 1
+            ? 'bad'
+            : 'warn'
+          : warnings <= 1
+            ? 'good'
+            : 'warn';
+        if (status === 'good') standalone++;
+
+        const card = document.createElement('li');
+        card.className = `passage passage--${status}`;
+        const head = document.createElement('div');
+        head.className = 'passage__head';
+        const title = document.createElement('p');
+        title.className = 'passage__title';
+        title.textContent = `${ICON[status]} ${passage.heading}`;
+        const meta = document.createElement('span');
+        meta.className = 'mono-label';
+        meta.textContent = fill(s.words, { n: words });
+        head.append(title, meta);
+        const quote = document.createElement('blockquote');
+        quote.textContent = first.length > 220 ? `${first.slice(0, 219)}…` : first;
+        const checkList = document.createElement('ul');
+        checkList.className = 'tool-checks';
+        checkList.append(...checks.map((check) => item(check.status, check.text)));
+        card.append(head, quote, checkList);
+        return card;
+      });
+
+      out('summary').textContent = fill(s.summary, { good: standalone, total: list.length });
+      out('passages').replaceChildren(...cards);
+    };
+
+    let timer = 0;
+    input.addEventListener('input', () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(analyze, 250);
+    });
+    analyze();
+  }
+</script>
+
+<style>
+  .passage-tool {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .passage-tool textarea {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+  }
+  .passage-tool__summary {
+    margin: 0 0 var(--space-2);
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
+  }
+  .passage-tool__note {
+    margin: 0 0 var(--space-4);
+    font-size: var(--fs-sm);
+  }
+  .passages {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: var(--space-4);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .passages :global(.passage) {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-success);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+  .passages :global(.passage--warn) {
+    border-left-color: var(--color-warning);
+  }
+  .passages :global(.passage--bad) {
+    border-left-color: var(--color-danger);
+  }
+  .passages :global(.passage__head) {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    align-items: baseline;
+  }
+  .passages :global(.passage__title) {
+    margin: 0;
+    font-size: var(--fs-base);
+    font-weight: var(--fw-semibold);
+  }
+  .passages :global(.passage__head .mono-label) {
+    flex: none;
+  }
+  .passages :global(blockquote) {
+    margin: var(--space-3) 0;
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--color-border);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .passages :global(.tool-checks) {
+    margin: 0;
+  }
+</style>

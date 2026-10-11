@@ -1,0 +1,143 @@
+---
+/**
+ * AI search glossary, shared by /glossary/ and /es/glosario/.
+ * Terms live in en.ts / es.ts (`glossary.terms`) and are sorted alphabetically
+ * per language. Each term is an H2 with its own anchor (#id) so it can be
+ * linked and quoted on its own, and links to a related free tool when one exists.
+ * JSON-LD: DefinedTermSet (one DefinedTerm per entry) + BreadcrumbList.
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { TOOLS } from '@/data/tools';
+import { LANG_META, type Lang } from '@/i18n/config';
+import { COLLECTION_BASE, ROUTES } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { breadcrumbSchema, definedTermSetSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+/** Bump when terms are added or changed. */
+const UPDATED = '2026-10-10';
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const g = t.glossary;
+const path = routePath('glossary', lang);
+const collator = new Intl.Collator(LANG_META[lang].htmlLang, { sensitivity: 'base' });
+const terms = [...g.terms].sort((a, b) => collator.compare(a.term, b.term));
+const toolFor = (key: string) => TOOLS.find((tool) => tool.key === key && tool.published);
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+});
+
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.glossary, path },
+];
+---
+
+<BaseLayout
+  title={t.pages.glossary.title}
+  description={t.pages.glossary.description}
+  lang={lang}
+  alternates={routeAlternates('glossary')}
+  noindex={!ROUTES.glossary.published}
+  jsonLd={[
+    definedTermSetSchema({
+      name: g.title,
+      description: t.pages.glossary.description,
+      path,
+      lang,
+      terms,
+    }),
+    breadcrumbSchema(crumbs),
+  ]}
+>
+  <Section labelledby="glossary-title" narrow>
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <SectionHeading
+      level="h1"
+      id="glossary-title"
+      eyebrow={g.eyebrow}
+      title={g.title}
+      description={g.intro}
+    />
+    <p class="mono-label glossary__updated">
+      {g.updated}
+      <time datetime={UPDATED}>{dateFormat.format(new Date(UPDATED))}</time>
+    </p>
+
+    <nav class="glossary__index" aria-label={g.index}>
+      <ul>
+        {terms.map((term) => (
+          <li>
+            <a href={`#${term.id}`}>{term.term.split(' (')[0]}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    {terms.map((term) => {
+      const tool = toolFor(term.tool);
+      return (
+        <section class="term" id={term.id} aria-labelledby={`${term.id}-title`}>
+          <h2 id={`${term.id}-title`}>{term.term}</h2>
+          <p>{term.definition}</p>
+          {tool && (
+            <p class="term__tool">
+              {g.tryTool}{' '}
+              <a href={`${COLLECTION_BASE.tools[lang]}${tool.slug[lang]}/`}>{tool.title[lang]}</a>
+            </p>
+          )}
+        </section>
+      );
+    })}
+  </Section>
+</BaseLayout>
+
+<style>
+  .glossary__updated {
+    margin: 0 0 var(--space-5);
+  }
+  .glossary__index {
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+  .glossary__index ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-sm);
+  }
+  .glossary__index a {
+    display: inline-block;
+    padding-block: var(--space-1);
+  }
+  .term {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    scroll-margin-top: var(--space-5);
+  }
+  .term h2 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-xl);
+  }
+  .term p {
+    margin: 0;
+  }
+  .term .term__tool {
+    margin-top: var(--space-3);
+    font-size: var(--fs-sm);
+  }
+</style>

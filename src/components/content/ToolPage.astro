@@ -12,11 +12,14 @@
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
 import AiLogs from '@/components/tools/AiLogs.astro';
 import AiRobots from '@/components/tools/AiRobots.astro';
+import AiTraffic from '@/components/tools/AiTraffic.astro';
+import AiVisibility from '@/components/tools/AiVisibility.astro';
 import AnchorAnalyzer from '@/components/tools/AnchorAnalyzer.astro';
 import AnswerReady from '@/components/tools/AnswerReady.astro';
 import ContentAnalyzer from '@/components/tools/ContentAnalyzer.astro';
 import LinkScorecard from '@/components/tools/LinkScorecard.astro';
 import LlmsTxt from '@/components/tools/LlmsTxt.astro';
+import PassageChecker from '@/components/tools/PassageChecker.astro';
 import SchemaGenerator from '@/components/tools/SchemaGenerator.astro';
 import SerpPreview from '@/components/tools/SerpPreview.astro';
 import Card from '@/components/ui/Card.astro';
@@ -50,6 +53,9 @@ const TOOL_COMPONENTS = {
   contentAnalyzer: ContentAnalyzer,
   anchorAnalyzer: AnchorAnalyzer,
   aiLogs: AiLogs,
+  aiTraffic: AiTraffic,
+  passageChecker: PassageChecker,
+  aiVisibility: AiVisibility,
 };
 const ToolUi = TOOL_COMPONENTS[tool.key];
 
