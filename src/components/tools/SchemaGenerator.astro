@@ -73,8 +73,12 @@ const ARTICLE_TYPES = ['Article', 'BlogPosting', 'NewsArticle'];
     </div>
 
     {(['article', 'organization', 'person'] as const).map((type) => (
-      <fieldset class="tool-fieldset" data-type={type} hidden={type !== 'article'}>
-        <legend class="visually-hidden">{ui.types[type]}</legend>
+      <fieldset
+        class="tool-fieldset"
+        data-type={type}
+        hidden={type !== 'article'}
+        aria-label={ui.types[type]}
+      >
         <div class="tool-grid">
           {type === 'article' && (
             <div class="tool-field">
@@ -115,16 +119,14 @@ const ARTICLE_TYPES = ['Article', 'BlogPosting', 'NewsArticle'];
       </fieldset>
     ))}
 
-    <fieldset class="tool-fieldset" data-type="faq" hidden>
-      <legend class="visually-hidden">{ui.types.faq}</legend>
+    <fieldset class="tool-fieldset" data-type="faq" hidden aria-label={ui.types.faq}>
       <ol class="schema-rows" data-rows="faq"></ol>
       <button type="button" class="schema-tool__add" data-add="faq">
         + {ui.addQuestion}
       </button>
     </fieldset>
 
-    <fieldset class="tool-fieldset" data-type="breadcrumb" hidden>
-      <legend class="visually-hidden">{ui.types.breadcrumb}</legend>
+    <fieldset class="tool-fieldset" data-type="breadcrumb" hidden aria-label={ui.types.breadcrumb}>
       <ol class="schema-rows" data-rows="breadcrumb"></ol>
       <button type="button" class="schema-tool__add" data-add="breadcrumb">
         + {ui.addPage}
@@ -409,6 +411,7 @@ const ARTICLE_TYPES = ['Article', 'BlogPosting', 'NewsArticle'];
 <style>
   .schema-tool {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
     align-items: start;
   }

@@ -345,7 +345,7 @@ export const en = {
     eyebrow: 'Free tools',
     title: 'Free SEO tools',
     intro:
-      'Small, fast tools for everyday SEO work: checking search snippets, writing structured data, and vetting link building prospects. They run entirely in your browser, so nothing you type is sent or stored.',
+      'Free tools for everyday SEO and AI search work: vetting link prospects, auditing content and anchor text, tracking AI traffic and visibility, and generating schema, robots.txt, and llms.txt files. They run entirely in your browser, so nothing you type is sent or stored.',
     open: 'Open tool',
     more: 'More tools are on the way, including checks for AI crawler access, live backlinks, and indexability.',
   },
@@ -751,7 +751,7 @@ export const en = {
         topPaths: 'Pages AI bots requested most',
         path: 'Path',
         errorWarning: '{percent}% of AI bot requests returned an error. Check the paths below.',
-        robotsFetched: 'AI bots fetched robots.txt {count} times.',
+        robotsFetched: 'robots.txt requests from AI bots: {count}.',
         reading: 'Reading file…',
         tooLarge:
           'This file is larger than 50 MB. Upload a smaller sample (for example, one day of logs).',

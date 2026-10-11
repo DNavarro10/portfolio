@@ -346,7 +346,7 @@ export const es: UiStrings = {
     eyebrow: 'Herramientas gratuitas',
     title: 'Herramientas SEO gratuitas',
     intro:
-      'Herramientas pequeñas y rápidas para el trabajo SEO del día a día: revisar snippets, escribir datos estructurados y evaluar prospectos de link building. Funcionan por completo en tu navegador, así que nada de lo que escribes se envía ni se guarda.',
+      'Herramientas gratuitas para el trabajo diario de SEO y búsqueda con IA: evaluar prospectos de enlaces, auditar contenido y anchor text, medir tráfico y visibilidad en IA, y generar schema, robots.txt y llms.txt. Funcionan por completo en tu navegador, así que nada de lo que escribes se envía ni se guarda.',
     open: 'Abrir herramienta',
     more: 'Vienen más herramientas, como verificadores de acceso de rastreadores de IA, backlinks en vivo e indexabilidad.',
   },
@@ -757,7 +757,7 @@ export const es: UiStrings = {
         path: 'Ruta',
         errorWarning:
           'El {percent}% de las peticiones de bots de IA devolvió un error. Revisa las rutas de abajo.',
-        robotsFetched: 'Los bots de IA pidieron el robots.txt {count} veces.',
+        robotsFetched: 'Peticiones de bots de IA al robots.txt: {count}.',
         reading: 'Leyendo el archivo…',
         tooLarge:
           'Este archivo pesa más de 50 MB. Sube una muestra más pequeña (por ejemplo, un día de logs).',

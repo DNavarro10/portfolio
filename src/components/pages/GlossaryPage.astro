@@ -68,8 +68,7 @@ const crumbs = [
       description={g.intro}
     />
     <p class="mono-label glossary__updated">
-      {g.updated}
-      <time datetime={UPDATED}>{dateFormat.format(new Date(UPDATED))}</time>
+      {g.updated} <time datetime={UPDATED}>{dateFormat.format(new Date(UPDATED))}</time>
     </p>
 
     <nav class="glossary__index" aria-label={g.index}>

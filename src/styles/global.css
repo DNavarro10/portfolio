@@ -55,6 +55,7 @@ h2,
 h3,
 h4 {
   margin: 0 0 var(--space-4);
+  overflow-wrap: break-word;
   font-weight: var(--fw-semibold);
   line-height: var(--lh-snug);
   letter-spacing: -0.015em;
@@ -302,8 +303,8 @@ main {
 }
 .tool-check input {
   flex: none;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
   margin-top: 0.15em;
   accent-color: var(--color-accent);
 }

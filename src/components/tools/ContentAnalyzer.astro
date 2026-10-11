@@ -508,6 +508,7 @@ const statKeys = Object.keys(ui.stats) as (keyof typeof ui.stats)[];
 <style>
   .content-tool {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
   }
   .content-tool__input {
