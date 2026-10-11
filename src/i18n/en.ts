@@ -19,6 +19,7 @@ export const en = {
     blog: 'Blog',
     tools: 'SEO Tools',
     glossary: 'Glossary',
+    privacy: 'Privacy policy',
     contact: 'Contact',
   },
   langSwitch: {
@@ -26,6 +27,7 @@ export const en = {
     label: 'Español',
   },
   footer: {
+    privacy: 'Privacy policy',
     builtWith: 'Built with Astro and hosted on Cloudflare.',
     sourceCode: 'Source code',
     rights: 'All rights reserved.',
@@ -297,6 +299,7 @@ export const en = {
     intro:
       "Use the form below or message me on LinkedIn. I'm happy to talk about senior SEO, link building, technical SEO, and GEO roles with teams in the US, UK, and Latin America.",
     form: {
+      privacyLink: 'Read the privacy policy.',
       title: 'Send me a message',
       text: 'Tell me about the role or the project.',
       name: 'Name',
@@ -1286,6 +1289,70 @@ export const en = {
       },
     ],
   },
+  privacy: {
+    eyebrow: 'Privacy',
+    title: 'Privacy policy',
+    intro:
+      'This site doesn’t use cookies, ads, or tracking pixels, and the free SEO tools never send what you type anywhere. This page explains the little data that is processed and why.',
+    updated: 'Last updated',
+    sections: [
+      {
+        title: 'Who is responsible for this site?',
+        paragraphs: [
+          'This website is run by Luis Diego Navarro Morales, an individual based in Costa Rica. For any question about your data, use the contact form or send me a message on LinkedIn.',
+        ],
+      },
+      {
+        title: 'Does this site use cookies or trackers?',
+        paragraphs: [
+          'No. The site doesn’t set cookies and doesn’t use advertising trackers, social media pixels, or third-party embeds.',
+        ],
+      },
+      {
+        title: 'What happens to the data I enter in the SEO tools?',
+        paragraphs: [
+          'Nothing leaves your device. Every tool runs entirely in your browser: the text, page source, files, and logs you paste or upload are processed locally and are never sent to me or stored.',
+        ],
+      },
+      {
+        title: 'What does the contact form collect?',
+        paragraphs: [
+          'When the contact form is available and you use it, it sends your name, email address, company (optional), topic, and message to my inbox so I can reply. That information is used only to answer you: it is not added to a mailing list, sold, or shared.',
+          'Messages are kept only as long as needed to handle your request and as part of normal email records. To protect the form from spam, Cloudflare Turnstile may check that the request comes from a real browser.',
+        ],
+      },
+      {
+        title: 'What does the hosting provider process?',
+        paragraphs: [
+          'The site is hosted on Cloudflare. Like any web host, Cloudflare processes technical data such as your IP address, browser type, and the pages requested, to deliver the site and protect it from attacks. This is handled under Cloudflare’s own privacy policy.',
+        ],
+      },
+      {
+        title: 'Does the site use analytics?',
+        paragraphs: [
+          'Not at the moment. If analytics are added, they will be a privacy-friendly service that doesn’t use cookies, and this page will be updated.',
+        ],
+      },
+      {
+        title: 'What about links to other websites?',
+        paragraphs: [
+          'Links to sites like LinkedIn or GitHub take you to services with their own privacy policies. This policy only covers this website.',
+        ],
+      },
+      {
+        title: 'What are my rights?',
+        paragraphs: [
+          'You can ask what personal data I have about you, and ask me to correct or delete it, or to stop using it. These rights are recognized by Costa Rica’s personal data protection law (Law 8968) and, if you are in the European Union or the United Kingdom, by the GDPR.',
+        ],
+      },
+      {
+        title: 'Will this policy change?',
+        paragraphs: [
+          'If the way the site handles data changes, this page will be updated and the date at the top will change.',
+        ],
+      },
+    ],
+  },
   caseStudy: {
     inShort: 'In short',
     keyResults: 'Key results',
@@ -1335,6 +1402,11 @@ export const en = {
       title: 'AI Search Glossary: GEO, AEO, AI Overviews',
       description:
         'Plain-language AI search glossary: GEO, AEO, AI Overviews, grounding, llms.txt, query fan-out, AI crawlers, and more, with links to free tools.',
+    },
+    privacy: {
+      title: 'Privacy Policy',
+      description:
+        'How this site handles your data: no cookies or trackers, SEO tools that run in your browser, and contact form messages used only to reply.',
     },
     contact: {
       title: 'Contact Diego Navarro, Senior SEO Specialist',

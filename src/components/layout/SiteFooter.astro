@@ -1,7 +1,7 @@
 ---
 import { OWNER, SITE } from '@/config/site';
 import type { Lang } from '@/i18n/config';
-import { useTranslations } from '@/i18n/utils';
+import { routePath, useTranslations } from '@/i18n/utils';
 
 interface Props {
   lang: Lang;
@@ -27,6 +27,9 @@ const legal = `© ${year} ${OWNER.name}. ${t.footer.rights} ${t.footer.builtWith
           </a>
         </li>
       ))}
+      <li>
+        <a href={routePath('privacy', lang)}>{t.footer.privacy}</a>
+      </li>
       <li>
         <a href={SITE.sourceUrl} rel="noopener">
           {t.footer.sourceCode}

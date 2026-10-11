@@ -1,0 +1,85 @@
+---
+/**
+ * Privacy policy, shared by /privacy/ and /es/privacidad/.
+ * Copy lives in en.ts / es.ts (`privacy.sections`), written as questions so each
+ * answer can be quoted on its own. Update UPDATED (and the copy) whenever the
+ * site starts handling data differently, e.g. when analytics or the form go live.
+ * Linked from the footer and the contact form, not from the main menu.
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { LANG_META, type Lang } from '@/i18n/config';
+import { ROUTES } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { breadcrumbSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const UPDATED = '2026-10-11';
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const p = t.privacy;
+const path = routePath('privacy', lang);
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+});
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.privacy, path },
+];
+---
+
+<BaseLayout
+  title={t.pages.privacy.title}
+  description={t.pages.privacy.description}
+  lang={lang}
+  alternates={routeAlternates('privacy')}
+  noindex={!ROUTES.privacy.published}
+  jsonLd={[breadcrumbSchema(crumbs)]}
+>
+  <Section labelledby="privacy-title" narrow>
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <SectionHeading
+      level="h1"
+      id="privacy-title"
+      eyebrow={p.eyebrow}
+      title={p.title}
+      description={p.intro}
+    />
+    <p class="mono-label privacy__updated">
+      {p.updated} <time datetime={UPDATED}>{dateFormat.format(new Date(UPDATED))}</time>
+    </p>
+
+    {p.sections.map((section) => (
+      <section class="privacy__section">
+        <h2>{section.title}</h2>
+        {section.paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </section>
+    ))}
+  </Section>
+</BaseLayout>
+
+<style>
+  .privacy__updated {
+    margin: 0 0 var(--space-5);
+  }
+  .privacy__section {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .privacy__section h2 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-xl);
+  }
+  .privacy__section p:last-child {
+    margin-bottom: 0;
+  }
+</style>

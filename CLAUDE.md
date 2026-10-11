@@ -76,7 +76,8 @@ src/
   styles/global.css       Base styles: reset, typography, links, .container, .prose, utilities
   pages/styleguide.astro  Private style guide (noindex, not in sitemap or menu)
 public/                   Static files served as-is (favicon, apple-touch-icon, og-default.png
-                          share image 1200×630, _redirects for 301s; CV PDF later)
+                          share image 1200×630, _redirects for 301s, _headers for security
+                          headers and caching; CV PDF later)
 integrations/             Small build steps (nested-404.mjs)
 ```
 
@@ -184,6 +185,13 @@ integrations/             Small build steps (nested-404.mjs)
 
 ## Privacy and secrets
 
+- `public/_headers` sets a strict Content-Security-Policy (scripts only from this site, no inline
+  JS), HSTS, nosniff, frame-deny, referrer and permissions policies. Never add inline `<script>`
+  code or third-party scripts without updating the CSP (the file lists what Turnstile and
+  Cloudflare Web Analytics need).
+- The privacy policy (`/privacy/`, `/es/privacidad/`, copy in `privacy` in en.ts/es.ts) must match
+  reality: update it and its `UPDATED` date before turning on the form, analytics, or any embed.
+
 - Never put the owner's email address or phone number in code or content. Contact happens via a
   form (to be built); public profiles go in `OWNER.profiles`.
 - Secrets go in `.env` / `.dev.vars` (git-ignored). Document variable names in `.env.example`.
@@ -209,7 +217,9 @@ integrations/             Small build steps (nested-404.mjs)
 7. Deploy to Cloudflare (wrangler: `assets.not_found_handling: "404-page"` so the nearest
    404.html is served with a 404 status), buy domain, update `SITE_URL`, verify in Search Console, wire the contact
    form: `/api/contact/` server route (`prerender = false`) + Turnstile, destination email stored as a
-   Cloudflare secret (never in the repo), then set `SITE.contactForm.enabled: true`
+   Cloudflare secret (never in the repo), then set `SITE.contactForm.enabled: true`. Extend the CSP
+   in `public/_headers` for Turnstile/analytics and update the privacy policy. Check the live site
+   on securityheaders.com and Mozilla Observatory
 8. 🟡 SEO tools (12, EN + ES, browser-only): ✅ link prospect scorecard, anchor text analyzer,
    AI answer-readiness checker, quotable passage checker, GA4 AI traffic channel, AI visibility
    tracker, AI bot log analyzer, AI crawler robots.txt generator, llms.txt generator, content

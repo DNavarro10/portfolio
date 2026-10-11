@@ -21,12 +21,14 @@ export const es: UiStrings = {
     blog: 'Blog',
     tools: 'Herramientas SEO',
     glossary: 'Glosario',
+    privacy: 'Política de privacidad',
     contact: 'Contacto',
   },
   langSwitch: {
     label: 'English',
   },
   footer: {
+    privacy: 'Política de privacidad',
     builtWith: 'Hecho con Astro y alojado en Cloudflare.',
     sourceCode: 'Código fuente',
     rights: 'Todos los derechos reservados.',
@@ -298,6 +300,7 @@ export const es: UiStrings = {
     intro:
       'Usa el formulario o escríbeme por LinkedIn. Con gusto converso sobre puestos de SEO senior, link building, SEO técnico y GEO con equipos de EE. UU., Reino Unido y Latinoamérica.',
     form: {
+      privacyLink: 'Lee la política de privacidad.',
       title: 'Envíame un mensaje',
       text: 'Cuéntame sobre el puesto o el proyecto.',
       name: 'Nombre',
@@ -1298,6 +1301,70 @@ export const es: UiStrings = {
       },
     ],
   },
+  privacy: {
+    eyebrow: 'Privacidad',
+    title: 'Política de privacidad',
+    intro:
+      'Este sitio no usa cookies, publicidad ni píxeles de seguimiento, y las herramientas SEO gratuitas nunca envían lo que escribes. Esta página explica qué pocos datos se procesan y por qué.',
+    updated: 'Última actualización',
+    sections: [
+      {
+        title: '¿Quién es responsable de este sitio?',
+        paragraphs: [
+          'Este sitio web lo administra Luis Diego Navarro Morales, persona física con residencia en Costa Rica. Para cualquier consulta sobre tus datos, usa el formulario de contacto o escríbeme por LinkedIn.',
+        ],
+      },
+      {
+        title: '¿El sitio usa cookies o rastreadores?',
+        paragraphs: [
+          'No. El sitio no instala cookies ni usa rastreadores publicitarios, píxeles de redes sociales o contenido incrustado de terceros.',
+        ],
+      },
+      {
+        title: '¿Qué pasa con los datos que ingreso en las herramientas SEO?',
+        paragraphs: [
+          'Nada sale de tu dispositivo. Todas las herramientas funcionan por completo en tu navegador: el texto, el código fuente, los archivos y los logs que pegas o subes se procesan localmente y nunca se me envían ni se guardan.',
+        ],
+      },
+      {
+        title: '¿Qué datos recoge el formulario de contacto?',
+        paragraphs: [
+          'Cuando el formulario de contacto esté disponible y lo uses, enviará a mi correo tu nombre, tu correo electrónico, tu empresa (opcional), el tema y tu mensaje para que pueda responderte. Esa información solo se usa para contestarte: no se agrega a listas de correo, no se vende ni se comparte.',
+          'Los mensajes se conservan solo el tiempo necesario para atender tu consulta y como parte del historial normal del correo. Para proteger el formulario del spam, Cloudflare Turnstile puede verificar que la solicitud venga de un navegador real.',
+        ],
+      },
+      {
+        title: '¿Qué procesa el proveedor de hosting?',
+        paragraphs: [
+          'El sitio está alojado en Cloudflare. Como cualquier servicio de hosting, Cloudflare procesa datos técnicos como tu dirección IP, el tipo de navegador y las páginas solicitadas para entregar el sitio y protegerlo de ataques. Esto se rige por la política de privacidad de Cloudflare.',
+        ],
+      },
+      {
+        title: '¿El sitio usa analítica?',
+        paragraphs: [
+          'Por ahora no. Si se agrega analítica, será un servicio respetuoso con la privacidad que no use cookies, y esta página se actualizará.',
+        ],
+      },
+      {
+        title: '¿Y los enlaces a otros sitios?',
+        paragraphs: [
+          'Los enlaces a sitios como LinkedIn o GitHub te llevan a servicios con sus propias políticas de privacidad. Esta política solo cubre este sitio web.',
+        ],
+      },
+      {
+        title: '¿Cuáles son mis derechos?',
+        paragraphs: [
+          'Puedes preguntar qué datos personales tengo sobre ti y pedir que los corrija, los elimine o deje de usarlos. Estos derechos los reconoce la Ley 8968 de Protección de la Persona frente al Tratamiento de sus Datos Personales de Costa Rica y, si estás en la Unión Europea o el Reino Unido, el RGPD.',
+        ],
+      },
+      {
+        title: '¿Esta política puede cambiar?',
+        paragraphs: [
+          'Si cambia la forma en que el sitio trata los datos, esta página se actualizará y cambiará la fecha que aparece arriba.',
+        ],
+      },
+    ],
+  },
   caseStudy: {
     inShort: 'En resumen',
     keyResults: 'Resultados clave',
@@ -1347,6 +1414,11 @@ export const es: UiStrings = {
       title: 'Glosario de búsqueda con IA: GEO, AEO y más',
       description:
         'Glosario de búsqueda con IA en español: GEO, AEO, AI Overviews, grounding, llms.txt, query fan-out, rastreadores de IA y más, con herramientas gratis.',
+    },
+    privacy: {
+      title: 'Política de privacidad',
+      description:
+        'Cómo trata este sitio tus datos: sin cookies ni rastreadores, herramientas SEO que funcionan en tu navegador y mensajes usados solo para responderte.',
     },
     contact: {
       title: 'Contactar a Diego Navarro, especialista SEO senior',

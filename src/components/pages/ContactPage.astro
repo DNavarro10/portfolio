@@ -129,7 +129,9 @@ const crumbs = [
             ></textarea>
           </div>
           <Button type="submit">{c.form.submit}</Button>
-          <p class="form__privacy text-muted">{c.form.privacy}</p>
+          <p class="form__privacy text-muted">
+            {c.form.privacy} <a href={routePath('privacy', lang)}>{c.form.privacyLink}</a>
+          </p>
         </fieldset>
       </form>
     </section>
