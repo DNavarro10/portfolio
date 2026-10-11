@@ -110,6 +110,11 @@ const jsonLd = [
       {p.privacy} · {t.blog.updatedOn}{' '}
       <time datetime={tool.updated}>{dateFormat.format(updated)}</time>
     </p>
+    {tool.bestOnDesktop && (
+      <p class="tool-desktop-note">
+        <span aria-hidden="true">🖥</span> {p.desktopNote}
+      </p>
+    )}
     <noscript>
       <p class="tool-noscript">{p.noscript}</p>
     </noscript>
@@ -157,6 +162,21 @@ const jsonLd = [
 <style>
   .tool-privacy {
     margin: 0 0 var(--space-6);
+  }
+  /* Only on phones and small tablets. */
+  .tool-desktop-note {
+    display: none;
+    margin: 0 0 var(--space-5);
+    padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  @media (max-width: 48rem) {
+    .tool-desktop-note {
+      display: block;
+    }
   }
   .tool-noscript {
     padding: var(--space-4);

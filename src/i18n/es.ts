@@ -351,6 +351,8 @@ export const es: UiStrings = {
     more: 'Vienen más herramientas, como verificadores de acceso de rastreadores de IA, backlinks en vivo e indexabilidad.',
   },
   toolPage: {
+    desktopNote:
+      'Funciona mejor en una computadora: esta herramienta usa tablas anchas, código o el código fuente de páginas.',
     eyebrow: 'Herramienta SEO gratuita',
     privacy: 'Funciona en tu navegador. Nada de lo que escribes se envía ni se guarda.',
     howTo: 'Cómo usarla',
@@ -1355,6 +1357,14 @@ export const es: UiStrings = {
       title: 'Página no encontrada',
       description: 'La página que buscas no existe.',
       backHome: 'Volver al inicio',
+      intro:
+        'Puede que el enlace esté roto o que la página haya cambiado de lugar. Aquí tienes algunas opciones para encontrar lo que buscas.',
+      suggestion: '¿Quisiste decir',
+      redirect: 'Te llevaremos a {page} en {seconds} segundos.',
+      redirectHome: 'la página de inicio',
+      stay: 'Quedarme en esta página',
+      stayed: 'Redirección cancelada. Elige una página abajo.',
+      popular: 'Páginas populares',
     },
   },
 };

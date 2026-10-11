@@ -26,6 +26,8 @@ export interface Tool {
   category: Record<Lang, string>;
   /** Last meaningful update (YYYY-MM-DD): shown on the page, in JSON-LD, and in the sitemap. */
   updated: string;
+  /** Shows a "works best on a computer" note on small screens (wide tables, pasted code). */
+  bestOnDesktop?: boolean;
   /** false = noindex and excluded from the sitemap. */
   published: boolean;
 }
@@ -59,6 +61,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'Link building', es: 'Link building' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
   {
@@ -74,6 +77,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
   {
@@ -86,6 +90,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
   {
@@ -101,6 +106,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
   {
@@ -128,6 +134,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
   {
@@ -143,6 +150,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
   {
@@ -170,6 +178,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'Content SEO', es: 'SEO de contenidos' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
   {
@@ -200,6 +209,7 @@ export const TOOLS: Tool[] = [
     },
     category: { en: 'Technical SEO', es: 'SEO técnico' },
     updated: '2026-10-10',
+    bestOnDesktop: true,
     published: true,
   },
 ];

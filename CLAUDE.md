@@ -71,12 +71,13 @@ src/
   content.config.ts       Collection schemas (blog, experience)
   content/{blog,experience}/{en,es}/*.md
   pages/                  Routes (EN at root, ES under /es/), sitemap.xml.ts, robots.txt.ts,
-                          llms.txt.ts, 404
+                          llms.txt.ts, 404 (EN + ES, see NotFoundPage.astro)
   styles/tokens.css       Design tokens: colors (light + dark), type scale, spacing, radii
   styles/global.css       Base styles: reset, typography, links, .container, .prose, utilities
   pages/styleguide.astro  Private style guide (noindex, not in sitemap or menu)
 public/                   Static files served as-is (favicon, apple-touch-icon, og-default.png
-                          share image 1200×630; CV PDF later)
+                          share image 1200×630, _redirects for 301s; CV PDF later)
+integrations/             Small build steps (nested-404.mjs)
 ```
 
 ## URL rules
@@ -105,6 +106,10 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
 - **Sitemap** (`/sitemap.xml`) is generated from the route registry, collections, and tools.
   Unpublished pages (`published: false`, `draft: true`) are `noindex` and excluded from it.
 - Never auto-redirect by browser language; the language switcher is a normal link.
+- **404s**: `/404.html` (EN) and `/es/404.html` (ES, moved there by `integrations/nested-404.mjs`)
+  keep a real 404 status, suggest the closest published URL, and redirect there (or home) after a
+  10-second countdown the visitor can cancel. Never redirect all missing URLs to the home page
+  with a 301 (soft 404). Pages that move for good get a 301 in `public/_redirects`.
 
 ## AI search (GEO/AEO) rules
 
@@ -134,6 +139,8 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
   (`.tool-panel`, `.tool-field`, `.tool-checks`, `.tool-table`, `.tool-button`, `.status--*`).
 - Pasted HTML is read with `DOMParser` (never inserted into the page); use `mainContent()`.
 - Status is never shown by color alone (icon or text too). Keep each tool script small.
+- Tools with wide tables, code, or pasted page source set `bestOnDesktop: true` (a note shows on
+  screens under 48rem). They must still work on phones.
 
 ## i18n rules
 
@@ -199,7 +206,8 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
    `SITE.contactForm.enabled`), LinkedIn + CV as secondary, availability, services teaser.
    Pending: CV PDF (set `OWNER.cv`, the button appears automatically)
 6. Blog launch posts
-7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console, wire the contact
+7. Deploy to Cloudflare (wrangler: `assets.not_found_handling: "404-page"` so the nearest
+   404.html is served with a 404 status), buy domain, update `SITE_URL`, verify in Search Console, wire the contact
    form: `/api/contact/` server route (`prerender = false`) + Turnstile, destination email stored as a
    Cloudflare secret (never in the repo), then set `SITE.contactForm.enabled: true`
 8. 🟡 SEO tools (12, EN + ES, browser-only): ✅ link prospect scorecard, anchor text analyzer,

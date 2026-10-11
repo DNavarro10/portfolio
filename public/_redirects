@@ -1,0 +1,14 @@
+# Permanent redirects (read by Cloudflare at deploy time).
+# One rule per line: <from> <to> <status>. Use 301 for pages that moved for good.
+# Only add a rule when a real page changes its URL; never send every missing URL
+# to the home page (Google treats that as a "soft 404").
+#
+# Examples:
+# /old-page/            /new-page/            301
+# /es/pagina-vieja/     /es/pagina-nueva/     301
+
+# Common shortcuts people type
+/home/      /       301
+/inicio/    /es/    301
+/en/        /       301
+/en/*       /:splat 301

@@ -350,6 +350,8 @@ export const en = {
     more: 'More tools are on the way, including checks for AI crawler access, live backlinks, and indexability.',
   },
   toolPage: {
+    desktopNote:
+      'Works best on a computer: this tool uses wide tables, code, or pasted page source.',
     eyebrow: 'Free SEO tool',
     privacy: 'Runs in your browser. Nothing you type is sent or stored.',
     howTo: 'How to use it',
@@ -1343,6 +1345,14 @@ export const en = {
       title: 'Page not found',
       description: 'The page you are looking for does not exist.',
       backHome: 'Back to the home page',
+      intro:
+        'The link may be broken, or the page may have moved. Here are some ways to find what you need.',
+      suggestion: 'Did you mean',
+      redirect: 'Taking you to {page} in {seconds} seconds.',
+      redirectHome: 'the home page',
+      stay: 'Stay on this page',
+      stayed: 'Redirect cancelled. Pick a page below.',
+      popular: 'Popular pages',
     },
   },
 };

@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import nestedNotFoundPages from './integrations/nested-404.mjs';
 import { SITE_URL } from './src/config/site.ts';
 
 // https://docs.astro.build/en/reference/configuration-reference/
@@ -30,4 +31,6 @@ export default defineConfig({
   // The Cloudflare adapter is added back at deploy time (roadmap step 7),
   // when the contact form and server-side SEO tools need it.
   output: 'static',
+
+  integrations: [nestedNotFoundPages()],
 });
