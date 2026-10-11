@@ -27,6 +27,15 @@
 
   --color-focus: #0a6b4b;
 
+  /* Status colors (tool results, meters). Always paired with text, never color alone. */
+  --color-success: #0a6b4b; /* 6.3:1 on bg */
+  --color-warning: #8a5a00; /* 5.7:1 on bg */
+  --color-danger: #b42318; /* 6.3:1 on bg */
+
+  /* SERP preview: imitates Google's result colors (light). */
+  --color-serp-title: #1a0dab; /* 12.5:1 on surface */
+  --color-serp-text: #4d5156; /* 8.0:1 on surface */
+
   /* ---------- Typography ---------- */
   --font-sans:
     'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
@@ -40,6 +49,10 @@
   --fs-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
   --fs-xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
   --fs-2xl: clamp(1.75rem, 1.45rem + 1.4vw, 2.5rem);
+  /* Fixed sizes that copy Google's result layout (SERP preview only). */
+  --fs-serp-title: 1.25rem; /* 20px */
+  --fs-serp-text: 0.875rem; /* 14px */
+  --font-serp: Arial, 'Helvetica Neue', Helvetica, sans-serif;
   --fs-3xl: clamp(2.25rem, 1.7rem + 2.6vw, 3.75rem);
 
   --lh-tight: 1.15;
@@ -94,5 +107,12 @@
     --color-on-accent-soft: #7fe0bc; /* 9.4:1 on accent-soft */
 
     --color-focus: #4fd1a1;
+
+    --color-success: #4fd1a1; /* 9.9:1 on bg */
+    --color-warning: #f0b44c; /* 10.2:1 on bg */
+    --color-danger: #ff8a7a; /* 8.2:1 on bg */
+
+    --color-serp-title: #99c3ff; /* 9.7:1 on surface */
+    --color-serp-text: #bdc1c6; /* 9.7:1 on surface */
   }
 }
