@@ -9,7 +9,7 @@
  */
 import { SITE } from '@/config/site';
 import type { Lang } from '@/i18n/config';
-import { NAV_ROUTES } from '@/i18n/routes';
+import { NAV_ROUTES, ROUTES } from '@/i18n/routes';
 import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 
@@ -22,7 +22,8 @@ const { lang, alternates } = Astro.props;
 const t = useTranslations(lang);
 const current = Astro.url.pathname;
 
-const links = NAV_ROUTES.map((key) => {
+// Only published pages appear in the menu (no links to unfinished pages).
+const links = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => {
   const href = routePath(key, lang);
   return { key, href, label: t.nav[key], isCurrent: current.startsWith(href) };
 });
