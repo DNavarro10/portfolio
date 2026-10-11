@@ -290,6 +290,36 @@ export const en = {
       contact: 'Get in touch',
     },
   },
+  contact: {
+    eyebrow: 'Contact',
+    title: 'Contact Diego Navarro',
+    intro:
+      "The best way to reach me is LinkedIn. I'm happy to talk about senior SEO, link building, technical SEO, and GEO roles with teams in the US, UK, and Latin America.",
+    linkedin: {
+      title: 'Message me on LinkedIn',
+      text: 'Send a message or a connection request with a short note about the role or project.',
+      button: 'Open LinkedIn',
+    },
+    details: {
+      title: 'Working with me',
+      items: [
+        { label: 'Based in', value: 'Costa Rica (UTC−6)' },
+        { label: 'Schedule', value: 'Used to working on US Eastern (EST) hours' },
+        { label: 'Languages', value: 'Spanish (native), English (C1)' },
+        { label: 'Focus', value: 'Senior SEO, link building, technical SEO, GEO' },
+      ],
+    },
+    cv: {
+      title: 'CV',
+      text: 'Prefer a document? Download my CV as a PDF.',
+    },
+    formSoon: 'A contact form is coming soon. Until then, LinkedIn is the fastest way to reach me.',
+    services: {
+      eyebrow: 'For businesses',
+      title: 'Need SEO help for your business?',
+      text: "I'm preparing a services offer for link building, technical SEO, and GEO. In the meantime, send me a message on LinkedIn and tell me about your project.",
+    },
+  },
   caseStudy: {
     inShort: 'In short',
     keyResults: 'Key results',
@@ -335,8 +365,9 @@ export const en = {
       description: 'Free, browser-based SEO tools built by Diego Navarro.',
     },
     contact: {
-      title: 'Contact',
-      description: 'Get in touch with Diego Navarro about SEO roles or projects.',
+      title: 'Contact Diego Navarro, Senior SEO Specialist',
+      description:
+        'How to contact Diego Navarro, Senior SEO and backlinks specialist in Costa Rica: LinkedIn, availability, languages, and focus areas.',
     },
     notFound: {
       title: 'Page not found',

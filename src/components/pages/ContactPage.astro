@@ -1,0 +1,146 @@
+---
+/**
+ * Contact page, shared by /contact/ and /es/contacto/.
+ * LinkedIn is the primary channel until the contact form is wired up at the
+ * Cloudflare deploy step (it needs a server to send email privately).
+ * The CV block appears automatically once OWNER.cv has a file for this language.
+ * JSON-LD: ContactPage (main entity: Person, whose sameAs lists the profiles).
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { OWNER } from '@/config/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang } from '@/i18n/config';
+import { ROUTES } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { breadcrumbSchema, contactPageSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const c = t.contact;
+const path = routePath('contact', lang);
+const linkedin = OWNER.profiles.find((profile) => profile.label === 'LinkedIn');
+const cvFile = OWNER.cv[lang];
+
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.contact, path },
+];
+---
+
+<BaseLayout
+  title={t.pages.contact.title}
+  description={t.pages.contact.description}
+  lang={lang}
+  alternates={routeAlternates('contact')}
+  noindex={!ROUTES.contact.published}
+  bareTitle
+  jsonLd={[contactPageSchema(path, lang), breadcrumbSchema(crumbs)]}
+>
+  <Section labelledby="contact-title" narrow>
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <SectionHeading
+      level="h1"
+      id="contact-title"
+      eyebrow={c.eyebrow}
+      title={c.title}
+      description={c.intro}
+    />
+
+    <div class="contact-grid">
+      {linkedin && (
+        <section class="panel panel--primary" aria-labelledby="linkedin-title">
+          <h2 id="linkedin-title">{c.linkedin.title}</h2>
+          <p>{c.linkedin.text}</p>
+          <Button href={linkedin.url} icon="external" rest={{ rel: 'me noopener' }}>
+            {c.linkedin.button}
+          </Button>
+        </section>
+      )}
+
+      {cvFile && (
+        <section class="panel" aria-labelledby="cv-title">
+          <h2 id="cv-title">{c.cv.title}</h2>
+          <p>{c.cv.text}</p>
+          <Button href={cvFile} variant="secondary" icon="download" download>
+            {t.home.actions.downloadCv}
+          </Button>
+        </section>
+      )}
+
+      <section class="panel" aria-labelledby="details-title">
+        <h2 id="details-title">{c.details.title}</h2>
+        <dl class="details">
+          {c.details.items.map((item) => (
+            <div>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    </div>
+
+    <p class="form-soon text-muted">{c.formSoon}</p>
+  </Section>
+
+  <Section labelledby="services-title" tinted narrow>
+    <SectionHeading
+      id="services-title"
+      eyebrow={c.services.eyebrow}
+      title={c.services.title}
+      description={c.services.text}
+    />
+  </Section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .panel {
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+  .panel--primary {
+    border-left: 3px solid var(--color-accent);
+  }
+  .panel h2 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-lg);
+  }
+  .panel p {
+    color: var(--color-text-muted);
+  }
+  .details {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+  }
+  .details div {
+    display: grid;
+    grid-template-columns: minmax(7rem, auto) 1fr;
+    gap: var(--space-3);
+  }
+  .details dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--color-accent);
+  }
+  .details dd {
+    margin: 0;
+  }
+  .form-soon {
+    margin: var(--space-6) 0 0;
+    font-size: var(--fs-sm);
+  }
+</style>

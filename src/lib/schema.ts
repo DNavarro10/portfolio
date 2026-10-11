@@ -129,6 +129,19 @@ export function aboutPageSchema(path: string, lang: Lang): JsonLdNode {
   };
 }
 
+/** Contact page: how to reach Diego (his profiles are on the Person node). */
+export function contactPageSchema(path: string, lang: Lang): JsonLdNode {
+  const url = absoluteUrl(path);
+  return {
+    '@type': 'ContactPage',
+    '@id': `${url}#contactpage`,
+    url,
+    inLanguage: LANG_META[lang].hreflang,
+    isPartOf: { '@id': WEBSITE_ID },
+    mainEntity: { '@id': PERSON_ID },
+  };
+}
+
 export interface BlogPostingInput {
   title: string;
   description: string;

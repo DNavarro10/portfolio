@@ -22,7 +22,7 @@ export const ROUTES = {
   experience: { en: '/experience/', es: '/es/experiencia/', published: true },
   blog: { en: '/blog/', es: '/es/blog/', published: false },
   tools: { en: '/tools/', es: '/es/herramientas/', published: false },
-  contact: { en: '/contact/', es: '/es/contacto/', published: false },
+  contact: { en: '/contact/', es: '/es/contacto/', published: true },
 } as const satisfies Record<string, Partial<Record<Lang, string>> & { published: boolean }>;
 
 export type RouteKey = keyof typeof ROUTES;

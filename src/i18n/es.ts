@@ -291,6 +291,37 @@ export const es: UiStrings = {
       contact: 'Contactarme',
     },
   },
+  contact: {
+    eyebrow: 'Contacto',
+    title: 'Contactar a Diego Navarro',
+    intro:
+      'La mejor forma de contactarme es LinkedIn. Con gusto converso sobre puestos de SEO senior, link building, SEO técnico y GEO con equipos de EE. UU., Reino Unido y Latinoamérica.',
+    linkedin: {
+      title: 'Escríbeme en LinkedIn',
+      text: 'Envía un mensaje o una solicitud de conexión con una nota breve sobre el puesto o el proyecto.',
+      button: 'Abrir LinkedIn',
+    },
+    details: {
+      title: 'Cómo trabajo',
+      items: [
+        { label: 'Ubicación', value: 'Costa Rica (UTC−6)' },
+        { label: 'Horario', value: 'Acostumbrado a trabajar en horario del este de EE. UU. (EST)' },
+        { label: 'Idiomas', value: 'Español (nativo), inglés (C1)' },
+        { label: 'Enfoque', value: 'SEO senior, link building, SEO técnico, GEO' },
+      ],
+    },
+    cv: {
+      title: 'CV',
+      text: '¿Prefieres un documento? Descarga mi CV en PDF.',
+    },
+    formSoon:
+      'Pronto habrá un formulario de contacto. Mientras tanto, LinkedIn es la forma más rápida de contactarme.',
+    services: {
+      eyebrow: 'Para empresas',
+      title: '¿Necesitas ayuda con el SEO de tu negocio?',
+      text: 'Estoy preparando una oferta de servicios de link building, SEO técnico y GEO. Mientras tanto, escríbeme por LinkedIn y cuéntame sobre tu proyecto.',
+    },
+  },
   caseStudy: {
     inShort: 'En resumen',
     keyResults: 'Resultados clave',
@@ -337,8 +368,9 @@ export const es: UiStrings = {
         'Herramientas SEO gratuitas que funcionan en el navegador, creadas por Diego Navarro.',
     },
     contact: {
-      title: 'Contacto',
-      description: 'Contacta a Diego Navarro para puestos o proyectos de SEO.',
+      title: 'Contactar a Diego Navarro, especialista SEO senior',
+      description:
+        'Cómo contactar a Diego Navarro, especialista SEO senior y en backlinks en Costa Rica: LinkedIn, disponibilidad, idiomas y enfoque.',
     },
     notFound: {
       title: 'Página no encontrada',
