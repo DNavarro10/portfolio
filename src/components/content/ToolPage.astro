@@ -1,16 +1,28 @@
 ---
 /**
- * Shell for one SEO tool page. The interactive tool itself will be added
- * as a client-side island inside the slot when each tool is built.
+ * One free SEO tool page, shared by /tools/<slug>/ and /es/herramientas/<slug>/.
+ *
+ * Structure (answer-ready): h1 + one-line summary → the interactive tool →
+ * "How to use it" steps → Q&A → links to the other tools.
+ * JSON-LD: WebApplication + BreadcrumbList + FAQPage.
+ *
+ * The interactive part lives in src/components/tools/ and ships its own small
+ * script, so JavaScript loads only on the tool page that needs it.
  */
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import LinkScorecard from '@/components/tools/LinkScorecard.astro';
+import SchemaGenerator from '@/components/tools/SchemaGenerator.astro';
+import SerpPreview from '@/components/tools/SerpPreview.astro';
+import Card from '@/components/ui/Card.astro';
+import CardGrid from '@/components/ui/CardGrid.astro';
 import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { TOOLS, type Tool } from '@/data/tools';
 import { LANGS, type Lang } from '@/i18n/config';
 import { COLLECTION_BASE } from '@/i18n/routes';
 import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
-import { breadcrumbSchema } from '@/lib/schema';
-import type { Tool } from '@/data/tools';
+import { breadcrumbSchema, faqSchema, webApplicationSchema } from '@/lib/schema';
 
 interface Props {
   tool: Tool;
@@ -19,13 +31,36 @@ interface Props {
 
 const { tool, lang } = Astro.props;
 const t = useTranslations(lang);
-const alternates: Alternates = Object.fromEntries(
-  LANGS.map((l) => [l, `${COLLECTION_BASE.tools[l]}${tool.slug[l]}/`]),
-);
+const p = t.toolPage;
+const content = t.toolContent[tool.key];
+
+const TOOL_COMPONENTS = {
+  serpPreview: SerpPreview,
+  schemaGenerator: SchemaGenerator,
+  linkScorecard: LinkScorecard,
+};
+const ToolUi = TOOL_COMPONENTS[tool.key];
+
+const pathFor = (item: Tool, l: Lang) => `${COLLECTION_BASE.tools[l]}${item.slug[l]}/`;
+const alternates: Alternates = Object.fromEntries(LANGS.map((l) => [l, pathFor(tool, l)]));
+const path = pathFor(tool, lang);
+const others = TOOLS.filter((item) => item.published && item.key !== tool.key);
+
 const crumbs = [
   { name: t.nav.home, path: routePath('home', lang) },
   { name: t.nav.tools, path: routePath('tools', lang) },
-  { name: tool.title[lang], path: alternates[lang]! },
+  { name: tool.title[lang], path },
+];
+
+const jsonLd = [
+  webApplicationSchema({
+    name: tool.title[lang],
+    description: tool.description[lang],
+    path,
+    lang,
+  }),
+  breadcrumbSchema(crumbs),
+  faqSchema(content.faq, path),
 ];
 ---
 
@@ -35,12 +70,88 @@ const crumbs = [
   lang={lang}
   alternates={alternates}
   noindex={!tool.published}
-  jsonLd={[breadcrumbSchema(crumbs)]}
+  jsonLd={jsonLd}
 >
-  <Section>
+  <Section labelledby="tool-title">
     <Breadcrumbs lang={lang} items={crumbs} />
-    <h1>{tool.title[lang]}</h1>
-    <p class="lead">{tool.description[lang]}</p>
-    <slot />
+    <SectionHeading
+      level="h1"
+      id="tool-title"
+      eyebrow={`${p.eyebrow} · ${tool.category[lang]}`}
+      title={tool.title[lang]}
+      description={tool.description[lang]}
+    />
+    <p class="tool-privacy mono-label">{p.privacy}</p>
+    <noscript>
+      <p class="tool-noscript">{p.noscript}</p>
+    </noscript>
+    <ToolUi lang={lang} />
   </Section>
+
+  <Section labelledby="howto-title" tinted narrow>
+    <SectionHeading id="howto-title" title={p.howTo} />
+    <ol class="steps">
+      {content.steps.map((step) => (
+        <li>{step}</li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section labelledby="faq-title" narrow>
+    <SectionHeading id="faq-title" title={p.faq} />
+    {content.faq.map((item) => (
+      <div class="faq-item">
+        <h3>{item.question}</h3>
+        <p>{item.answer}</p>
+      </div>
+    ))}
+  </Section>
+
+  {others.length > 0 && (
+    <Section labelledby="related-title" tinted>
+      <SectionHeading id="related-title" title={p.related} />
+      <CardGrid min="18rem">
+        {others.map((item) => (
+          <li>
+            <Card
+              href={pathFor(item, lang)}
+              eyebrow={item.category[lang]}
+              title={item.title[lang]}
+              description={item.description[lang]}
+            />
+          </li>
+        ))}
+      </CardGrid>
+    </Section>
+  )}
 </BaseLayout>
+
+<style>
+  .tool-privacy {
+    margin: 0 0 var(--space-6);
+  }
+  .tool-noscript {
+    padding: var(--space-4);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
+  }
+  .steps {
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+  .steps li + li {
+    margin-top: var(--space-3);
+  }
+  .faq-item {
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+  .faq-item h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-lg);
+  }
+  .faq-item p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+</style>

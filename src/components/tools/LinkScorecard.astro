@@ -1,0 +1,350 @@
+---
+/**
+ * Link prospect scorecard: a first filter for link building outreach.
+ *
+ * Score out of 100: relevance 25, traffic 25, DR 25, market 15, trend 10.
+ * Each red flag subtracts 20. Hard fails (automatic no-go): DR or traffic
+ * below the user's minimums, or links out to unrelated risky niches.
+ * Verdict: Go ≥ 70 with no red flags, Review ≥ 45, otherwise No-go.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.linkScorecard.ui;
+const copied = t.toolPage.copied;
+
+const trends = Object.entries(ui.trends);
+const relevances = Object.entries(ui.relevances);
+const markets = Object.entries(ui.markets);
+const flags = Object.entries(ui.flagList);
+---
+
+<div class="scorecard" data-scorecard data-strings={JSON.stringify({ ...ui, copied, lang })}>
+  <form class="scorecard__form" novalidate>
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.thresholds}</legend>
+      <div class="tool-grid">
+        <div class="tool-field">
+          <label for="lp-min-dr">{ui.minDr}</label>
+          <input id="lp-min-dr" name="minDr" type="number" min="0" max="100" value="30" />
+        </div>
+        <div class="tool-field">
+          <label for="lp-min-traffic">{ui.minTraffic}</label>
+          <input
+            id="lp-min-traffic"
+            name="minTraffic"
+            type="number"
+            min="0"
+            step="100"
+            value="1000"
+          />
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.metrics}</legend>
+      <div class="tool-grid">
+        <div class="tool-field">
+          <label for="lp-domain">{ui.domain}</label>
+          <input
+            id="lp-domain"
+            name="domain"
+            type="text"
+            inputmode="url"
+            autocomplete="off"
+            placeholder={ui.domainPlaceholder}
+          />
+        </div>
+        <div class="tool-field">
+          <label for="lp-dr">{ui.dr}</label>
+          <input id="lp-dr" name="dr" type="number" min="0" max="100" />
+        </div>
+        <div class="tool-field">
+          <label for="lp-traffic">{ui.traffic}</label>
+          <input id="lp-traffic" name="traffic" type="number" min="0" step="100" />
+        </div>
+        <div class="tool-field">
+          <label for="lp-trend">{ui.trend}</label>
+          <select id="lp-trend" name="trend">
+            {trends.map(([value, label]) => (
+              <option value={value} selected={value === 'stable'}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div class="tool-field">
+          <label for="lp-relevance">{ui.relevance}</label>
+          <select id="lp-relevance" name="relevance">
+            {relevances.map(([value, label]) => (
+              <option value={value}>{label}</option>
+            ))}
+          </select>
+        </div>
+        <div class="tool-field">
+          <label for="lp-market">{ui.market}</label>
+          <select id="lp-market" name="market">
+            {markets.map(([value, label]) => (
+              <option value={value}>{label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.flags}</legend>
+      {flags.map(([value, label]) => (
+        <label class="tool-check">
+          <input type="checkbox" name="flags" value={value} />
+          <span>{label}</span>
+        </label>
+      ))}
+    </fieldset>
+  </form>
+
+  <section class="tool-panel scorecard__result" aria-labelledby="lp-result-title">
+    <h2 id="lp-result-title">{ui.result}</h2>
+    <div aria-live="polite" aria-atomic="true">
+      <p class="scorecard__empty text-muted" data-out="empty">
+        {ui.empty}
+      </p>
+      <div data-out="filled" hidden>
+        <p class="scorecard__score">
+          <span class="mono-label">{ui.score}</span>
+          <span class="scorecard__number">
+            <span data-out="score"></span>/100
+          </span>
+        </p>
+        <p class="scorecard__verdict" data-out="verdict"></p>
+        <ul class="scorecard__reasons" data-out="reasons"></ul>
+      </div>
+    </div>
+    <button type="button" class="scorecard__copy" data-out="copy" hidden>
+      {ui.copySummary}
+    </button>
+  </section>
+</div>
+
+<script>
+  import { copyText, fill, readStrings } from './client';
+
+  type Status = 'good' | 'warn' | 'bad';
+  type Key =
+    'growing' | 'stable' | 'declining' | 'high' | 'medium' | 'low' | 'yes' | 'partial' | 'no';
+
+  interface Strings {
+    lang: string;
+    copied: string;
+    unnamed: string;
+    verdicts: Record<'go' | 'review' | 'nogo', string>;
+    reasons: Record<string, string>;
+    flagShort: Record<string, string>;
+  }
+
+  const POINTS: Record<Key, number> = {
+    growing: 10,
+    stable: 7,
+    declining: 0,
+    high: 25,
+    medium: 12,
+    low: 0,
+    yes: 15,
+    partial: 8,
+    no: 0,
+  };
+  const STATUS: Record<Key, Status> = {
+    growing: 'good',
+    stable: 'good',
+    declining: 'warn',
+    high: 'good',
+    medium: 'warn',
+    low: 'bad',
+    yes: 'good',
+    partial: 'warn',
+    no: 'bad',
+  };
+  const FLAG_PENALTY = 20;
+  const HARD_FAIL_FLAGS = ['spamOutbound'];
+  const ICON: Record<Status, string> = { good: '✓', warn: '!', bad: '✕' };
+
+  const root = document.querySelector<HTMLElement>('[data-scorecard]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const form = root.querySelector('form')!;
+    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+    const number = new Intl.NumberFormat(s.lang);
+    let summary = '';
+
+    const num = (name: string): number | null => {
+      const field = form.elements.namedItem(name) as HTMLInputElement;
+      return field.value === '' ? null : Math.max(0, Number(field.value));
+    };
+    const pick = (name: string) =>
+      (form.elements.namedItem(name) as HTMLSelectElement).value as Key;
+
+    const update = () => {
+      const dr = num('dr');
+      const traffic = num('traffic');
+      const filled = dr !== null && traffic !== null;
+      out('empty').hidden = filled;
+      out('filled').hidden = !filled;
+      out('copy').hidden = !filled;
+      if (!filled) return;
+
+      const minDr = num('minDr') ?? 0;
+      const minTraffic = num('minTraffic') ?? 0;
+      const reasons: { status: Status; text: string }[] = [];
+      let score = 0;
+      let hardFail = false;
+
+      // Authority: 25 points, scaled from the minimum up to DR 100.
+      if (dr < minDr) {
+        hardFail = true;
+        reasons.push({ status: 'bad', text: fill(s.reasons.drBelow!, { dr, min: minDr }) });
+      } else {
+        score += 10 + 15 * ((dr - minDr) / Math.max(1, 100 - minDr));
+        reasons.push({ status: 'good', text: fill(s.reasons.drOk!, { dr, min: minDr }) });
+      }
+
+      // Traffic: 25 points; full marks at 100× the minimum (log scale).
+      const values = { traffic: number.format(traffic), min: number.format(minTraffic) };
+      if (traffic < minTraffic || traffic === 0) {
+        hardFail = true;
+        reasons.push({ status: 'bad', text: fill(s.reasons.trafficBelow!, values) });
+      } else {
+        const ratio = Math.log10(traffic / Math.max(1, minTraffic)) / 2;
+        score += 10 + 15 * Math.min(1, Math.max(0, ratio));
+        reasons.push({ status: 'good', text: fill(s.reasons.trafficOk!, values) });
+      }
+
+      for (const key of [pick('relevance'), pick('market'), pick('trend')]) {
+        score += POINTS[key];
+        reasons.push({ status: STATUS[key], text: s.reasons[key]! });
+      }
+
+      const flags = [...form.querySelectorAll<HTMLInputElement>('input[name="flags"]:checked')].map(
+        (box) => box.value,
+      );
+      for (const flag of flags) {
+        score -= FLAG_PENALTY;
+        if (HARD_FAIL_FLAGS.includes(flag)) hardFail = true;
+        reasons.push({ status: 'bad', text: fill(s.reasons.flag!, { flag: s.flagShort[flag]! }) });
+      }
+
+      score = Math.round(Math.max(0, Math.min(100, score)));
+      let verdict: 'go' | 'review' | 'nogo' = 'nogo';
+      if (!hardFail && score >= 70 && flags.length === 0) verdict = 'go';
+      else if (!hardFail && score >= 45) verdict = 'review';
+
+      const verdictStatus: Status =
+        verdict === 'go' ? 'good' : verdict === 'review' ? 'warn' : 'bad';
+      out('score').textContent = String(score);
+      const verdictEl = out('verdict');
+      verdictEl.textContent = `${ICON[verdictStatus]} ${s.verdicts[verdict]}`;
+      verdictEl.className = `scorecard__verdict status--${verdictStatus}`;
+
+      const list = out('reasons');
+      list.replaceChildren(
+        ...reasons.map((reason) => {
+          const item = document.createElement('li');
+          const icon = document.createElement('span');
+          icon.className = `scorecard__icon status--${reason.status}`;
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = ICON[reason.status];
+          item.append(icon, reason.text);
+          return item;
+        }),
+      );
+
+      const domain = (form.elements.namedItem('domain') as HTMLInputElement).value.trim();
+      summary = [
+        `${domain || s.unnamed}: ${s.verdicts[verdict]} (${score}/100)`,
+        ...reasons.map((reason) => `${ICON[reason.status]} ${reason.text}`),
+      ].join('\n');
+    };
+
+    form.addEventListener('input', update);
+    form.addEventListener('submit', (event) => event.preventDefault());
+    const copyButton = out('copy') as HTMLButtonElement;
+    copyButton.addEventListener('click', () => void copyText(summary, copyButton, s.copied));
+    update();
+  }
+</script>
+
+<style>
+  .scorecard {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 60rem) {
+    .scorecard {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+    .scorecard__result {
+      position: sticky;
+      top: var(--space-5);
+    }
+  }
+  .scorecard__form {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .scorecard__score {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin: 0;
+  }
+  .scorecard__number {
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-medium);
+  }
+  .scorecard__verdict {
+    margin: var(--space-2) 0 var(--space-4);
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-lg);
+  }
+  .scorecard__reasons {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-sm);
+  }
+  .scorecard__reasons :global(li) {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .scorecard__reasons :global(.scorecard__icon) {
+    flex: none;
+    width: 1.25em;
+    font-family: var(--font-mono);
+    font-weight: var(--fw-semibold);
+  }
+  .scorecard__copy {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-5);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+  }
+  .scorecard__copy:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+</style>

@@ -142,6 +142,43 @@ export function contactPageSchema(path: string, lang: Lang): JsonLdNode {
   };
 }
 
+/** A free tool page: a browser-based web app made by Diego. */
+export function webApplicationSchema(input: {
+  name: string;
+  description: string;
+  path: string;
+  lang: Lang;
+}): JsonLdNode {
+  const url = absoluteUrl(input.path);
+  return {
+    '@type': 'WebApplication',
+    '@id': `${url}#app`,
+    name: input.name,
+    description: input.description,
+    url,
+    inLanguage: LANG_META[input.lang].hreflang,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Any (runs in the web browser)',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    creator: { '@id': PERSON_ID },
+    isPartOf: { '@id': WEBSITE_ID },
+  };
+}
+
+/** An ordered list of links, e.g. the tools index. */
+export function itemListSchema(items: { name: string; path: string }[]): JsonLdNode {
+  return {
+    '@type': 'ItemList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      url: absoluteUrl(item.path),
+    })),
+  };
+}
+
 export interface BlogPostingInput {
   title: string;
   description: string;

@@ -341,6 +341,236 @@ export const es: UiStrings = {
       text: 'Estoy preparando una oferta de servicios de link building, SEO técnico y GEO. Mientras tanto, escríbeme y cuéntame sobre tu proyecto.',
     },
   },
+  toolsIndex: {
+    eyebrow: 'Herramientas gratuitas',
+    title: 'Herramientas SEO gratuitas',
+    intro:
+      'Herramientas pequeñas y rápidas para el trabajo SEO del día a día: revisar snippets, escribir datos estructurados y evaluar prospectos de link building. Funcionan por completo en tu navegador, así que nada de lo que escribes se envía ni se guarda.',
+    open: 'Abrir herramienta',
+    more: 'Vienen más herramientas, como un verificador de acceso de rastreadores de IA y un comprobador de backlinks en vivo.',
+  },
+  toolPage: {
+    eyebrow: 'Herramienta SEO gratuita',
+    privacy: 'Funciona en tu navegador. Nada de lo que escribes se envía ni se guarda.',
+    howTo: 'Cómo usarla',
+    faq: 'Preguntas frecuentes',
+    noscript: 'Esta herramienta necesita JavaScript. Actívalo en tu navegador para usarla.',
+    related: 'Más herramientas gratuitas',
+    copy: 'Copiar',
+    copied: 'Copiado',
+  },
+  toolContent: {
+    serpPreview: {
+      steps: [
+        'Escribe la URL de la página, el title y la meta description.',
+        'Revisa la vista previa. El texto que Google cortaría termina en "…".',
+        'Ajusta hasta que ambos medidores digan "Buena longitud" y copia el texto final en tu CMS.',
+      ],
+      faq: [
+        {
+          question: '¿Qué tan largo debe ser el title SEO?',
+          answer:
+            'Google corta los títulos por ancho en píxeles, no por caracteres. En escritorio el límite ronda los 600 píxeles, que suelen ser entre 50 y 60 caracteres. Letras anchas como W y M ocupan más espacio que la i o la l.',
+        },
+        {
+          question: '¿Qué tan larga debe ser la meta description?',
+          answer:
+            'Apunta a unos 120 a 160 caracteres. Google corta los snippets más largos cerca de los 920 píxeles en escritorio y a menudo reescribe la descripción según la búsqueda, así que pon el mensaje clave al inicio.',
+        },
+        {
+          question: '¿Google siempre muestra mi title y mi descripción?',
+          answer:
+            'No. Google los reescribe cuando cree que otro texto responde mejor a la búsqueda. Un title claro y preciso, alineado con el H1 de la página, reduce la probabilidad de que lo cambie.',
+        },
+        {
+          question: '¿La vista previa es exacta?',
+          answer:
+            'Es una estimación cercana. Mide el texto en Arial con los tamaños que usa Google, pero Google cambia su diseño de vez en cuando, así que deja un pequeño margen.',
+        },
+      ],
+      ui: {
+        url: 'URL de la página',
+        urlPlaceholder: 'https://ejemplo.com/blog/guia-link-building/',
+        title: 'Title (etiqueta de título)',
+        titlePlaceholder: 'Guía de link building: cómo conseguir backlinks de calidad | Marca',
+        description: 'Meta description',
+        descriptionPlaceholder:
+          'Aprende a encontrar, evaluar y contactar sitios para conseguir enlaces, con plantillas y las señales de alerta que debes revisar.',
+        preview: 'Vista previa (escritorio)',
+        characters: 'caracteres',
+        pixels: 'px',
+        of: 'de',
+        titleShort: 'Corto: hay espacio para una palabra clave o tu marca.',
+        descriptionShort: 'Corta: agrega un beneficio o una llamada a la acción.',
+        good: 'Buena longitud.',
+        tooLong: 'Demasiado largo: probablemente Google lo cortará.',
+      },
+    },
+    schemaGenerator: {
+      steps: [
+        'Elige el tipo de schema que corresponde a tu página.',
+        'Completa los campos. El código se actualiza mientras escribes.',
+        'Copia el código y pégalo en el HTML de la página (el <head> es un buen lugar).',
+        'Pruébalo con la prueba de resultados enriquecidos de Google antes de publicar.',
+      ],
+      faq: [
+        {
+          question: '¿Qué es el schema markup?',
+          answer:
+            'Son datos estructurados, normalmente en formato JSON-LD, que describen de qué trata una página (un artículo, una empresa, una persona, una lista de preguntas) de forma que los buscadores y los asistentes de IA la entiendan sin ambigüedad.',
+        },
+        {
+          question: '¿Qué formato recomienda Google?',
+          answer:
+            'JSON-LD. Va en una sola etiqueta script, separada del HTML visible, así que es el formato más fácil de agregar y mantener.',
+        },
+        {
+          question: '¿El schema me garantiza resultados enriquecidos?',
+          answer:
+            'No. Un marcado válido hace que la página sea elegible, pero Google decide cuándo mostrarlos. Desde 2023, los resultados enriquecidos de FAQ solo aparecen para sitios gubernamentales y de salud reconocidos, aunque el marcado FAQ sigue ayudando a que las máquinas entiendan el contenido.',
+        },
+        {
+          question: '¿El schema ayuda en la búsqueda con IA?',
+          answer:
+            'Los datos estructurados declaran hechos claros sobre entidades: quién escribió una página, qué es una organización y qué perfiles le pertenecen. Esa claridad ayuda a buscadores y sistemas de IA a relacionar el contenido con la entidad correcta, aunque ningún marcado garantiza una cita.',
+        },
+      ],
+      ui: {
+        type: 'Tipo de schema',
+        types: {
+          article: 'Artículo o entrada de blog',
+          faq: 'Página de preguntas frecuentes',
+          organization: 'Organización',
+          person: 'Persona',
+          breadcrumb: 'Migas de pan (breadcrumbs)',
+        },
+        fields: {
+          articleType: 'Tipo de artículo',
+          headline: 'Titular',
+          description: 'Descripción',
+          image: 'URL de la imagen',
+          authorName: 'Nombre del autor',
+          authorUrl: 'URL de la página del autor',
+          publisherName: 'Nombre del editor',
+          publisherLogo: 'URL del logo del editor',
+          datePublished: 'Fecha de publicación',
+          dateModified: 'Fecha de actualización',
+          name: 'Nombre',
+          url: 'URL del sitio web',
+          logo: 'URL del logo',
+          sameAs: 'URLs de perfiles (una por línea)',
+          jobTitle: 'Cargo',
+          worksFor: 'Empresa',
+          knowsAbout: 'Áreas de especialidad (una por línea)',
+          question: 'Pregunta',
+          answer: 'Respuesta',
+          pageName: 'Nombre de la página',
+          pageUrl: 'URL de la página',
+        },
+        item: 'Elemento',
+        addQuestion: 'Agregar pregunta',
+        addPage: 'Agregar página',
+        remove: 'Quitar',
+        output: 'Tu código JSON-LD',
+        missing: 'Falta un campo obligatorio:',
+        ready: 'Los campos obligatorios están completos. Prueba el código antes de publicar.',
+        test: 'Probar en la prueba de resultados enriquecidos de Google',
+      },
+    },
+    linkScorecard: {
+      steps: [
+        'Define tu DR y tráfico orgánico mínimos. Empieza con 30 y 1.000, y ajústalos a tus propios criterios.',
+        'Ingresa las métricas del prospecto desde Ahrefs, Semrush o una herramienta similar.',
+        'Responde las preguntas de calidad con honestidad. Las señales de alerta pesan mucho.',
+        'Lee el veredicto y los motivos, y copia el resumen en tu hoja de outreach.',
+      ],
+      faq: [
+        {
+          question: '¿Cómo se calcula la puntuación?',
+          answer:
+            'La puntuación es sobre 100: relevancia temática 25, tráfico orgánico 25, autoridad (DR) 25, coincidencia de mercado 15 y tendencia del tráfico 10. Cada señal de alerta resta 20 puntos. Los sitios por debajo de tu DR o tráfico mínimo, o con enlaces a nichos riesgosos no relacionados, se descartan automáticamente.',
+        },
+        {
+          question: '¿Por qué el DR no basta para evaluar un sitio?',
+          answer:
+            'El DR mide el perfil de enlaces de un sitio, no si personas reales lo leen. Los sitios con DR alto y poco tráfico orgánico suelen existir para vender enlaces, por eso este evaluador da tanto peso al tráfico y a la relevancia como a la autoridad.',
+        },
+        {
+          question: '¿Qué se considera relevancia temática?',
+          answer:
+            'Un sitio es muy relevante cuando sus temas principales coinciden con los tuyos y sus lectores harían clic en tu enlace de forma natural. Un sitio de noticias deportivas que enlaza a una reseña de casas de apuestas es relevante; un blog general que habla de todo, desde préstamos hasta mascotas, no lo es.',
+        },
+        {
+          question: '¿Reemplaza una revisión manual?',
+          answer:
+            'No. Es un primer filtro rápido que mantiene criterios consistentes en todo el equipo. Revisa siempre el sitio, sus artículos recientes y hacia dónde apuntan sus enlaces salientes antes de escribirle.',
+        },
+      ],
+      ui: {
+        thresholds: 'Tus mínimos',
+        minDr: 'DR mínimo',
+        minTraffic: 'Tráfico orgánico mensual mínimo',
+        metrics: 'Prospecto',
+        domain: 'Dominio (opcional)',
+        domainPlaceholder: 'ejemplo.com',
+        dr: 'Domain Rating (DR)',
+        traffic: 'Tráfico orgánico mensual',
+        trend: 'Tendencia del tráfico (últimos 6 a 12 meses)',
+        trends: { growing: 'En crecimiento', stable: 'Estable', declining: 'En caída' },
+        relevance: 'Relevancia temática para tu sitio',
+        relevances: {
+          high: 'Alta: mismo tema y audiencia',
+          medium: 'Media: tema relacionado',
+          low: 'Baja: tema no relacionado',
+        },
+        market: 'Audiencia en tu mercado objetivo',
+        markets: { yes: 'Sí, en su mayoría', partial: 'En parte', no: 'No' },
+        flags: 'Señales de alerta (marca todas las que apliquen)',
+        flagList: {
+          sellsLinks:
+            'Vende enlaces abiertamente (tarifas de "escribe para nosotros", menús de posts patrocinados)',
+          spamOutbound: 'Enlaza a nichos riesgosos no relacionados (farmacia, préstamos, adultos)',
+          thinContent: 'Contenido pobre, reescrito o producido en masa',
+          linkOnly: 'Los artículos recientes parecen existir solo para enlazar a otros sitios',
+          trafficDrop: 'Caída fuerte de tráfico que parece una penalización o una actualización',
+        },
+        result: 'Resultado',
+        score: 'Puntuación',
+        empty: 'Ingresa el DR y el tráfico para ver la puntuación.',
+        verdicts: {
+          go: 'Adelante: vale la pena contactarlo',
+          review: 'Revisar: compruébalo a mano antes de contactarlo',
+          nogo: 'Descartar: no conviene este prospecto',
+        },
+        reasons: {
+          drBelow: 'El DR de {dr} está por debajo de tu mínimo de {min}.',
+          drOk: 'El DR de {dr} cumple tu mínimo de {min}.',
+          trafficBelow: 'Un tráfico de {traffic} al mes está por debajo de tu mínimo de {min}.',
+          trafficOk: 'Un tráfico de {traffic} al mes cumple tu mínimo de {min}.',
+          growing: 'El tráfico está creciendo.',
+          stable: 'El tráfico es estable.',
+          declining:
+            'El tráfico está cayendo: revisa si hubo una penalización o pérdida de posiciones.',
+          high: 'Mismo tema y audiencia que tu sitio.',
+          medium: 'Tema relacionado: asegúrate de que el enlace encaje de forma natural.',
+          low: 'Tema no relacionado: el enlace se vería fuera de lugar.',
+          yes: 'La audiencia coincide con tu mercado objetivo.',
+          partial: 'La audiencia coincide solo en parte con tu mercado objetivo.',
+          no: 'La audiencia está fuera de tu mercado objetivo.',
+          flag: 'Señal de alerta: {flag}.',
+        },
+        flagShort: {
+          sellsLinks: 'vende enlaces abiertamente',
+          spamOutbound: 'enlaza a nichos riesgosos no relacionados',
+          thinContent: 'contenido pobre o producido en masa',
+          linkOnly: 'artículos que solo existen para enlazar',
+          trafficDrop: 'caída fuerte de tráfico',
+        },
+        copySummary: 'Copiar resumen',
+        unnamed: 'Prospecto',
+      },
+    },
+  },
   caseStudy: {
     inShort: 'En resumen',
     keyResults: 'Resultados clave',
@@ -382,9 +612,9 @@ export const es: UiStrings = {
       description: 'Artículos sobre SEO técnico, estrategia de contenidos y búsqueda con IA.',
     },
     tools: {
-      title: 'Herramientas SEO gratuitas',
+      title: 'Herramientas SEO gratuitas de Diego Navarro',
       description:
-        'Herramientas SEO gratuitas que funcionan en el navegador, creadas por Diego Navarro.',
+        'Herramientas SEO gratuitas que funcionan en tu navegador: simulador SERP, generador de schema JSON-LD y evaluador de prospectos para link building.',
     },
     contact: {
       title: 'Contactar a Diego Navarro, especialista SEO senior',

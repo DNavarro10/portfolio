@@ -1,0 +1,268 @@
+---
+/**
+ * SERP snippet preview: shows how a title and meta description look in
+ * Google's desktop results and measures them in pixels, the way Google cuts them.
+ *
+ * Limits (approximate, desktop): title 600px at 20px Arial; description
+ * 920px at 14px Arial. Measured with a <canvas>, so no server is needed.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.serpPreview.ui;
+---
+
+<div class="serp-tool" data-serp-tool data-strings={JSON.stringify(ui)}>
+  <div class="tool-panel">
+    <div class="serp-fields">
+      <div class="tool-field">
+        <label for="serp-url">{ui.url}</label>
+        <input id="serp-url" type="url" inputmode="url" placeholder={ui.urlPlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="serp-title">{ui.title}</label>
+        <input
+          id="serp-title"
+          type="text"
+          placeholder={ui.titlePlaceholder}
+          aria-describedby="serp-title-meter"
+        />
+        <p class="meter" id="serp-title-meter">
+          <span class="meter__bar">
+            <span class="meter__fill"></span>
+          </span>
+          <span class="meter__text"></span>
+        </p>
+      </div>
+      <div class="tool-field">
+        <label for="serp-description">{ui.description}</label>
+        <textarea
+          id="serp-description"
+          rows="3"
+          placeholder={ui.descriptionPlaceholder}
+          aria-describedby="serp-description-meter"
+        ></textarea>
+        <p class="meter" id="serp-description-meter">
+          <span class="meter__bar">
+            <span class="meter__fill"></span>
+          </span>
+          <span class="meter__text"></span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <section class="tool-panel serp-preview" aria-labelledby="serp-preview-title">
+    <h2 id="serp-preview-title" class="mono-label">
+      {ui.preview}
+    </h2>
+    <div class="serp-result">
+      <p class="serp-result__site">
+        <span class="serp-result__favicon" aria-hidden="true"></span>
+        <span>
+          <span class="serp-result__name" data-out="site"></span>
+          <span class="serp-result__url" data-out="url"></span>
+        </span>
+      </p>
+      <p class="serp-result__title" data-out="title"></p>
+      <p class="serp-result__description" data-out="description"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  import { readStrings } from './client';
+
+  interface Strings {
+    urlPlaceholder: string;
+    titlePlaceholder: string;
+    descriptionPlaceholder: string;
+    characters: string;
+    pixels: string;
+    of: string;
+    titleShort: string;
+    descriptionShort: string;
+    good: string;
+    tooLong: string;
+  }
+
+  // Google desktop limits (approximate). Widths in CSS pixels.
+  const TITLE = { font: '20px Arial, sans-serif', max: 600, min: 300 };
+  const DESCRIPTION = { font: '14px Arial, sans-serif', max: 920, min: 430 };
+
+  const root = document.querySelector<HTMLElement>('[data-serp-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const ctx = document.createElement('canvas').getContext('2d');
+    const urlInput = root.querySelector<HTMLInputElement>('#serp-url')!;
+    const titleInput = root.querySelector<HTMLInputElement>('#serp-title')!;
+    const descInput = root.querySelector<HTMLTextAreaElement>('#serp-description')!;
+    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+
+    const width = (text: string, font: string): number => {
+      if (!ctx) return text.length * 8;
+      ctx.font = font;
+      return Math.round(ctx.measureText(text).width);
+    };
+
+    /** Cuts text to fit `max` pixels, at a word boundary, and adds "…". */
+    const truncate = (text: string, font: string, max: number): string => {
+      if (width(text, font) <= max) return text;
+      const ellipsis = ' …';
+      let cut = text;
+      while (cut.length > 0 && width(cut + ellipsis, font) > max) {
+        const lastSpace = cut.lastIndexOf(' ');
+        cut = lastSpace > 0 ? cut.slice(0, lastSpace) : cut.slice(0, -1);
+      }
+      return cut.trimEnd() + ellipsis;
+    };
+
+    const updateMeter = (
+      id: string,
+      text: string,
+      limits: { font: string; max: number; min: number },
+      shortMessage: string,
+    ) => {
+      const meter = root.querySelector<HTMLElement>(`#${id}`)!;
+      const px = width(text, limits.font);
+      let status = 'good';
+      let message = s.good;
+      if (px > limits.max) {
+        status = 'bad';
+        message = s.tooLong;
+      } else if (px < limits.min) {
+        status = 'warn';
+        message = shortMessage;
+      }
+      const fillEl = meter.querySelector<HTMLElement>('.meter__fill')!;
+      fillEl.style.width = `${Math.min(100, (px / limits.max) * 100)}%`;
+      meter.dataset.status = status;
+      meter.querySelector('.meter__text')!.textContent =
+        `${text.length} ${s.characters} · ${px} ${s.of} ${limits.max} ${s.pixels}. ${message}`;
+    };
+
+    const formatUrl = (raw: string) => {
+      try {
+        const url = new URL(raw);
+        const parts = url.pathname.split('/').filter(Boolean);
+        const host = url.hostname.replace(/^www\./, '');
+        return { site: host, url: [url.origin, ...parts].join(' › ') };
+      } catch {
+        return { site: raw, url: raw };
+      }
+    };
+
+    const update = () => {
+      const title = titleInput.value.trim() || s.titlePlaceholder;
+      const description = descInput.value.trim() || s.descriptionPlaceholder;
+      const { site, url } = formatUrl(urlInput.value.trim() || s.urlPlaceholder);
+
+      out('site').textContent = site;
+      out('url').textContent = url;
+      out('title').textContent = truncate(title, TITLE.font, TITLE.max);
+      out('description').textContent = truncate(description, DESCRIPTION.font, DESCRIPTION.max);
+
+      updateMeter('serp-title-meter', title, TITLE, s.titleShort);
+      updateMeter('serp-description-meter', description, DESCRIPTION, s.descriptionShort);
+    };
+
+    root.addEventListener('input', update);
+    update();
+    // Re-measure once Arial is ready (rarely needed; it is a system font).
+    void document.fonts?.ready.then(update);
+  }
+</script>
+
+<style>
+  .serp-tool {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .serp-fields {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .meter {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-1) 0 0;
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+  }
+  .meter__bar {
+    display: block;
+    height: 6px;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-2);
+  }
+  .meter__fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--color-success);
+    transition: width var(--transition);
+  }
+  .meter[data-status='warn'] .meter__fill {
+    background: var(--color-warning);
+  }
+  .meter[data-status='bad'] .meter__fill {
+    background: var(--color-danger);
+  }
+  .meter[data-status='bad'] .meter__text {
+    color: var(--color-danger);
+  }
+  .serp-preview h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-xs);
+  }
+  .serp-result {
+    max-width: 600px;
+    font-family: var(--font-serp);
+  }
+  .serp-result p {
+    margin: 0;
+  }
+  .serp-result__site {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    margin-bottom: var(--space-2) !important;
+    font-size: var(--fs-serp-text);
+    line-height: 1.3;
+  }
+  .serp-result__favicon {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+  }
+  .serp-result__name {
+    display: block;
+    color: var(--color-text);
+  }
+  .serp-result__url {
+    display: block;
+    color: var(--color-serp-text);
+    word-break: break-all;
+  }
+  .serp-result__title {
+    font-size: var(--fs-serp-title);
+    line-height: 1.3;
+    color: var(--color-serp-title);
+  }
+  .serp-result__description {
+    margin-top: var(--space-1) !important;
+    font-size: var(--fs-serp-text);
+    line-height: 1.58;
+    color: var(--color-serp-text);
+  }
+</style>

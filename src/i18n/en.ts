@@ -340,6 +340,234 @@ export const en = {
       text: "I'm preparing a services offer for link building, technical SEO, and GEO. In the meantime, send me a message and tell me about your project.",
     },
   },
+  toolsIndex: {
+    eyebrow: 'Free tools',
+    title: 'Free SEO tools',
+    intro:
+      'Small, fast tools for everyday SEO work: checking search snippets, writing structured data, and vetting link building prospects. They run entirely in your browser, so nothing you type is sent or stored.',
+    open: 'Open tool',
+    more: 'More tools are on the way, including checks for AI crawler access and live backlinks.',
+  },
+  toolPage: {
+    eyebrow: 'Free SEO tool',
+    privacy: 'Runs in your browser. Nothing you type is sent or stored.',
+    howTo: 'How to use it',
+    faq: 'Questions and answers',
+    noscript: 'This tool needs JavaScript. Turn it on in your browser to use it.',
+    related: 'More free tools',
+    copy: 'Copy',
+    copied: 'Copied',
+  },
+  toolContent: {
+    serpPreview: {
+      steps: [
+        'Enter the page URL, the title tag, and the meta description.',
+        'Check the preview. Text that Google would cut off ends with "…".',
+        'Adjust until both meters say "Good length", then copy the final text into your CMS.',
+      ],
+      faq: [
+        {
+          question: 'How long should an SEO title be?',
+          answer:
+            'Google cuts titles by pixel width, not by characters. On desktop the limit is about 600 pixels, which is usually 50 to 60 characters. Wide letters like W and M use more space than i or l.',
+        },
+        {
+          question: 'How long should a meta description be?',
+          answer:
+            'Aim for about 120 to 160 characters. Google cuts longer snippets at roughly 920 pixels on desktop and often rewrites descriptions to match the query, so put the key message first.',
+        },
+        {
+          question: 'Does Google always show my title and description?',
+          answer:
+            'No. Google rewrites titles and descriptions when it thinks other text fits the search better. A clear, accurate title that matches the page’s H1 lowers the chance of a rewrite.',
+        },
+        {
+          question: 'Is this preview exact?',
+          answer:
+            'It is a close estimate. It measures text in Arial at the sizes Google uses, but Google changes its layout from time to time, so leave a small margin.',
+        },
+      ],
+      ui: {
+        url: 'Page URL',
+        urlPlaceholder: 'https://example.com/blog/link-building-guide/',
+        title: 'Title tag',
+        titlePlaceholder: 'Link Building Guide: How to Earn Quality Backlinks | Brand',
+        description: 'Meta description',
+        descriptionPlaceholder:
+          'Learn how to find, vet, and pitch link prospects, with templates and the red flags to avoid before you pay for any placement.',
+        preview: 'Preview (desktop)',
+        characters: 'characters',
+        pixels: 'px',
+        of: 'of',
+        titleShort: 'Short: there is room for a keyword or your brand.',
+        descriptionShort: 'Short: add a benefit or a call to action.',
+        good: 'Good length.',
+        tooLong: 'Too long: Google will probably cut it.',
+      },
+    },
+    schemaGenerator: {
+      steps: [
+        'Choose the schema type that matches your page.',
+        'Fill in the fields. The code updates as you type.',
+        'Copy the code and paste it into the page’s HTML (the <head> is a good place).',
+        'Test it with Google’s Rich Results Test before you publish.',
+      ],
+      faq: [
+        {
+          question: 'What is schema markup?',
+          answer:
+            'Schema markup is structured data, usually in JSON-LD format, that describes what a page is about (an article, a company, a person, a list of questions) in a way search engines and AI assistants can read reliably.',
+        },
+        {
+          question: 'Which format does Google recommend?',
+          answer:
+            'JSON-LD. It lives in a single script tag, separate from the visible HTML, so it is the easiest format to add and maintain.',
+        },
+        {
+          question: 'Will schema markup give me rich results?',
+          answer:
+            'Not guaranteed. Valid markup makes a page eligible, but Google decides when to show rich results. Since 2023, FAQ rich results only appear for well-known government and health sites, though FAQ markup still helps machines understand the content.',
+        },
+        {
+          question: 'Does schema help with AI search?',
+          answer:
+            'Structured data states clear facts about entities: who wrote a page, what an organization is, and which profiles belong to it. That clarity helps search engines and AI systems connect content to the right entity, although no markup guarantees a citation.',
+        },
+      ],
+      ui: {
+        type: 'Schema type',
+        types: {
+          article: 'Article or blog post',
+          faq: 'FAQ page',
+          organization: 'Organization',
+          person: 'Person',
+          breadcrumb: 'Breadcrumbs',
+        },
+        fields: {
+          articleType: 'Article type',
+          headline: 'Headline',
+          description: 'Description',
+          image: 'Image URL',
+          authorName: 'Author name',
+          authorUrl: 'Author page URL',
+          publisherName: 'Publisher name',
+          publisherLogo: 'Publisher logo URL',
+          datePublished: 'Date published',
+          dateModified: 'Date modified',
+          name: 'Name',
+          url: 'Website URL',
+          logo: 'Logo URL',
+          sameAs: 'Profile URLs (one per line)',
+          jobTitle: 'Job title',
+          worksFor: 'Company',
+          knowsAbout: 'Areas of expertise (one per line)',
+          question: 'Question',
+          answer: 'Answer',
+          pageName: 'Page name',
+          pageUrl: 'Page URL',
+        },
+        item: 'Item',
+        addQuestion: 'Add a question',
+        addPage: 'Add a page',
+        remove: 'Remove',
+        output: 'Your JSON-LD code',
+        missing: 'Missing required field:',
+        ready: 'Required fields are complete. Test the code before publishing.',
+        test: 'Test in Google’s Rich Results Test',
+      },
+    },
+    linkScorecard: {
+      steps: [
+        'Set your minimum DR and organic traffic. Start with 30 and 1,000, then adjust them to your own guidelines.',
+        'Enter the prospect’s metrics from Ahrefs, Semrush, or a similar tool.',
+        'Answer the quality questions honestly. Red flags weigh heavily.',
+        'Read the verdict and the reasons, then copy the summary into your outreach sheet.',
+      ],
+      faq: [
+        {
+          question: 'How is the score calculated?',
+          answer:
+            'The score is out of 100: topical relevance 25, organic traffic 25, authority (DR) 25, market match 15, and traffic trend 10. Each red flag subtracts 20 points. Sites below your minimum DR or traffic, or with links to unrelated risky niches, are an automatic no-go.',
+        },
+        {
+          question: 'Why isn’t DR enough to judge a site?',
+          answer:
+            'DR measures a site’s link profile, not whether real people read it. Sites with high DR and little organic traffic are often built to sell links, so this scorecard weighs traffic and relevance as much as authority.',
+        },
+        {
+          question: 'What counts as topical relevance?',
+          answer:
+            'A site is highly relevant when its main topics overlap with yours and its readers would plausibly click your link. A sports news site linking to a sportsbook review is relevant; a general blog that covers everything from loans to pets is not.',
+        },
+        {
+          question: 'Does this replace a manual review?',
+          answer:
+            'No. It is a fast first filter that keeps your criteria consistent across a team. Always look at the site itself, its recent articles, and where its outbound links go before you pitch.',
+        },
+      ],
+      ui: {
+        thresholds: 'Your minimums',
+        minDr: 'Minimum DR',
+        minTraffic: 'Minimum monthly organic traffic',
+        metrics: 'Prospect',
+        domain: 'Domain (optional)',
+        domainPlaceholder: 'example.com',
+        dr: 'Domain Rating (DR)',
+        traffic: 'Monthly organic traffic',
+        trend: 'Traffic trend (last 6 to 12 months)',
+        trends: { growing: 'Growing', stable: 'Stable', declining: 'Declining' },
+        relevance: 'Topical relevance to your site',
+        relevances: {
+          high: 'High: same topic and audience',
+          medium: 'Medium: related topic',
+          low: 'Low: unrelated topic',
+        },
+        market: 'Audience in your target market',
+        markets: { yes: 'Yes, mostly', partial: 'Partly', no: 'No' },
+        flags: 'Red flags (check all that apply)',
+        flagList: {
+          sellsLinks: 'Openly sells links ("write for us" price lists, sponsored post menus)',
+          spamOutbound: 'Links out to unrelated risky niches (pharma, loans, adult)',
+          thinContent: 'Thin, spun, or mass-produced content',
+          linkOnly: 'Recent articles seem to exist only to link out',
+          trafficDrop: 'Sharp traffic drop that looks like a penalty or an update hit',
+        },
+        result: 'Result',
+        score: 'Score',
+        empty: 'Enter the DR and the traffic to see the score.',
+        verdicts: {
+          go: 'Go: worth pitching',
+          review: 'Review: check it manually before pitching',
+          nogo: 'No-go: skip this prospect',
+        },
+        reasons: {
+          drBelow: 'DR {dr} is below your minimum of {min}.',
+          drOk: 'DR {dr} meets your minimum of {min}.',
+          trafficBelow: 'Traffic of {traffic} a month is below your minimum of {min}.',
+          trafficOk: 'Traffic of {traffic} a month meets your minimum of {min}.',
+          growing: 'Traffic is growing.',
+          stable: 'Traffic is stable.',
+          declining: 'Traffic is declining: check for a penalty or lost rankings.',
+          high: 'Same topic and audience as your site.',
+          medium: 'Related topic: make sure the link fits the article naturally.',
+          low: 'Unrelated topic: the link would look out of place.',
+          yes: 'The audience matches your target market.',
+          partial: 'The audience only partly matches your target market.',
+          no: 'The audience is outside your target market.',
+          flag: 'Red flag: {flag}.',
+        },
+        flagShort: {
+          sellsLinks: 'openly sells links',
+          spamOutbound: 'links to unrelated risky niches',
+          thinContent: 'thin or mass-produced content',
+          linkOnly: 'articles exist only to link out',
+          trafficDrop: 'sharp traffic drop',
+        },
+        copySummary: 'Copy summary',
+        unnamed: 'Prospect',
+      },
+    },
+  },
   caseStudy: {
     inShort: 'In short',
     keyResults: 'Key results',
@@ -381,8 +609,9 @@ export const en = {
       description: 'Articles on technical SEO, content strategy, and AI search.',
     },
     tools: {
-      title: 'Free SEO Tools',
-      description: 'Free, browser-based SEO tools built by Diego Navarro.',
+      title: 'Free SEO Tools by Diego Navarro',
+      description:
+        'Free, browser-based SEO tools by Diego Navarro: SERP snippet preview, JSON-LD schema generator, and a link prospect scorecard for outreach.',
     },
     contact: {
       title: 'Contact Diego Navarro, Senior SEO Specialist',

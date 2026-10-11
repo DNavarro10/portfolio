@@ -1,0 +1,79 @@
+---
+/**
+ * Tools index, shared by /tools/ and /es/herramientas/.
+ * Lists every published tool from src/data/tools.ts.
+ * JSON-LD: BreadcrumbList + ItemList (the tools, in order).
+ */
+import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import Card from '@/components/ui/Card.astro';
+import CardGrid from '@/components/ui/CardGrid.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { TOOLS } from '@/data/tools';
+import type { Lang } from '@/i18n/config';
+import { COLLECTION_BASE, ROUTES } from '@/i18n/routes';
+import { routeAlternates, routePath, useTranslations } from '@/i18n/utils';
+import { breadcrumbSchema, itemListSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const x = t.toolsIndex;
+const tools = TOOLS.filter((tool) => tool.published).map((tool) => ({
+  ...tool,
+  path: `${COLLECTION_BASE.tools[lang]}${tool.slug[lang]}/`,
+}));
+
+const crumbs = [
+  { name: t.nav.home, path: routePath('home', lang) },
+  { name: t.nav.tools, path: routePath('tools', lang) },
+];
+---
+
+<BaseLayout
+  title={t.pages.tools.title}
+  description={t.pages.tools.description}
+  lang={lang}
+  alternates={routeAlternates('tools')}
+  noindex={!ROUTES.tools.published}
+  jsonLd={[
+    breadcrumbSchema(crumbs),
+    itemListSchema(tools.map((tool) => ({ name: tool.title[lang], path: tool.path }))),
+  ]}
+>
+  <Section labelledby="tools-title">
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <SectionHeading
+      level="h1"
+      id="tools-title"
+      eyebrow={x.eyebrow}
+      title={x.title}
+      description={x.intro}
+    />
+    <CardGrid min="18rem">
+      {tools.map((tool) => (
+        <li>
+          <Card
+            href={tool.path}
+            eyebrow={tool.category[lang]}
+            title={tool.title[lang]}
+            description={tool.description[lang]}
+            headingLevel="h2"
+          />
+        </li>
+      ))}
+    </CardGrid>
+    <p class="tools-more text-muted">{x.more}</p>
+  </Section>
+</BaseLayout>
+
+<style>
+  .tools-more {
+    margin: var(--space-6) 0 0;
+    font-size: var(--fs-sm);
+  }
+</style>

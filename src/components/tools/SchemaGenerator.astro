@@ -1,0 +1,487 @@
+---
+/**
+ * Schema markup generator: builds JSON-LD for Article, FAQPage, Organization,
+ * Person, and BreadcrumbList as the user types. Everything runs in the browser.
+ *
+ * The form is rendered here (labels come from the translation files); the
+ * script only reads the fields of the selected type and prints the JSON-LD.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.schemaGenerator.ui;
+const f = ui.fields;
+const copied = t.toolPage.copied;
+
+type Kind = 'text' | 'url' | 'date' | 'textarea' | 'lines';
+interface Field {
+  name: keyof typeof f;
+  kind: Kind;
+  required?: boolean;
+}
+
+/** Simple (non-repeating) fields per schema type. */
+const FIELDS: Record<'article' | 'organization' | 'person', Field[]> = {
+  article: [
+    { name: 'headline', kind: 'text', required: true },
+    { name: 'description', kind: 'textarea' },
+    { name: 'image', kind: 'url' },
+    { name: 'authorName', kind: 'text' },
+    { name: 'authorUrl', kind: 'url' },
+    { name: 'publisherName', kind: 'text' },
+    { name: 'publisherLogo', kind: 'url' },
+    { name: 'datePublished', kind: 'date' },
+    { name: 'dateModified', kind: 'date' },
+  ],
+  organization: [
+    { name: 'name', kind: 'text', required: true },
+    { name: 'url', kind: 'url', required: true },
+    { name: 'logo', kind: 'url' },
+    { name: 'description', kind: 'textarea' },
+    { name: 'sameAs', kind: 'lines' },
+  ],
+  person: [
+    { name: 'name', kind: 'text', required: true },
+    { name: 'jobTitle', kind: 'text' },
+    { name: 'url', kind: 'url' },
+    { name: 'image', kind: 'url' },
+    { name: 'worksFor', kind: 'text' },
+    { name: 'sameAs', kind: 'lines' },
+    { name: 'knowsAbout', kind: 'lines' },
+  ],
+};
+
+const types = Object.entries(ui.types) as [keyof typeof ui.types, string][];
+const ARTICLE_TYPES = ['Article', 'BlogPosting', 'NewsArticle'];
+---
+
+<div class="schema-tool" data-schema-tool data-strings={JSON.stringify({ ...ui, copied })}>
+  <form class="tool-panel schema-tool__form" novalidate>
+    <div class="tool-field schema-tool__type">
+      <label for="sg-type">{ui.type}</label>
+      <select id="sg-type" name="type">
+        {types.map(([value, label]) => (
+          <option value={value}>{label}</option>
+        ))}
+      </select>
+    </div>
+
+    {(['article', 'organization', 'person'] as const).map((type) => (
+      <fieldset class="tool-fieldset" data-type={type} hidden={type !== 'article'}>
+        <legend class="visually-hidden">{ui.types[type]}</legend>
+        <div class="tool-grid">
+          {type === 'article' && (
+            <div class="tool-field">
+              <label for="sg-article-articleType">{f.articleType}</label>
+              <select id="sg-article-articleType" name="articleType">
+                {ARTICLE_TYPES.map((value) => (
+                  <option value={value}>{value}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {FIELDS[type].map((field) => {
+            const id = `sg-${type}-${field.name}`;
+            const label = `${f[field.name]}${field.required ? ' *' : ''}`;
+            return (
+              <div
+                class:list={[
+                  'tool-field',
+                  { 'tool-field--wide': field.kind === 'textarea' || field.kind === 'lines' },
+                ]}
+              >
+                <label for={id}>{label}</label>
+                {field.kind === 'textarea' || field.kind === 'lines' ? (
+                  <textarea id={id} name={field.name} rows="3" data-kind={field.kind} />
+                ) : (
+                  <input
+                    id={id}
+                    name={field.name}
+                    type={field.kind === 'url' ? 'url' : field.kind === 'date' ? 'date' : 'text'}
+                    inputmode={field.kind === 'url' ? 'url' : undefined}
+                    required={field.required}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </fieldset>
+    ))}
+
+    <fieldset class="tool-fieldset" data-type="faq" hidden>
+      <legend class="visually-hidden">{ui.types.faq}</legend>
+      <ol class="schema-rows" data-rows="faq"></ol>
+      <button type="button" class="schema-tool__add" data-add="faq">
+        + {ui.addQuestion}
+      </button>
+    </fieldset>
+
+    <fieldset class="tool-fieldset" data-type="breadcrumb" hidden>
+      <legend class="visually-hidden">{ui.types.breadcrumb}</legend>
+      <ol class="schema-rows" data-rows="breadcrumb"></ol>
+      <button type="button" class="schema-tool__add" data-add="breadcrumb">
+        + {ui.addPage}
+      </button>
+    </fieldset>
+  </form>
+
+  <section class="tool-panel schema-tool__output" aria-labelledby="sg-output-title">
+    <div class="schema-tool__output-head">
+      <h2 id="sg-output-title">{ui.output}</h2>
+      <button type="button" class="schema-tool__copy" data-copy>
+        {t.toolPage.copy}
+      </button>
+    </div>
+    <p class="schema-tool__status" data-out="status" aria-live="polite"></p>
+    <pre class="tool-code"><code data-out="code"></code></pre>
+    <p class="schema-tool__test">
+      <a href="https://search.google.com/test/rich-results" rel="noopener" target="_blank">
+        {ui.test} ↗
+      </a>
+    </p>
+  </section>
+
+  <!-- Row templates, cloned by the script for repeatable items. -->
+  <template data-template="faq">
+    <li class="schema-row">
+      <div class="schema-row__head">
+        <span class="mono-label" data-row-label></span>
+        <button type="button" class="schema-row__remove" data-remove>
+          {ui.remove}
+        </button>
+      </div>
+      <div class="tool-field">
+        <label data-for="question">{f.question}</label>
+        <input type="text" name="question" />
+      </div>
+      <div class="tool-field">
+        <label data-for="answer">{f.answer}</label>
+        <textarea name="answer" rows="3"></textarea>
+      </div>
+    </li>
+  </template>
+  <template data-template="breadcrumb">
+    <li class="schema-row">
+      <div class="schema-row__head">
+        <span class="mono-label" data-row-label></span>
+        <button type="button" class="schema-row__remove" data-remove>
+          {ui.remove}
+        </button>
+      </div>
+      <div class="tool-grid">
+        <div class="tool-field">
+          <label data-for="pageName">{f.pageName}</label>
+          <input type="text" name="pageName" />
+        </div>
+        <div class="tool-field">
+          <label data-for="pageUrl">{f.pageUrl}</label>
+          <input type="url" inputmode="url" name="pageUrl" />
+        </div>
+      </div>
+    </li>
+  </template>
+</div>
+
+<script>
+  import { copyText, readStrings } from './client';
+
+  type Json = Record<string, unknown>;
+  // Split so this file never contains a literal closing script tag.
+  const SCRIPT_END = '</' + 'script>';
+  interface Strings {
+    copied: string;
+    item: string;
+    missing: string;
+    ready: string;
+    fields: Record<string, string>;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-schema-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const form = root.querySelector('form')!;
+    const typeSelect = root.querySelector<HTMLSelectElement>('#sg-type')!;
+    const code = root.querySelector<HTMLElement>('[data-out="code"]')!;
+    const status = root.querySelector<HTMLElement>('[data-out="status"]')!;
+    let rowCounter = 0;
+
+    const activeFieldset = () =>
+      root.querySelector<HTMLFieldSetElement>(`fieldset[data-type="${typeSelect.value}"]`)!;
+
+    /** Value of a named field inside the active type (trimmed). */
+    const value = (name: string): string => {
+      const field = activeFieldset().querySelector<HTMLInputElement>(`[name="${name}"]`);
+      return field?.value.trim() ?? '';
+    };
+    const lines = (name: string): string[] =>
+      value(name)
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+    /** Removes empty strings, empty arrays, and objects that only hold "@type". */
+    const clean = (input: unknown): unknown => {
+      if (Array.isArray(input)) {
+        const list = input.map(clean).filter((item) => item !== undefined);
+        return list.length ? list : undefined;
+      }
+      if (input && typeof input === 'object') {
+        const entries = Object.entries(input as Json)
+          .map(([key, item]) => [key, clean(item)] as const)
+          .filter(([, item]) => item !== undefined);
+        const keys = entries.map(([key]) => key);
+        if (keys.every((key) => key === '@type')) return undefined;
+        return Object.fromEntries(entries);
+      }
+      return input === '' ? undefined : input;
+    };
+
+    const rows = (type: string) => [
+      ...root.querySelectorAll<HTMLElement>(`[data-rows="${type}"] > li`),
+    ];
+    const rowValue = (row: HTMLElement, name: string) =>
+      row.querySelector<HTMLInputElement>(`[name="${name}"]`)?.value.trim() ?? '';
+
+    /** Builds the JSON-LD object and the list of missing required fields. */
+    const build = (): { data: Json; missing: string[] } => {
+      const missing: string[] = [];
+      const need = (name: string) => {
+        if (!value(name)) missing.push(s.fields[name] ?? name);
+        return value(name);
+      };
+
+      switch (typeSelect.value) {
+        case 'faq': {
+          const items = rows('faq')
+            .map((row) => ({ q: rowValue(row, 'question'), a: rowValue(row, 'answer') }))
+            .filter((item) => item.q && item.a);
+          if (!items.length) missing.push(`${s.fields.question} + ${s.fields.answer}`);
+          return {
+            missing,
+            data: {
+              '@type': 'FAQPage',
+              mainEntity: items.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a },
+              })),
+            },
+          };
+        }
+        case 'breadcrumb': {
+          const items = rows('breadcrumb')
+            .map((row) => ({ name: rowValue(row, 'pageName'), url: rowValue(row, 'pageUrl') }))
+            .filter((item) => item.name);
+          if (!items.length) missing.push(s.fields.pageName!);
+          return {
+            missing,
+            data: {
+              '@type': 'BreadcrumbList',
+              itemListElement: items.map((item, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                name: item.name,
+                item: item.url,
+              })),
+            },
+          };
+        }
+        case 'organization':
+          return {
+            missing,
+            data: {
+              '@type': 'Organization',
+              name: need('name'),
+              url: need('url'),
+              logo: value('logo'),
+              description: value('description'),
+              sameAs: lines('sameAs'),
+            },
+          };
+        case 'person':
+          return {
+            missing,
+            data: {
+              '@type': 'Person',
+              name: need('name'),
+              jobTitle: value('jobTitle'),
+              url: value('url'),
+              image: value('image'),
+              worksFor: { '@type': 'Organization', name: value('worksFor') },
+              sameAs: lines('sameAs'),
+              knowsAbout: lines('knowsAbout'),
+            },
+          };
+        default:
+          return {
+            missing,
+            data: {
+              '@type': value('articleType') || 'Article',
+              headline: need('headline'),
+              description: value('description'),
+              image: value('image'),
+              author: { '@type': 'Person', name: value('authorName'), url: value('authorUrl') },
+              publisher: {
+                '@type': 'Organization',
+                name: value('publisherName'),
+                logo: { '@type': 'ImageObject', url: value('publisherLogo') },
+              },
+              datePublished: value('datePublished'),
+              dateModified: value('dateModified'),
+            },
+          };
+      }
+    };
+
+    let output = '';
+    const update = () => {
+      root.querySelectorAll<HTMLFieldSetElement>('fieldset[data-type]').forEach((set) => {
+        set.hidden = set.dataset.type !== typeSelect.value;
+      });
+      const { data, missing } = build();
+      const json = { '@context': 'https://schema.org', ...((clean(data) as Json) ?? {}) };
+      output = `<script type="application/ld+json">\n${JSON.stringify(json, null, 2)}\n${SCRIPT_END}`;
+      code.textContent = output;
+      status.textContent = missing.length ? `${s.missing} ${missing.join(', ')}` : s.ready;
+      status.className = `schema-tool__status status--${missing.length ? 'warn' : 'good'}`;
+    };
+
+    /** Gives each row's fields unique ids and numbers the rows. */
+    const relabel = (type: string) => {
+      rows(type).forEach((row, index) => {
+        row.querySelector('[data-row-label]')!.textContent = `${s.item} ${index + 1}`;
+      });
+    };
+
+    const addRow = (type: string) => {
+      const template = root.querySelector<HTMLTemplateElement>(`[data-template="${type}"]`)!;
+      const row = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      rowCounter += 1;
+      row.querySelectorAll<HTMLLabelElement>('label[data-for]').forEach((label) => {
+        const id = `sg-${type}-${label.dataset.for}-${rowCounter}`;
+        label.htmlFor = id;
+        row.querySelector(`[name="${label.dataset.for}"]`)!.id = id;
+      });
+      root.querySelector(`[data-rows="${type}"]`)!.append(row);
+      relabel(type);
+      return row;
+    };
+
+    root.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const add = target.closest<HTMLElement>('[data-add]');
+      if (add) {
+        const row = addRow(add.dataset.add!);
+        row.querySelector<HTMLInputElement>('input, textarea')?.focus();
+        update();
+      }
+      const remove = target.closest<HTMLElement>('[data-remove]');
+      if (remove) {
+        const list = remove.closest<HTMLElement>('[data-rows]')!;
+        remove.closest('li')!.remove();
+        relabel(list.dataset.rows!);
+        update();
+      }
+    });
+
+    const copyButton = root.querySelector<HTMLButtonElement>('[data-copy]')!;
+    copyButton.addEventListener('click', () => void copyText(output, copyButton, s.copied));
+
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    form.addEventListener('submit', (event) => event.preventDefault());
+    addRow('faq');
+    addRow('faq');
+    addRow('breadcrumb');
+    addRow('breadcrumb');
+    addRow('breadcrumb');
+    update();
+  }
+</script>
+
+<style>
+  .schema-tool {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 64rem) {
+    .schema-tool {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .schema-tool__output {
+      position: sticky;
+      top: var(--space-5);
+    }
+  }
+  .schema-tool__form {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .tool-field--wide {
+    grid-column: 1 / -1;
+  }
+  .schema-rows {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+  .schema-rows :global(.schema-row) {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .schema-rows :global(.schema-row__head) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .schema-tool__add,
+  .schema-tool__copy,
+  .schema-rows :global(.schema-row__remove) {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+  }
+  .schema-tool__add:hover,
+  .schema-tool__copy:hover,
+  .schema-rows :global(.schema-row__remove:hover) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+  .schema-tool__output-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .schema-tool__output-head h2 {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+  .schema-tool__status {
+    margin: 0 0 var(--space-3);
+    font-size: var(--fs-sm);
+  }
+  .schema-tool__test {
+    margin: var(--space-3) 0 0;
+    font-size: var(--fs-sm);
+  }
+</style>

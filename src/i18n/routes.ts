@@ -21,7 +21,7 @@ export const ROUTES = {
   about: { en: '/about/', es: '/es/sobre-mi/', published: true },
   experience: { en: '/experience/', es: '/es/experiencia/', published: true },
   blog: { en: '/blog/', es: '/es/blog/', published: false },
-  tools: { en: '/tools/', es: '/es/herramientas/', published: false },
+  tools: { en: '/tools/', es: '/es/herramientas/', published: true },
   contact: { en: '/contact/', es: '/es/contacto/', published: true },
 } as const satisfies Record<string, Partial<Record<Lang, string>> & { published: boolean }>;
 
