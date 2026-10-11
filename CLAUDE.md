@@ -47,7 +47,7 @@ src/
     utils.ts              useTranslations, routePath, routeAlternates, absoluteUrl
   lib/
     schema.ts             JSON-LD builders (Person, WebSite, ProfilePage, AboutPage, ContactPage,
-                          Article, FAQPage, BreadcrumbList, BlogPosting)
+                          Article, FAQPage, BreadcrumbList, BlogPosting, WebApplication, ItemList)
     content.ts            Collection helpers: by language, entry URLs, hreflang alternates
     pages.ts              All published pages (feeds sitemap.xml and llms.txt)
   data/tools.ts           Registry of free SEO tools (slug, title, description, category, published)
