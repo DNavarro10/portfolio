@@ -15,6 +15,7 @@ import Section from '@/components/ui/Section.astro';
 import TagList from '@/components/ui/TagList.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { Lang } from '@/i18n/config';
+import { LANG_META } from '@/i18n/config';
 import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
 import { entryPath } from '@/lib/content';
 import { articleSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
@@ -40,11 +41,18 @@ const {
   tags,
   tools,
   faq,
+  seoTitle,
+  pubDate,
+  updatedDate,
   heroImage,
   heroAlt,
   draft,
 } = entry.data;
 const path = entryPath('experience', entry);
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+});
 
 const crumbs = [
   { name: t.nav.home, path: routePath('home', lang) },
@@ -53,14 +61,22 @@ const crumbs = [
 ];
 
 const jsonLd = [
-  articleSchema({ title, description, path, lang, keywords: tags }),
+  articleSchema({
+    title,
+    description,
+    path,
+    lang,
+    keywords: tags,
+    datePublished: pubDate,
+    dateModified: updatedDate,
+  }),
   breadcrumbSchema(crumbs),
   ...(faq.length ? [faqSchema(faq, path)] : []),
 ];
 ---
 
 <BaseLayout
-  title={title}
+  title={seoTitle ?? title}
   description={description}
   lang={lang}
   alternates={alternates}
@@ -79,6 +95,17 @@ const jsonLd = [
         <h1>{title}</h1>
         <p class="text-muted">
           {role} · {period}
+        </p>
+        <p class="case__date mono-label">
+          {t.blog.publishedOn}{' '}
+          <time datetime={pubDate.toISOString()}>{dateFormat.format(pubDate)}</time>
+          {updatedDate && (
+            <>
+              {' · '}
+              {t.blog.updatedOn}{' '}
+              <time datetime={updatedDate.toISOString()}>{dateFormat.format(updatedDate)}</time>
+            </>
+          )}
         </p>
         <TagList tags={tags} label={c.topics} />
       </header>
@@ -141,6 +168,9 @@ const jsonLd = [
   }
   .case__header h1 {
     margin-block: var(--space-2) var(--space-3);
+  }
+  .case__date {
+    margin: 0 0 var(--space-3);
   }
   .case__summary {
     margin-bottom: var(--space-6);

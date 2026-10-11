@@ -4,6 +4,8 @@ description: Cómo apoyé el SEO de 8 a 12 dominios estatales como BetArizona.co
 summary: Como analista SEO, apoyé el SEO de 8 a 12 dominios estatales, entre ellos BetArizona.com, BetOhio.com, BetMichigan.com y BetOntario.com, en lanzamientos de mercado rápidos y competitivos. La constancia en estos proyectos simultáneos me llevó a un ascenso a un rol de liderazgo de equipo.
 translationKey: state-launches
 draft: false
+seoTitle: 'SEO para 8 a 12 lanzamientos estatales'
+pubDate: 2026-10-09
 company: Gambling.com Group
 role: Analista SEO (contratista remoto, EE. UU.)
 period: 2021 – 2023

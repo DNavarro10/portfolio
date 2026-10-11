@@ -4,6 +4,8 @@ description: How I ran link building and digital outreach for RotoWire.com and B
 summary: I ran link building and digital outreach for RotoWire.com and Bookies.com, securing 120+ backlinks a month at an average Domain Rating of 45 from a network of 5,000+ publishers. Every placement passed a quality check for authority, organic traffic, and topical relevance before it went live.
 translationKey: link-building
 draft: false
+seoTitle: 'Link building at scale: 120+ backlinks/month'
+pubDate: 2026-10-09
 company: Gambling.com Group
 role: Senior SEO Specialist
 period: 2023 – 2026

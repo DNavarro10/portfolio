@@ -38,7 +38,10 @@ const posts = (await getPublishedEntries('blog', lang))
   .slice(0, 3);
 const tools = TOOLS.filter((tool) => tool.published).slice(0, 3);
 
-const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, { dateStyle: 'medium' });
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, {
+  dateStyle: 'medium',
+  timeZone: 'UTC',
+});
 
 const profileRows = [
   [h.profile.role, h.profile.roleValue],

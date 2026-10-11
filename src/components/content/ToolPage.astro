@@ -25,7 +25,7 @@ import Section from '@/components/ui/Section.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { TOOLS, type Tool } from '@/data/tools';
-import { LANGS, type Lang } from '@/i18n/config';
+import { LANG_META, LANGS, type Lang } from '@/i18n/config';
 import { COLLECTION_BASE } from '@/i18n/routes';
 import { routePath, useTranslations, type Alternates } from '@/i18n/utils';
 import { breadcrumbSchema, faqSchema, webApplicationSchema } from '@/lib/schema';
@@ -58,6 +58,12 @@ const alternates: Alternates = Object.fromEntries(LANGS.map((l) => [l, pathFor(t
 const path = pathFor(tool, lang);
 const others = TOOLS.filter((item) => item.published && item.key !== tool.key);
 
+const updated = new Date(tool.updated);
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+});
+
 const crumbs = [
   { name: t.nav.home, path: routePath('home', lang) },
   { name: t.nav.tools, path: routePath('tools', lang) },
@@ -70,6 +76,7 @@ const jsonLd = [
     description: tool.description[lang],
     path,
     lang,
+    dateModified: tool.updated,
   }),
   breadcrumbSchema(crumbs),
   faqSchema(content.faq, path),
@@ -93,7 +100,10 @@ const jsonLd = [
       title={tool.title[lang]}
       description={tool.description[lang]}
     />
-    <p class="tool-privacy mono-label">{p.privacy}</p>
+    <p class="tool-privacy mono-label">
+      {p.privacy} · {t.blog.updatedOn}{' '}
+      <time datetime={tool.updated}>{dateFormat.format(updated)}</time>
+    </p>
     <noscript>
       <p class="tool-noscript">{p.noscript}</p>
     </noscript>

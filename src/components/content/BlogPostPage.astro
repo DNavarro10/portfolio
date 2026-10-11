@@ -22,7 +22,10 @@ const t = useTranslations(lang);
 const { title, description, pubDate, updatedDate, heroImage, heroAlt } = entry.data;
 const path = entryPath('blog', entry);
 
-const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, { dateStyle: 'long' });
+const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+});
 const crumbs = [
   { name: t.nav.home, path: routePath('home', lang) },
   { name: t.nav.blog, path: routePath('blog', lang) },

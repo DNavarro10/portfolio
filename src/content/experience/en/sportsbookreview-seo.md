@@ -4,6 +4,7 @@ description: My first SEO role, where I ran end-to-end SEO for SportsbookReview.
 summary: In my first SEO role, I ran end-to-end SEO for SportsbookReview.com on WordPress, from keyword research and on-page optimization to technical audits, Google Tag Manager implementation, and outreach for high-value pages. It's where I learned to connect content, technical health, and links into one strategy.
 translationKey: sportsbookreview
 draft: false
+pubDate: 2026-10-09
 company: Advision Development
 role: SEO Analyst
 period: 2019 – 2021

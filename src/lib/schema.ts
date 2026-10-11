@@ -78,6 +78,8 @@ export interface ArticleInput {
   path: string;
   lang: Lang;
   keywords?: readonly string[];
+  datePublished?: Date;
+  dateModified?: Date;
 }
 
 /** Case studies: an Article written by (and about the work of) Diego. */
@@ -95,6 +97,8 @@ export function articleSchema(article: ArticleInput): JsonLdNode {
     publisher: { '@id': PERSON_ID },
     isPartOf: { '@id': WEBSITE_ID },
     ...(article.keywords?.length ? { keywords: article.keywords.join(', ') } : {}),
+    ...(article.datePublished ? { datePublished: article.datePublished.toISOString() } : {}),
+    ...(article.dateModified ? { dateModified: article.dateModified.toISOString() } : {}),
   };
 }
 
@@ -148,6 +152,7 @@ export function webApplicationSchema(input: {
   description: string;
   path: string;
   lang: Lang;
+  dateModified?: string;
 }): JsonLdNode {
   const url = absoluteUrl(input.path);
   return {
@@ -163,6 +168,7 @@ export function webApplicationSchema(input: {
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     creator: { '@id': PERSON_ID },
     isPartOf: { '@id': WEBSITE_ID },
+    ...(input.dateModified ? { dateModified: input.dateModified } : {}),
   };
 }
 

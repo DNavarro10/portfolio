@@ -4,6 +4,7 @@ description: Mi primer rol en SEO, donde llevé el SEO integral de SportsbookRev
 summary: En mi primer rol en SEO llevé el SEO integral de SportsbookReview.com en WordPress, desde la investigación de palabras clave y la optimización on-page hasta auditorías técnicas, la implementación de Google Tag Manager y el outreach para páginas de alto valor. Ahí aprendí a unir contenido, salud técnica y enlaces en una sola estrategia.
 translationKey: sportsbookreview
 draft: false
+pubDate: 2026-10-09
 company: Advision Development
 role: Analista SEO
 period: 2019 – 2021

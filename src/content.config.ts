@@ -51,6 +51,14 @@ const experience = defineCollection({
        * top of the page. Written to be quoted on its own (search and AI answers).
        */
       summary: z.string().min(80).max(420),
+      /**
+       * Optional shorter <title> when the H1 is long. Together with
+       * " | Diego Navarro" it should stay within ~60 characters.
+       */
+      seoTitle: z.string().max(44).optional(),
+      /** When the case study was published / last meaningfully updated. */
+      pubDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
       company: z.string(),
       role: z.string(),
       /** e.g. "2023 – 2026" */

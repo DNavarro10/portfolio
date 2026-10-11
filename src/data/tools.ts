@@ -24,6 +24,8 @@ export interface Tool {
   description: Record<Lang, string>;
   /** Short label for cards and lists. */
   category: Record<Lang, string>;
+  /** Last meaningful update (YYYY-MM-DD): shown on the page, in JSON-LD, and in the sitemap. */
+  updated: string;
   /** false = noindex and excluded from the sitemap. */
   published: boolean;
 }
@@ -41,6 +43,7 @@ export const TOOLS: Tool[] = [
       es: 'Herramienta gratuita de link building: evalúa un sitio para outreach según DR, tráfico, relevancia y señales de riesgo, con un veredicto claro.',
     },
     category: { en: 'Link building', es: 'Link building' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -55,6 +58,7 @@ export const TOOLS: Tool[] = [
       es: 'Analizador gratuito de anchor text: pega un export de Ahrefs o Semrush y revisa tu mezcla de anclas de marca, exactas y genéricas para evitar sobreoptimizar.',
     },
     category: { en: 'Link building', es: 'Link building' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -69,6 +73,7 @@ export const TOOLS: Tool[] = [
       es: 'Verificador gratuito de AEO y GEO: pega una página y descubre si es fácil de citar por la búsqueda con IA, desde el resumen hasta el schema.',
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -83,6 +88,7 @@ export const TOOLS: Tool[] = [
       es: 'Analizador gratuito de logs: sube o pega los logs de tu servidor y descubre qué bots de IA, como GPTBot o PerplexityBot, visitan tu sitio y qué rastrean.',
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -97,6 +103,7 @@ export const TOOLS: Tool[] = [
       es: 'Generador gratuito de robots.txt para rastreadores de IA: permite bots de búsqueda como OAI-SearchBot y bloquea los de entrenamiento como GPTBot.',
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -108,6 +115,7 @@ export const TOOLS: Tool[] = [
       es: 'Generador gratuito de llms.txt: crea el archivo Markdown que da a las herramientas de IA un resumen de tu sitio y enlaces a tus mejores páginas.',
     },
     category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -122,6 +130,7 @@ export const TOOLS: Tool[] = [
       es: 'Analizador de contenido SEO gratuito: cuenta palabras, tiempo de lectura, legibilidad, densidad de palabras clave, relleno de keywords y encabezados HTML.',
     },
     category: { en: 'Content SEO', es: 'SEO de contenidos' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -136,6 +145,7 @@ export const TOOLS: Tool[] = [
       es: 'Herramienta gratuita para ver cómo se verán tu title y tu meta description en Google, con medición en píxeles, antes de publicar.',
     },
     category: { en: 'On-page SEO', es: 'SEO on-page' },
+    updated: '2026-10-10',
     published: true,
   },
   {
@@ -150,6 +160,7 @@ export const TOOLS: Tool[] = [
       es: 'Generador gratuito de datos estructurados JSON-LD para Article, FAQ, Organization, Person y Breadcrumb. Copia el código listo para usar.',
     },
     category: { en: 'Technical SEO', es: 'SEO técnico' },
+    updated: '2026-10-10',
     published: true,
   },
 ];

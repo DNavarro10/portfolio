@@ -96,6 +96,7 @@ function toolPages(): IndexablePage[] {
           path: `${COLLECTION_BASE.tools[lang]}${tool.slug[lang]}/`,
           title: tool.title[lang],
           description: tool.description[lang],
+          lastmod: new Date(tool.updated),
         },
       ]),
     ),
