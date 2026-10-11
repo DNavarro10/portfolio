@@ -46,7 +46,8 @@ src/
     routes.ts             Page registry: EN/ES path per page + `published` flag
     utils.ts              useTranslations, routePath, routeAlternates, absoluteUrl
   lib/
-    schema.ts             JSON-LD builders (Person, WebSite, BreadcrumbList, BlogPosting)
+    schema.ts             JSON-LD builders (Person, WebSite, ProfilePage, AboutPage, ContactPage,
+                          Article, FAQPage, BreadcrumbList, BlogPosting)
     content.ts            Collection helpers: by language, entry URLs, hreflang alternates
     pages.ts              All published pages (feeds sitemap.xml and llms.txt)
   data/tools.ts           Registry of free SEO tools (code, not Markdown)
@@ -66,7 +67,8 @@ src/
   styles/tokens.css       Design tokens: colors (light + dark), type scale, spacing, radii
   styles/global.css       Base styles: reset, typography, links, .container, .prose, utilities
   pages/styleguide.astro  Private style guide (noindex, not in sitemap or menu)
-public/                   Static files served as-is (favicon; CV PDF later)
+public/                   Static files served as-is (favicon, apple-touch-icon, og-default.png
+                          share image 1200×630; CV PDF later)
 ```
 
 ## URL rules
@@ -144,6 +146,7 @@ public/                   Static files served as-is (favicon; CV PDF later)
 - Layout helpers: `.container`, `.container--prose`, `.prose` (long-form), `.lead`, `.mono-label`,
   `.text-muted`, `.visually-hidden`.
 - Header: desktop nav plus a no-JavaScript mobile menu (`<details>`). Touch targets ≥ 44px.
+  The menu only lists published routes (no links to unfinished pages).
 - Review changes on `/styleguide/` in light and dark. That page is the one exception to the
   "no hardcoded text" rule (internal, English sample text).
 
@@ -167,8 +170,10 @@ public/                   Static files served as-is (favicon; CV PDF later)
 2. ✅ Design system (Signal green, IBM Plex, components, style guide)
 3. ✅ Home page (hiring-team focus; CTA for services moves to Contact later)
 4. ✅ About + Experience (4 case studies, EN + ES), published
-5. Contact form + CV download (`/public`, track clicks)
+5. 🟡 Contact page published (LinkedIn first, availability, services teaser). Pending: CV PDF
+   (set `OWNER.cv`, the download block appears automatically); the form comes with step 7
 6. Blog launch posts
-7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console
+7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console, contact form
+   (server route + Turnstile)
 8. SEO tools, one at a time (browser-only first; server-side ones via `prerender = false` routes)
 9. Later: `/services` for client work
