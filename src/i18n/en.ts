@@ -294,7 +294,28 @@ export const en = {
     eyebrow: 'Contact',
     title: 'Contact Diego Navarro',
     intro:
-      "The best way to reach me is LinkedIn. I'm happy to talk about senior SEO, link building, technical SEO, and GEO roles with teams in the US, UK, and Latin America.",
+      "Use the form below or message me on LinkedIn. I'm happy to talk about senior SEO, link building, technical SEO, and GEO roles with teams in the US, UK, and Latin America.",
+    form: {
+      title: 'Send me a message',
+      text: 'Tell me about the role or the project.',
+      name: 'Name',
+      email: 'Email',
+      company: 'Company (optional)',
+      topic: 'What is it about?',
+      topics: [
+        { value: 'role', label: 'A job opportunity' },
+        { value: 'project', label: 'An SEO project for my business' },
+        { value: 'other', label: 'Something else' },
+      ],
+      message: 'Message',
+      submit: 'Send message',
+      soon: 'The form will be active soon. Until then, LinkedIn is the fastest way to reach me.',
+      privacy:
+        'Your details are only used to reply to you. They are never shared or added to a mailing list.',
+    },
+    other: {
+      title: 'Other ways to reach me',
+    },
     linkedin: {
       title: 'Message me on LinkedIn',
       text: 'Send a message or a connection request with a short note about the role or project.',
@@ -313,11 +334,10 @@ export const en = {
       title: 'CV',
       text: 'Prefer a document? Download my CV as a PDF.',
     },
-    formSoon: 'A contact form is coming soon. Until then, LinkedIn is the fastest way to reach me.',
     services: {
       eyebrow: 'For businesses',
       title: 'Need SEO help for your business?',
-      text: "I'm preparing a services offer for link building, technical SEO, and GEO. In the meantime, send me a message on LinkedIn and tell me about your project.",
+      text: "I'm preparing a services offer for link building, technical SEO, and GEO. In the meantime, send me a message and tell me about your project.",
     },
   },
   caseStudy: {
@@ -367,7 +387,7 @@ export const en = {
     contact: {
       title: 'Contact Diego Navarro, Senior SEO Specialist',
       description:
-        'How to contact Diego Navarro, Senior SEO and backlinks specialist in Costa Rica: LinkedIn, availability, languages, and focus areas.',
+        'How to contact Diego Navarro, Senior SEO and backlinks specialist in Costa Rica: contact form, LinkedIn, availability, languages, and focus.',
     },
     notFound: {
       title: 'Page not found',

@@ -170,10 +170,12 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
 2. ✅ Design system (Signal green, IBM Plex, components, style guide)
 3. ✅ Home page (hiring-team focus; CTA for services moves to Contact later)
 4. ✅ About + Experience (4 case studies, EN + ES), published
-5. 🟡 Contact page published (LinkedIn first, availability, services teaser). Pending: CV PDF
-   (set `OWNER.cv`, the download block appears automatically); the form comes with step 7
+5. 🟡 Contact page published: form first (plain HTML, shown disabled as "coming soon" until
+   `SITE.contactForm.enabled`), LinkedIn + CV as secondary, availability, services teaser.
+   Pending: CV PDF (set `OWNER.cv`, the button appears automatically)
 6. Blog launch posts
-7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console, contact form
-   (server route + Turnstile)
+7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console, wire the contact
+   form: `/api/contact/` server route (`prerender = false`) + Turnstile, destination email stored as a
+   Cloudflare secret (never in the repo), then set `SITE.contactForm.enabled: true`
 8. SEO tools, one at a time (browser-only first; server-side ones via `prerender = false` routes)
 9. Later: `/services` for client work

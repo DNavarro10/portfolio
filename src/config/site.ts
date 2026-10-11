@@ -85,4 +85,11 @@ export const SITE = {
   twitterHandle: '',
   /** Public source code of this site (shown in the footer). */
   sourceUrl: 'https://github.com/DNavarro10/portfolio',
+  /**
+   * Contact form. `enabled: false` shows the form as "coming soon" (fields disabled).
+   * It is switched on at the Cloudflare deploy step, when the server route that sends
+   * the email exists. The destination address is a private Cloudflare secret, never
+   * written in this repo.
+   */
+  contactForm: { enabled: false, action: '/api/contact/' },
 } as const;

@@ -1,16 +1,18 @@
 ---
 /**
  * Contact page, shared by /contact/ and /es/contacto/.
- * LinkedIn is the primary channel until the contact form is wired up at the
- * Cloudflare deploy step (it needs a server to send email privately).
- * The CV block appears automatically once OWNER.cv has a file for this language.
+ * Order: contact form (main action) → other ways (LinkedIn, CV) → working details → services.
+ * The form is plain HTML (no JavaScript). While SITE.contactForm.enabled is false its
+ * fields are disabled and a "coming soon" note shows; it is switched on at the Cloudflare
+ * deploy step, when the server route that emails the message exists.
+ * The CV button appears automatically once OWNER.cv has a file for this language.
  * JSON-LD: ContactPage (main entity: Person, whose sameAs lists the profiles).
  */
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
 import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
-import { OWNER } from '@/config/site';
+import { OWNER, SITE } from '@/config/site';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { Lang } from '@/i18n/config';
 import { ROUTES } from '@/i18n/routes';
@@ -27,6 +29,7 @@ const c = t.contact;
 const path = routePath('contact', lang);
 const linkedin = OWNER.profiles.find((profile) => profile.label === 'LinkedIn');
 const cvFile = OWNER.cv[lang];
+const form = SITE.contactForm;
 
 const crumbs = [
   { name: t.nav.home, path: routePath('home', lang) },
@@ -53,26 +56,105 @@ const crumbs = [
       description={c.intro}
     />
 
-    <div class="contact-grid">
-      {linkedin && (
-        <section class="panel panel--primary" aria-labelledby="linkedin-title">
-          <h2 id="linkedin-title">{c.linkedin.title}</h2>
-          <p>{c.linkedin.text}</p>
-          <Button href={linkedin.url} icon="external" rest={{ rel: 'me noopener' }}>
-            {c.linkedin.button}
-          </Button>
-        </section>
+    <section class="panel panel--primary" aria-labelledby="form-title">
+      <h2 id="form-title">{c.form.title}</h2>
+      <p>{c.form.text}</p>
+      {!form.enabled && (
+        <p class="form-soon" id="form-soon">
+          {c.form.soon}
+        </p>
       )}
+      <form
+        class="form"
+        method="post"
+        action={form.enabled ? form.action : undefined}
+        aria-describedby={form.enabled ? undefined : 'form-soon'}
+      >
+        <fieldset disabled={!form.enabled}>
+          <legend class="visually-hidden">{c.form.title}</legend>
+          <input type="hidden" name="lang" value={lang} />
+          <div class="form__row">
+            <div class="field">
+              <label for="cf-name">{c.form.name}</label>
+              <input
+                id="cf-name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required
+                maxlength="100"
+              />
+            </div>
+            <div class="field">
+              <label for="cf-email">{c.form.email}</label>
+              <input
+                id="cf-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                maxlength="200"
+              />
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label for="cf-company">{c.form.company}</label>
+              <input
+                id="cf-company"
+                name="company"
+                type="text"
+                autocomplete="organization"
+                maxlength="100"
+              />
+            </div>
+            <div class="field">
+              <label for="cf-topic">{c.form.topic}</label>
+              <select id="cf-topic" name="topic" required>
+                {c.form.topics.map((topic) => (
+                  <option value={topic.value}>{topic.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-message">{c.form.message}</label>
+            <textarea
+              id="cf-message"
+              name="message"
+              rows="6"
+              required
+              minlength="10"
+              maxlength="5000"
+            ></textarea>
+          </div>
+          <Button type="submit">{c.form.submit}</Button>
+          <p class="form__privacy text-muted">{c.form.privacy}</p>
+        </fieldset>
+      </form>
+    </section>
 
-      {cvFile && (
-        <section class="panel" aria-labelledby="cv-title">
-          <h2 id="cv-title">{c.cv.title}</h2>
-          <p>{c.cv.text}</p>
-          <Button href={cvFile} variant="secondary" icon="download" download>
-            {t.home.actions.downloadCv}
-          </Button>
-        </section>
-      )}
+    <div class="contact-grid">
+      <section class="panel" aria-labelledby="other-title">
+        <h2 id="other-title">{c.other.title}</h2>
+        <div class="other__actions">
+          {linkedin && (
+            <Button
+              href={linkedin.url}
+              variant="secondary"
+              icon="external"
+              rest={{ rel: 'me noopener' }}
+            >
+              {c.linkedin.button}
+            </Button>
+          )}
+          {cvFile && (
+            <Button href={cvFile} variant="secondary" icon="download" download>
+              {t.home.actions.downloadCv}
+            </Button>
+          )}
+        </div>
+      </section>
 
       <section class="panel" aria-labelledby="details-title">
         <h2 id="details-title">{c.details.title}</h2>
@@ -86,8 +168,6 @@ const crumbs = [
         </dl>
       </section>
     </div>
-
-    <p class="form-soon text-muted">{c.formSoon}</p>
   </Section>
 
   <Section labelledby="services-title" tinted narrow>
@@ -104,6 +184,7 @@ const crumbs = [
   .contact-grid {
     display: grid;
     gap: var(--space-5);
+    margin-top: var(--space-5);
   }
   .panel {
     padding: var(--space-5);
@@ -118,7 +199,7 @@ const crumbs = [
     margin-bottom: var(--space-2);
     font-size: var(--fs-lg);
   }
-  .panel p {
+  .panel > p {
     color: var(--color-text-muted);
   }
   .details {
@@ -140,7 +221,60 @@ const crumbs = [
     margin: 0;
   }
   .form-soon {
-    margin: var(--space-6) 0 0;
+    margin: 0 0 var(--space-5);
+    padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
     font-size: var(--fs-sm);
+    color: var(--color-text);
+  }
+  .form fieldset {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .form fieldset:disabled {
+    opacity: 0.6;
+  }
+  .form__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-4);
+  }
+  .field {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .field label {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+  }
+  .field textarea {
+    resize: vertical;
+  }
+  .form :global(.btn) {
+    justify-self: start;
+  }
+  .form__privacy {
+    margin: 0;
+    font-size: var(--fs-xs);
+  }
+  .other__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
   }
 </style>
