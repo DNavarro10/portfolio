@@ -1,0 +1,264 @@
+---
+/**
+ * llms.txt generator (format from llmstxt.org):
+ *   # Site name
+ *   > Short summary
+ *   Optional details
+ *   ## Section
+ *   - [Title](URL): description
+ * Sections are repeatable; links are typed one per line as "Title | URL | description".
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.llmsTxt.ui;
+---
+
+<div
+  class="llms-tool"
+  data-llms-tool
+  data-strings={JSON.stringify({ ...ui, copied: t.toolPage.copied })}
+>
+  <form class="llms-tool__form" novalidate>
+    <div class="tool-panel llms-tool__intro">
+      <div class="tool-field">
+        <label for="llms-name">{ui.siteName}</label>
+        <input id="llms-name" name="name" type="text" placeholder={ui.siteNamePlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label for="llms-summary">{ui.summary}</label>
+        <textarea
+          id="llms-summary"
+          name="summary"
+          rows="2"
+          placeholder={ui.summaryPlaceholder}
+        ></textarea>
+      </div>
+      <div class="tool-field">
+        <label for="llms-details">{ui.details}</label>
+        <textarea
+          id="llms-details"
+          name="details"
+          rows="2"
+          placeholder={ui.detailsPlaceholder}
+        ></textarea>
+      </div>
+    </div>
+
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.sections}</legend>
+      <ol class="llms-sections" data-sections></ol>
+      <button type="button" class="tool-button" data-add>
+        + {ui.addSection}
+      </button>
+    </fieldset>
+  </form>
+
+  <section class="tool-panel llms-tool__output" aria-labelledby="llms-output-title">
+    <div class="output-head">
+      <h2 id="llms-output-title">{ui.output}</h2>
+      <div class="output-actions">
+        <button type="button" class="tool-button" data-copy>
+          {t.toolPage.copy}
+        </button>
+        <button type="button" class="tool-button" data-download>
+          {ui.download}
+        </button>
+      </div>
+    </div>
+    <p class="output-status status--warn" data-out="status" aria-live="polite" hidden></p>
+    <pre class="tool-code"><code data-out="code"></code></pre>
+  </section>
+
+  <template data-template>
+    <li class="llms-section">
+      <div class="llms-section__head">
+        <span class="mono-label" data-label></span>
+        <button type="button" class="tool-button" data-remove>
+          {ui.remove}
+        </button>
+      </div>
+      <div class="tool-field">
+        <label data-for="title">{ui.sectionTitle}</label>
+        <input type="text" name="title" placeholder={ui.sectionTitlePlaceholder} />
+      </div>
+      <div class="tool-field">
+        <label data-for="links">{ui.links}</label>
+        <textarea name="links" rows="4" placeholder={ui.linksPlaceholder}></textarea>
+      </div>
+    </li>
+  </template>
+</div>
+
+<script>
+  import { copyText, readStrings } from './client';
+
+  interface Strings {
+    copied: string;
+    section: string;
+    siteNamePlaceholder: string;
+    summaryPlaceholder: string;
+    sectionTitlePlaceholder: string;
+    linksPlaceholder: string;
+    invalid: string;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-llms-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const form = root.querySelector('form')!;
+    const list = root.querySelector<HTMLElement>('[data-sections]')!;
+    const code = root.querySelector<HTMLElement>('[data-out="code"]')!;
+    const status = root.querySelector<HTMLElement>('[data-out="status"]')!;
+    let output = '';
+    let counter = 0;
+
+    const field = (name: string) =>
+      (form.elements.namedItem(name) as HTMLInputElement).value.trim();
+
+    /** One line "Title | URL | description" → Markdown list item, or null if invalid. */
+    const toLink = (line: string): string | null => {
+      const [title, url, ...rest] = line.split('|').map((part) => part.trim());
+      if (!title || !url || !/^https?:\/\//i.test(url)) return null;
+      const description = rest.join(' | ').trim();
+      return `- [${title}](${url})${description ? `: ${description}` : ''}`;
+    };
+
+    const render = () => {
+      const isEmpty = !field('name') && !field('summary');
+      const lines = [
+        `# ${field('name') || s.siteNamePlaceholder}`,
+        '',
+        `> ${field('summary') || s.summaryPlaceholder}`,
+      ];
+      if (field('details')) lines.push('', field('details'));
+
+      const invalid: string[] = [];
+      list.querySelectorAll<HTMLElement>(':scope > li').forEach((section, index) => {
+        const title = section.querySelector<HTMLInputElement>('[name="title"]')!.value.trim();
+        const raw = section.querySelector<HTMLTextAreaElement>('[name="links"]')!.value;
+        const usePlaceholder = isEmpty && index === 0 && !title && !raw.trim();
+        const sourceLines = (usePlaceholder ? s.linksPlaceholder : raw)
+          .split('\n')
+          .map((line) => line.trim())
+          .filter(Boolean);
+        const links = sourceLines.map((line) => {
+          const link = toLink(line);
+          if (!link) invalid.push(line);
+          return link;
+        });
+        const valid = links.filter((link): link is string => link !== null);
+        const heading = title || (usePlaceholder ? s.sectionTitlePlaceholder : '');
+        if (heading || valid.length)
+          lines.push('', `## ${heading || `${s.section} ${index + 1}`}`, '', ...valid);
+      });
+
+      output = `${lines.join('\n')}\n`;
+      code.textContent = output;
+      status.hidden = invalid.length === 0;
+      status.textContent = invalid.length ? `${s.invalid} ${invalid.join(' · ')}` : '';
+    };
+
+    const relabel = () => {
+      list.querySelectorAll<HTMLElement>(':scope > li').forEach((section, index) => {
+        section.querySelector('[data-label]')!.textContent = `${s.section} ${index + 1}`;
+      });
+    };
+
+    const addSection = () => {
+      const template = root.querySelector<HTMLTemplateElement>('[data-template]')!;
+      const section = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      counter += 1;
+      section.querySelectorAll<HTMLLabelElement>('label[data-for]').forEach((label) => {
+        const id = `llms-${label.dataset.for}-${counter}`;
+        label.htmlFor = id;
+        section.querySelector(`[name="${label.dataset.for}"]`)!.id = id;
+      });
+      list.append(section);
+      relabel();
+      return section;
+    };
+
+    root.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('[data-add]')) {
+        addSection().querySelector('input')?.focus();
+        render();
+      }
+      const remove = target.closest('[data-remove]');
+      if (remove) {
+        remove.closest('li')!.remove();
+        relabel();
+        render();
+      }
+      if (target.closest('[data-download]')) {
+        const url = URL.createObjectURL(new Blob([output], { type: 'text/plain' }));
+        const link = Object.assign(document.createElement('a'), {
+          href: url,
+          download: 'llms.txt',
+        });
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    });
+
+    const copyButton = root.querySelector<HTMLButtonElement>('[data-copy]')!;
+    copyButton.addEventListener('click', () => void copyText(output, copyButton, s.copied));
+    form.addEventListener('input', render);
+    form.addEventListener('submit', (event) => event.preventDefault());
+
+    addSection();
+    render();
+  }
+</script>
+
+<style>
+  .llms-tool {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 64rem) {
+    .llms-tool {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .llms-tool__output {
+      position: sticky;
+      top: var(--space-5);
+    }
+  }
+  .llms-tool__form,
+  .llms-tool__intro {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .llms-sections {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+  .llms-sections :global(.llms-section) {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .llms-sections :global(.llms-section__head) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .llms-tool .tool-code {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>

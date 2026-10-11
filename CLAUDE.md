@@ -51,12 +51,14 @@ src/
     content.ts            Collection helpers: by language, entry URLs, hreflang alternates
     pages.ts              All published pages (feeds sitemap.xml and llms.txt)
   data/tools.ts           Registry of free SEO tools (slug, title, description, category, published)
+  data/ai-crawlers.ts     Known AI crawler tokens + purpose (training/search/user/control)
   components/
     seo/SeoHead.astro     Every SEO <head> tag; pages never write these by hand
     seo/JsonLd.astro      Single JSON-LD <script> with @graph
     layout/               Header, footer, language switcher, breadcrumbs
     content/              Blog post, case study, and tool page templates (shared by EN/ES)
-    tools/                Interactive tool UIs (SerpPreview, SchemaGenerator, LinkScorecard) +
+    tools/                Interactive tool UIs (LinkScorecard, AnswerReady, AiRobots, LlmsTxt,
+                          SerpPreview, SchemaGenerator) +
                           client.ts helpers. Each ships its own small <script>, loaded only on
                           that tool's page
     ui/                   Design-system components (see "Design system" below)
@@ -191,7 +193,7 @@ public/                   Static files served as-is (favicon, apple-touch-icon, 
 7. Deploy to Cloudflare, buy domain, update `SITE_URL`, verify in Search Console, wire the contact
    form: `/api/contact/` server route (`prerender = false`) + Turnstile, destination email stored as a
    Cloudflare secret (never in the repo), then set `SITE.contactForm.enabled: true`
-8. 🟡 SEO tools: ✅ Link prospect scorecard, SERP snippet preview, schema generator (EN + ES,
-   browser-only). Next after deploy: AI crawler access checker, live backlink checker,
+8. 🟡 SEO tools: ✅ Link prospect scorecard, AI answer-readiness checker, AI crawler robots.txt
+   generator, llms.txt generator, SERP snippet preview, schema generator (EN + ES, browser-only). Next after deploy: AI crawler access checker, live backlink checker,
    indexability checker (server routes, `prerender = false`)
 9. Later: `/services` for client work

@@ -10,7 +10,10 @@
  * script, so JavaScript loads only on the tool page that needs it.
  */
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import AiRobots from '@/components/tools/AiRobots.astro';
+import AnswerReady from '@/components/tools/AnswerReady.astro';
 import LinkScorecard from '@/components/tools/LinkScorecard.astro';
+import LlmsTxt from '@/components/tools/LlmsTxt.astro';
 import SchemaGenerator from '@/components/tools/SchemaGenerator.astro';
 import SerpPreview from '@/components/tools/SerpPreview.astro';
 import Card from '@/components/ui/Card.astro';
@@ -38,6 +41,9 @@ const TOOL_COMPONENTS = {
   serpPreview: SerpPreview,
   schemaGenerator: SchemaGenerator,
   linkScorecard: LinkScorecard,
+  aiRobots: AiRobots,
+  llmsTxt: LlmsTxt,
+  answerReady: AnswerReady,
 };
 const ToolUi = TOOL_COMPONENTS[tool.key];
 

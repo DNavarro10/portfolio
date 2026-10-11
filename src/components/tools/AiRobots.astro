@@ -1,0 +1,236 @@
+---
+/**
+ * AI crawler robots.txt generator. Lists known AI crawlers (src/data/ai-crawlers.ts)
+ * with a "block" checkbox each, plus three presets. Regular search engines are
+ * always allowed (User-agent: *). Output updates as you click.
+ */
+import { AI_CRAWLERS } from '@/data/ai-crawlers';
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.aiRobots.ui;
+const presets = Object.entries(ui.presetList);
+---
+
+<div
+  class="robots-tool"
+  data-robots-tool
+  data-strings={JSON.stringify({ ...ui, copied: t.toolPage.copied })}
+>
+  <form class="robots-tool__form" novalidate>
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.presets}</legend>
+      <div class="presets">
+        {presets.map(([value, label]) => (
+          <label class="tool-check">
+            <input type="radio" name="preset" value={value} checked={value === 'searchOnly'} />
+            <span>{label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset class="tool-panel tool-fieldset">
+      <legend>{ui.crawlers}</legend>
+      <div class="crawler-table-wrap">
+        <table class="crawler-table">
+          <thead>
+            <tr>
+              <th scope="col">{ui.block}</th>
+              <th scope="col">User-agent</th>
+              <th scope="col">{ui.purposeTitle}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {AI_CRAWLERS.map((crawler) => (
+              <tr>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="block"
+                    value={crawler.token}
+                    data-purpose={crawler.purpose}
+                    id={`bot-${crawler.token}`}
+                    aria-label={`${ui.block} ${crawler.token}`}
+                  />
+                </td>
+                <td>
+                  <label for={`bot-${crawler.token}`}>
+                    <code>{crawler.token}</code>
+                    <span class="crawler-company">{crawler.company}</span>
+                  </label>
+                </td>
+                <td>{ui.purposes[crawler.purpose]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </fieldset>
+
+    <div class="tool-panel tool-field">
+      <label for="robots-sitemap">{ui.sitemap}</label>
+      <input
+        id="robots-sitemap"
+        name="sitemap"
+        type="url"
+        inputmode="url"
+        placeholder={ui.sitemapPlaceholder}
+      />
+    </div>
+  </form>
+
+  <section class="tool-panel robots-tool__output" aria-labelledby="robots-output-title">
+    <div class="output-head">
+      <h2 id="robots-output-title">{ui.output}</h2>
+      <button type="button" class="tool-button" data-copy>
+        {t.toolPage.copy}
+      </button>
+    </div>
+    <p class="output-status" data-out="summary" aria-live="polite"></p>
+    <pre class="tool-code"><code data-out="code"></code></pre>
+  </section>
+</div>
+
+<script>
+  import { copyText, fill, readStrings } from './client';
+
+  interface Strings {
+    copied: string;
+    commentAll: string;
+    commentAllowed: string;
+    commentBlocked: string;
+    summary: string;
+  }
+
+  /** Which purposes each preset blocks. */
+  const PRESETS: Record<string, string[]> = {
+    allowAll: [],
+    searchOnly: ['training', 'control'],
+    blockAll: ['training', 'search', 'user', 'control'],
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-robots-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const form = root.querySelector('form')!;
+    const boxes = [...form.querySelectorAll<HTMLInputElement>('input[name="block"]')];
+    const code = root.querySelector<HTMLElement>('[data-out="code"]')!;
+    const summary = root.querySelector<HTMLElement>('[data-out="summary"]')!;
+    let output = '';
+
+    const applyPreset = (preset: string) => {
+      const blocked = PRESETS[preset] ?? [];
+      boxes.forEach((box) => {
+        box.checked = blocked.includes(box.dataset.purpose!);
+      });
+    };
+
+    const render = () => {
+      const blocked = boxes.filter((box) => box.checked).map((box) => box.value);
+      const allowed = boxes.filter((box) => !box.checked).map((box) => box.value);
+      const sitemap = (form.elements.namedItem('sitemap') as HTMLInputElement).value.trim();
+      const lines = [`# ${s.commentAll}`, 'User-agent: *', 'Allow: /'];
+      if (allowed.length) {
+        lines.push(
+          '',
+          `# ${s.commentAllowed}`,
+          ...allowed.map((a) => `User-agent: ${a}`),
+          'Allow: /',
+        );
+      }
+      if (blocked.length) {
+        lines.push(
+          '',
+          `# ${s.commentBlocked}`,
+          ...blocked.map((b) => `User-agent: ${b}`),
+          'Disallow: /',
+        );
+      }
+      if (sitemap) lines.push('', `Sitemap: ${sitemap}`);
+      output = lines.join('\n');
+      code.textContent = output;
+      summary.textContent = fill(s.summary, { blocked: blocked.length, allowed: allowed.length });
+    };
+
+    form.addEventListener('change', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.name === 'preset') applyPreset(target.value);
+      render();
+    });
+    form.addEventListener('input', render);
+    form.addEventListener('submit', (event) => event.preventDefault());
+
+    const copyButton = root.querySelector<HTMLButtonElement>('[data-copy]')!;
+    copyButton.addEventListener('click', () => void copyText(output, copyButton, s.copied));
+
+    applyPreset('searchOnly');
+    render();
+  }
+</script>
+
+<style>
+  .robots-tool {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 64rem) {
+    .robots-tool {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .robots-tool__output {
+      position: sticky;
+      top: var(--space-5);
+    }
+  }
+  .robots-tool__form {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .presets {
+    display: grid;
+  }
+  .crawler-table-wrap {
+    overflow-x: auto;
+  }
+  .crawler-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-sm);
+  }
+  .crawler-table th {
+    padding: var(--space-2);
+    border-bottom: 1px solid var(--color-border-strong);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    text-align: left;
+    color: var(--color-text-muted);
+  }
+  .crawler-table td {
+    padding: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+  .crawler-table input {
+    width: 1.5rem;
+    height: 1.5rem;
+    accent-color: var(--color-accent);
+  }
+  .crawler-table label {
+    display: block;
+    cursor: pointer;
+  }
+  .crawler-company {
+    display: block;
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+  }
+</style>

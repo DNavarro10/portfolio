@@ -17,7 +17,7 @@ export function fill(template: string, values: Record<string, string | number>):
 
 /**
  * Copies text and briefly changes the button label to "Copied".
- * Falls back to selecting a text field when the Clipboard API is unavailable.
+ * If the Clipboard API is blocked, selects the fallback field so the user can copy by hand.
  */
 export async function copyText(
   text: string,
@@ -30,7 +30,7 @@ export async function copyText(
     await navigator.clipboard.writeText(text);
   } catch {
     fallbackField?.select();
-    document.execCommand('copy');
+    return;
   }
   button.textContent = copiedLabel;
   window.setTimeout(() => {

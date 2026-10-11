@@ -17,7 +17,9 @@ export const AI_SEARCH_CRAWLERS = [
   'Perplexity-User', // Perplexity user-triggered fetches
   'Claude-SearchBot', // Claude search
   'Claude-User', // Claude user-triggered fetches
-  'Google-Extended', // Gemini grounding (Google Search itself uses Googlebot)
+  // Google-Extended controls Gemini use of content: grounding AND model training.
+  // Kept allowed for now (owner to decide, Oct 10). Google Search uses Googlebot.
+  'Google-Extended',
 ] as const;
 
 /** AI model-training crawlers: blocked for now. */

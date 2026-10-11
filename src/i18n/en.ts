@@ -346,7 +346,7 @@ export const en = {
     intro:
       'Small, fast tools for everyday SEO work: checking search snippets, writing structured data, and vetting link building prospects. They run entirely in your browser, so nothing you type is sent or stored.',
     open: 'Open tool',
-    more: 'More tools are on the way, including checks for AI crawler access and live backlinks.',
+    more: 'More tools are on the way, including checks for AI crawler access, live backlinks, and indexability.',
   },
   toolPage: {
     eyebrow: 'Free SEO tool',
@@ -359,6 +359,187 @@ export const en = {
     copied: 'Copied',
   },
   toolContent: {
+    aiRobots: {
+      steps: [
+        'Pick a starting point: allow all AI crawlers, allow AI search but block training, or block all AI crawlers.',
+        'Fine-tune each crawler with its checkbox. Regular search engines like Googlebot and Bingbot stay allowed.',
+        'Add your sitemap URL, then copy the rules into the robots.txt file at the root of your domain.',
+        'Check your server logs after a few weeks to see which bots actually visit.',
+      ],
+      faq: [
+        {
+          question: 'What is the difference between AI training and AI search crawlers?',
+          answer:
+            'Training crawlers, like GPTBot and ClaudeBot, collect content to train future models. Search crawlers, like OAI-SearchBot and PerplexityBot, build an index so the assistant can find and cite your pages in answers. You can block one group and allow the other.',
+        },
+        {
+          question: 'Will blocking AI crawlers hurt my Google rankings?',
+          answer:
+            'No. Google Search uses Googlebot, which this tool never blocks. Google-Extended is a separate token that controls whether Google may use your content for Gemini, and blocking it does not change how Google Search ranks you.',
+        },
+        {
+          question: 'What are Google-Extended and Applebot-Extended?',
+          answer:
+            'They are control tokens, not crawlers. Google and Apple crawl with their main bots; these tokens tell them whether that content may be used for their AI models and features.',
+        },
+        {
+          question: 'Do all AI bots follow robots.txt?',
+          answer:
+            'The major ones say they do, but robots.txt is a request, not a lock. Some agents and AI browsers do not identify themselves, so check your server logs if you need to enforce a block at the firewall.',
+        },
+      ],
+      ui: {
+        presets: 'Start from',
+        presetList: {
+          allowAll: 'Allow all AI crawlers',
+          searchOnly: 'Allow AI search, block AI training',
+          blockAll: 'Block all AI crawlers',
+        },
+        crawlers: 'AI crawlers',
+        block: 'Block',
+        purposes: {
+          training: 'Training',
+          search: 'AI search',
+          user: 'User request',
+          control: 'AI use control',
+        },
+        purposeTitle: 'Purpose',
+        sitemap: 'Sitemap URL (optional)',
+        sitemapPlaceholder: 'https://example.com/sitemap.xml',
+        output: 'Your robots.txt rules',
+        commentAll: 'Search engines and all other crawlers',
+        commentAllowed: 'AI crawlers: allowed',
+        commentBlocked: 'AI crawlers: blocked',
+        summary: '{blocked} blocked, {allowed} allowed.',
+      },
+    },
+    llmsTxt: {
+      steps: [
+        'Enter your site name and a one or two sentence summary of what the site offers.',
+        'Add sections (for example Services, Guides, About) and list your most useful pages, one per line.',
+        'Copy or download the file and publish it at the root of your domain as /llms.txt.',
+        'Keep it short and update it when you publish important pages.',
+      ],
+      faq: [
+        {
+          question: 'What is llms.txt?',
+          answer:
+            'llms.txt is a proposed standard (llmstxt.org): a Markdown file at the root of a site that gives AI tools a short summary and a curated list of the most useful pages, so they don’t have to work it out from navigation and ads.',
+        },
+        {
+          question: 'Do Google or ChatGPT use llms.txt?',
+          answer:
+            'No major search engine has said it uses llms.txt for ranking or citations. Some AI tools and coding assistants read it, and it costs little to maintain, so treat it as a low-effort extra, not a ranking factor.',
+        },
+        {
+          question: 'What should I put in it?',
+          answer:
+            'Your most important, evergreen pages: what you offer, key guides or documentation, pricing or contact details, and an About page. Each link gets a short, factual description. Skip thin pages and duplicates.',
+        },
+        {
+          question: 'What is the "Optional" section?',
+          answer:
+            'Under the convention, links in a section titled "Optional" are secondary and can be skipped when an AI tool needs a shorter context.',
+        },
+      ],
+      ui: {
+        siteName: 'Site or company name',
+        siteNamePlaceholder: 'Example Agency',
+        summary: 'Short summary',
+        summaryPlaceholder:
+          'Example Agency helps online stores grow organic traffic with technical SEO and link building.',
+        details: 'More details (optional)',
+        detailsPlaceholder:
+          'Founded in 2020. Works with e-commerce brands in the US and Latin America.',
+        sections: 'Sections',
+        sectionTitle: 'Section title',
+        sectionTitlePlaceholder: 'Services',
+        links: 'Links (one per line: Title | URL | description)',
+        linksPlaceholder:
+          'Technical SEO audit | https://example.com/services/audit/ | What the audit covers and how long it takes',
+        addSection: 'Add a section',
+        remove: 'Remove',
+        section: 'Section',
+        output: 'Your llms.txt',
+        download: 'Download llms.txt',
+        invalid: 'Lines skipped (need at least a title and a URL):',
+      },
+    },
+    answerReady: {
+      steps: [
+        'Open the page in your browser, view its source (Ctrl+U or Cmd+Option+U), and copy all of it. You can also paste plain text.',
+        'Paste it in the box. The checks run instantly in your browser.',
+        'Fix the items marked with ✕ or !, starting from the top.',
+        'Paste the updated page again to confirm the score went up.',
+      ],
+      faq: [
+        {
+          question: 'What makes content "answer-ready" for AI search?',
+          answer:
+            'AI answers quote short, self-contained passages. Pages that state the main answer early, use clear question-style headings, keep paragraphs short, include concrete facts, and describe themselves with structured data are easier to extract and cite.',
+        },
+        {
+          question: 'Does a high score guarantee AI citations?',
+          answer:
+            'No. Being cited also depends on authority, relevance to the question, and whether the AI crawler can reach the page. This checker covers what is on the page; it is a structure review, not a prediction.',
+        },
+        {
+          question: 'Why paste the HTML instead of entering a URL?',
+          answer:
+            'Fetching another website needs a server, and this tool runs fully in your browser so nothing is sent anywhere. Pasting the source also lets you check drafts and staging pages that are not public yet.',
+        },
+        {
+          question: 'Which checks does it run?',
+          answer:
+            'One H1; a short summary right after it; question-style headings; heading order; paragraph length; lists or tables; concrete numbers; JSON-LD structured data; a meta description; and signals of author and date.',
+        },
+      ],
+      ui: {
+        input: 'Page HTML or text',
+        inputPlaceholder:
+          'Paste the page source (starting with <!doctype html>) or the article text',
+        result: 'Result',
+        score: 'Score',
+        empty: 'Paste a page to see the checks.',
+        modeHtml: 'Checked as HTML.',
+        modeText: 'Checked as plain text: paste the HTML source for the full set of checks.',
+        levels: {
+          high: 'Answer-ready',
+          medium: 'Partly answer-ready',
+          low: 'Needs work',
+        },
+        checks: {
+          h1Ok: 'One H1: "{text}"',
+          h1None: 'No H1 found. Add one clear main heading.',
+          h1Many: '{count} H1 headings. Keep only one.',
+          summaryOk: 'Summary near the top ({words} words).',
+          summaryLong:
+            'The first paragraph has {words} words. Open with a 1 or 2 sentence answer (under 60 words).',
+          summaryMissing: 'No intro paragraph found. Start with a short summary of the answer.',
+          questionsOk: '{count} of {total} subheadings are questions.',
+          questionsNone:
+            'No subheadings phrased as questions. Use the questions people actually search.',
+          headingsOk: 'Heading levels are in order.',
+          headingsSkip: 'A heading level is skipped ({from} → {to}).',
+          headingsNone: 'No subheadings. Split the content into sections with H2 headings.',
+          paragraphsOk: '{percent}% of paragraphs are under 80 words.',
+          paragraphsLong:
+            'Only {percent}% of paragraphs are under 80 words. Shorter paragraphs are easier to quote.',
+          listsOk: 'Uses lists or tables.',
+          listsNone: 'No lists or tables. Use them for steps, comparisons, and key facts.',
+          numbersOk: '{count} concrete numbers or data points.',
+          numbersFew: 'Few concrete numbers. Add data, dates, prices, or measurable results.',
+          schemaOk: 'Structured data found: {types}.',
+          schemaNone: 'No JSON-LD structured data. Add the schema type that matches the page.',
+          metaOk: 'Meta description present.',
+          metaNone: 'No meta description.',
+          authorOk: 'Author signal found.',
+          authorNone: 'No author found. Name the author and link to their profile.',
+          dateOk: 'Publish or update date found.',
+          dateNone: 'No date found. Show when the page was published or updated.',
+        },
+      },
+    },
     serpPreview: {
       steps: [
         'Enter the page URL, the title tag, and the meta description.',
@@ -611,7 +792,7 @@ export const en = {
     tools: {
       title: 'Free SEO Tools by Diego Navarro',
       description:
-        'Free, browser-based SEO tools by Diego Navarro: SERP snippet preview, JSON-LD schema generator, and a link prospect scorecard for outreach.',
+        'Free, browser-based SEO and AI search tools by Diego Navarro: link prospect scorecard, AI answer-readiness checker, robots.txt and llms.txt generators.',
     },
     contact: {
       title: 'Contact Diego Navarro, Senior SEO Specialist',

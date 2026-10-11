@@ -347,7 +347,7 @@ export const es: UiStrings = {
     intro:
       'Herramientas pequeñas y rápidas para el trabajo SEO del día a día: revisar snippets, escribir datos estructurados y evaluar prospectos de link building. Funcionan por completo en tu navegador, así que nada de lo que escribes se envía ni se guarda.',
     open: 'Abrir herramienta',
-    more: 'Vienen más herramientas, como un verificador de acceso de rastreadores de IA y un comprobador de backlinks en vivo.',
+    more: 'Vienen más herramientas, como verificadores de acceso de rastreadores de IA, backlinks en vivo e indexabilidad.',
   },
   toolPage: {
     eyebrow: 'Herramienta SEO gratuita',
@@ -360,6 +360,191 @@ export const es: UiStrings = {
     copied: 'Copiado',
   },
   toolContent: {
+    aiRobots: {
+      steps: [
+        'Elige un punto de partida: permitir todos los rastreadores de IA, permitir la búsqueda con IA pero bloquear el entrenamiento, o bloquearlos todos.',
+        'Ajusta cada rastreador con su casilla. Los buscadores normales como Googlebot y Bingbot siguen permitidos.',
+        'Agrega la URL de tu sitemap y copia las reglas en el archivo robots.txt de la raíz de tu dominio.',
+        'Revisa los logs del servidor después de unas semanas para ver qué bots te visitan de verdad.',
+      ],
+      faq: [
+        {
+          question:
+            '¿Qué diferencia hay entre los rastreadores de entrenamiento y los de búsqueda con IA?',
+          answer:
+            'Los de entrenamiento, como GPTBot y ClaudeBot, recopilan contenido para entrenar modelos futuros. Los de búsqueda, como OAI-SearchBot y PerplexityBot, crean un índice para que el asistente encuentre y cite tus páginas en sus respuestas. Puedes bloquear un grupo y permitir el otro.',
+        },
+        {
+          question: '¿Bloquear rastreadores de IA afecta mi posicionamiento en Google?',
+          answer:
+            'No. Google Search usa Googlebot, que esta herramienta nunca bloquea. Google-Extended es otro token que controla si Google puede usar tu contenido para Gemini, y bloquearlo no cambia cómo te posiciona Google Search.',
+        },
+        {
+          question: '¿Qué son Google-Extended y Applebot-Extended?',
+          answer:
+            'Son tokens de control, no rastreadores. Google y Apple rastrean con sus bots principales; estos tokens les indican si pueden usar ese contenido para sus modelos y funciones de IA.',
+        },
+        {
+          question: '¿Todos los bots de IA respetan el robots.txt?',
+          answer:
+            'Los principales dicen que sí, pero el robots.txt es una petición, no un candado. Algunos agentes y navegadores con IA no se identifican, así que revisa tus logs si necesitas forzar un bloqueo desde el firewall.',
+        },
+      ],
+      ui: {
+        presets: 'Punto de partida',
+        presetList: {
+          allowAll: 'Permitir todos los rastreadores de IA',
+          searchOnly: 'Permitir búsqueda con IA, bloquear entrenamiento',
+          blockAll: 'Bloquear todos los rastreadores de IA',
+        },
+        crawlers: 'Rastreadores de IA',
+        block: 'Bloquear',
+        purposes: {
+          training: 'Entrenamiento',
+          search: 'Búsqueda con IA',
+          user: 'Petición del usuario',
+          control: 'Control de uso en IA',
+        },
+        purposeTitle: 'Propósito',
+        sitemap: 'URL del sitemap (opcional)',
+        sitemapPlaceholder: 'https://ejemplo.com/sitemap.xml',
+        output: 'Tus reglas de robots.txt',
+        commentAll: 'Buscadores y todos los demás rastreadores',
+        commentAllowed: 'Rastreadores de IA: permitidos',
+        commentBlocked: 'Rastreadores de IA: bloqueados',
+        summary: '{blocked} bloqueados, {allowed} permitidos.',
+      },
+    },
+    llmsTxt: {
+      steps: [
+        'Escribe el nombre de tu sitio y un resumen de una o dos frases sobre lo que ofrece.',
+        'Agrega secciones (por ejemplo Servicios, Guías, Acerca de) y lista tus páginas más útiles, una por línea.',
+        'Copia o descarga el archivo y publícalo en la raíz de tu dominio como /llms.txt.',
+        'Mantenlo breve y actualízalo cuando publiques páginas importantes.',
+      ],
+      faq: [
+        {
+          question: '¿Qué es llms.txt?',
+          answer:
+            'llms.txt es un estándar propuesto (llmstxt.org): un archivo Markdown en la raíz del sitio que da a las herramientas de IA un resumen breve y una lista seleccionada de las páginas más útiles, para que no tengan que deducirlo del menú y la publicidad.',
+        },
+        {
+          question: '¿Google o ChatGPT usan llms.txt?',
+          answer:
+            'Ningún buscador importante ha dicho que use llms.txt para posicionar o citar. Algunas herramientas de IA y asistentes de programación sí lo leen, y mantenerlo cuesta poco, así que tómalo como un extra de bajo esfuerzo, no como un factor de posicionamiento.',
+        },
+        {
+          question: '¿Qué debo incluir?',
+          answer:
+            'Tus páginas más importantes y duraderas: lo que ofreces, guías o documentación clave, precios o contacto, y una página Acerca de. Cada enlace lleva una descripción breve y objetiva. Omite páginas pobres y duplicadas.',
+        },
+        {
+          question: '¿Qué es la sección "Optional"?',
+          answer:
+            'Según la convención, los enlaces de una sección titulada "Optional" son secundarios y una herramienta de IA puede omitirlos cuando necesita un contexto más corto.',
+        },
+      ],
+      ui: {
+        siteName: 'Nombre del sitio o empresa',
+        siteNamePlaceholder: 'Agencia Ejemplo',
+        summary: 'Resumen breve',
+        summaryPlaceholder:
+          'Agencia Ejemplo ayuda a tiendas en línea a crecer su tráfico orgánico con SEO técnico y link building.',
+        details: 'Más detalles (opcional)',
+        detailsPlaceholder:
+          'Fundada en 2020. Trabaja con marcas de comercio electrónico en EE. UU. y Latinoamérica.',
+        sections: 'Secciones',
+        sectionTitle: 'Título de la sección',
+        sectionTitlePlaceholder: 'Servicios',
+        links: 'Enlaces (uno por línea: Título | URL | descripción)',
+        linksPlaceholder:
+          'Auditoría SEO técnica | https://ejemplo.com/servicios/auditoria/ | Qué incluye la auditoría y cuánto tarda',
+        addSection: 'Agregar sección',
+        remove: 'Quitar',
+        section: 'Sección',
+        output: 'Tu llms.txt',
+        download: 'Descargar llms.txt',
+        invalid: 'Líneas omitidas (necesitan al menos un título y una URL):',
+      },
+    },
+    answerReady: {
+      steps: [
+        'Abre la página en tu navegador, mira su código fuente (Ctrl+U o Cmd+Opción+U) y cópialo completo. También puedes pegar texto plano.',
+        'Pégalo en el recuadro. La revisión se hace al instante en tu navegador.',
+        'Corrige los puntos marcados con ✕ o !, empezando por arriba.',
+        'Vuelve a pegar la página actualizada para confirmar que la puntuación subió.',
+      ],
+      faq: [
+        {
+          question: '¿Qué hace que un contenido esté "listo para respuestas" de IA?',
+          answer:
+            'Las respuestas de IA citan pasajes breves y autosuficientes. Las páginas que dan la respuesta principal al inicio, usan encabezados claros en forma de pregunta, mantienen párrafos cortos, incluyen datos concretos y se describen con datos estructurados son más fáciles de extraer y citar.',
+        },
+        {
+          question: '¿Una puntuación alta garantiza citas en IA?',
+          answer:
+            'No. Que te citen también depende de la autoridad, de la relevancia para la pregunta y de que el rastreador de IA pueda acceder a la página. Esta herramienta revisa lo que está en la página: es una revisión de estructura, no una predicción.',
+        },
+        {
+          question: '¿Por qué pegar el HTML en lugar de escribir una URL?',
+          answer:
+            'Descargar otro sitio web requiere un servidor, y esta herramienta funciona por completo en tu navegador para que nada se envíe. Pegar el código también te permite revisar borradores y páginas de prueba que aún no son públicas.',
+        },
+        {
+          question: '¿Qué revisa?',
+          answer:
+            'Un solo H1; un resumen breve justo después; encabezados en forma de pregunta; orden de encabezados; largo de los párrafos; listas o tablas; números concretos; datos estructurados JSON-LD; meta description; y señales de autor y fecha.',
+        },
+      ],
+      ui: {
+        input: 'HTML o texto de la página',
+        inputPlaceholder:
+          'Pega el código fuente de la página (empieza con <!doctype html>) o el texto del artículo',
+        result: 'Resultado',
+        score: 'Puntuación',
+        empty: 'Pega una página para ver la revisión.',
+        modeHtml: 'Revisado como HTML.',
+        modeText: 'Revisado como texto plano: pega el código HTML para la revisión completa.',
+        levels: {
+          high: 'Lista para respuestas',
+          medium: 'Parcialmente lista',
+          low: 'Necesita trabajo',
+        },
+        checks: {
+          h1Ok: 'Un solo H1: "{text}"',
+          h1None: 'No hay H1. Agrega un encabezado principal claro.',
+          h1Many: 'Hay {count} encabezados H1. Deja solo uno.',
+          summaryOk: 'Resumen al inicio ({words} palabras).',
+          summaryLong:
+            'El primer párrafo tiene {words} palabras. Empieza con una respuesta de 1 o 2 frases (menos de 60 palabras).',
+          summaryMissing:
+            'No hay párrafo de introducción. Empieza con un resumen breve de la respuesta.',
+          questionsOk: '{count} de {total} subtítulos son preguntas.',
+          questionsNone:
+            'Ningún subtítulo está escrito como pregunta. Usa las preguntas que la gente realmente busca.',
+          headingsOk: 'Los niveles de encabezado están en orden.',
+          headingsSkip: 'Se salta un nivel de encabezado ({from} → {to}).',
+          headingsNone: 'No hay subtítulos. Divide el contenido en secciones con encabezados H2.',
+          paragraphsOk: 'El {percent}% de los párrafos tiene menos de 80 palabras.',
+          paragraphsLong:
+            'Solo el {percent}% de los párrafos tiene menos de 80 palabras. Los párrafos cortos son más fáciles de citar.',
+          listsOk: 'Usa listas o tablas.',
+          listsNone: 'No hay listas ni tablas. Úsalas para pasos, comparaciones y datos clave.',
+          numbersOk: '{count} números o datos concretos.',
+          numbersFew:
+            'Pocos números concretos. Agrega datos, fechas, precios o resultados medibles.',
+          schemaOk: 'Datos estructurados encontrados: {types}.',
+          schemaNone:
+            'No hay datos estructurados JSON-LD. Agrega el tipo de schema que corresponde a la página.',
+          metaOk: 'Tiene meta description.',
+          metaNone: 'No tiene meta description.',
+          authorOk: 'Se encontró una señal de autor.',
+          authorNone: 'No se encontró autor. Indica quién escribió la página y enlaza a su perfil.',
+          dateOk: 'Se encontró la fecha de publicación o actualización.',
+          dateNone: 'No se encontró fecha. Muestra cuándo se publicó o actualizó la página.',
+        },
+      },
+    },
     serpPreview: {
       steps: [
         'Escribe la URL de la página, el title y la meta description.',
@@ -614,7 +799,7 @@ export const es: UiStrings = {
     tools: {
       title: 'Herramientas SEO gratuitas de Diego Navarro',
       description:
-        'Herramientas SEO gratuitas que funcionan en tu navegador: simulador SERP, generador de schema JSON-LD y evaluador de prospectos para link building.',
+        'Herramientas gratuitas de SEO y búsqueda con IA: evaluador de prospectos, verificador de contenido para IA y generadores de robots.txt y llms.txt.',
     },
     contact: {
       title: 'Contactar a Diego Navarro, especialista SEO senior',

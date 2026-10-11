@@ -1,0 +1,351 @@
+---
+/**
+ * AI answer-readiness checker (AEO/GEO). The user pastes a page's HTML source
+ * (or plain text); the browser parses it with DOMParser, which never runs the
+ * pasted scripts, and scores structure signals that make passages easy for AI
+ * search to extract and cite. Nothing is sent anywhere.
+ *
+ * Weights (out of 100): summary 15, schema 15, H1 10, question headings 10,
+ * heading order 10, paragraph length 10, numbers 10, lists 5, meta 5,
+ * author 5, date 5. "!" items earn half. Plain text only runs the checks that
+ * make sense without HTML, and the score is scaled to those.
+ */
+import type { Lang } from '@/i18n/config';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const ui = t.toolContent.answerReady.ui;
+---
+
+<div class="answer-tool" data-answer-tool data-strings={JSON.stringify(ui)}>
+  <div class="tool-panel tool-field">
+    <label for="ar-input">{ui.input}</label>
+    <textarea
+      id="ar-input"
+      rows="14"
+      spellcheck="false"
+      placeholder={ui.inputPlaceholder}
+    ></textarea>
+  </div>
+
+  <section class="tool-panel answer-tool__result" aria-labelledby="ar-result-title">
+    <h2 id="ar-result-title">{ui.result}</h2>
+    <div aria-live="polite">
+      <p class="text-muted" data-out="empty">
+        {ui.empty}
+      </p>
+      <div data-out="filled" hidden>
+        <p class="answer-tool__score">
+          <span class="mono-label">{ui.score}</span>
+          <span class="answer-tool__number">
+            <span data-out="score"></span>/100
+          </span>
+        </p>
+        <p class="answer-tool__level" data-out="level"></p>
+        <p class="answer-tool__mode text-muted" data-out="mode"></p>
+        <ul class="answer-tool__checks" data-out="checks"></ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  import { fill, readStrings } from './client';
+
+  type Status = 'good' | 'warn' | 'bad';
+  interface Check {
+    status: Status;
+    weight: number;
+    text: string;
+  }
+  interface Strings {
+    modeHtml: string;
+    modeText: string;
+    levels: Record<'high' | 'medium' | 'low', string>;
+    checks: Record<string, string>;
+  }
+
+  const ICON: Record<Status, string> = { good: '✓', warn: '!', bad: '✕' };
+  const EARN: Record<Status, number> = { good: 1, warn: 0.5, bad: 0 };
+  const QUESTION_START =
+    /^(¿|how|what|why|when|where|which|who|can|does|do|is|are|should|will|cómo|como|qué|que|por qué|cuándo|dónde|cuál|cuáles|quién|cuánto|cuánta|es|son|se puede|puedo|debo)\b/i;
+  const NUMBER = /\d[\d.,]*\s?%?/g;
+
+  const words = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
+  const clip = (text: string, max = 70) =>
+    text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
+  const isQuestion = (text: string) =>
+    text.trim().endsWith('?') || QUESTION_START.test(text.trim());
+
+  const root = document.querySelector<HTMLElement>('[data-answer-tool]');
+  if (root) {
+    const s = readStrings<Strings>(root);
+    const c = s.checks;
+    const input = root.querySelector<HTMLTextAreaElement>('#ar-input')!;
+    const out = (name: string) => root.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+
+    const check = (
+      ok: Status,
+      weight: number,
+      key: string,
+      values: Record<string, string | number> = {},
+    ): Check => ({
+      status: ok,
+      weight,
+      text: fill(c[key]!, values),
+    });
+
+    /** Shared checks on a list of paragraphs. */
+    const paragraphCheck = (paragraphs: string[]): Check => {
+      const counted = paragraphs.filter((p) => words(p) >= 5);
+      const short = counted.filter((p) => words(p) <= 80).length;
+      const percent = counted.length ? Math.round((short / counted.length) * 100) : 100;
+      return percent >= 80
+        ? check('good', 10, 'paragraphsOk', { percent })
+        : check(percent >= 60 ? 'warn' : 'bad', 10, 'paragraphsLong', { percent });
+    };
+    const summaryCheck = (first: string | undefined): Check => {
+      if (!first) return check('bad', 15, 'summaryMissing');
+      const count = words(first);
+      return count <= 60
+        ? check('good', 15, 'summaryOk', { words: count })
+        : check('warn', 15, 'summaryLong', { words: count });
+    };
+    const numbersCheck = (text: string): Check => {
+      const count = (text.match(NUMBER) ?? []).length;
+      return count >= 3
+        ? check('good', 10, 'numbersOk', { count })
+        : check('warn', 10, 'numbersFew');
+    };
+    const questionsCheck = (headings: string[]): Check => {
+      const count = headings.filter(isQuestion).length;
+      return count > 0
+        ? check('good', 10, 'questionsOk', { count, total: headings.length })
+        : check('bad', 10, 'questionsNone');
+    };
+
+    const analyzeHtml = (html: string): Check[] => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const content = (doc.querySelector('article, main') ?? doc.body).cloneNode(
+        true,
+      ) as HTMLElement;
+      content
+        .querySelectorAll('script, style, noscript, nav, header, footer, aside, form')
+        .forEach((node) => node.remove());
+      const results: Check[] = [];
+
+      const h1s = [...doc.querySelectorAll('h1')];
+      if (h1s.length === 1)
+        results.push(check('good', 10, 'h1Ok', { text: clip(h1s[0]!.textContent?.trim() ?? '') }));
+      else if (h1s.length === 0) results.push(check('bad', 10, 'h1None'));
+      else results.push(check('warn', 10, 'h1Many', { count: h1s.length }));
+
+      const paragraphs = [...content.querySelectorAll('p')].map((p) => p.textContent?.trim() ?? '');
+      results.push(summaryCheck(paragraphs.find((p) => words(p) >= 8)));
+
+      const subheadings = [...content.querySelectorAll('h2, h3')].map(
+        (h) => h.textContent?.trim() ?? '',
+      );
+      if (subheadings.length === 0) {
+        results.push(check('bad', 10, 'headingsNone'), check('bad', 10, 'questionsNone'));
+      } else {
+        results.push(questionsCheck(subheadings));
+        const levels = [...doc.querySelectorAll('h1, h2, h3, h4, h5, h6')].map((h) =>
+          Number(h.tagName[1]),
+        );
+        const skipIndex = levels.findIndex((level, i) => i > 0 && level > levels[i - 1]! + 1);
+        results.push(
+          skipIndex === -1
+            ? check('good', 10, 'headingsOk')
+            : check('warn', 10, 'headingsSkip', {
+                from: `H${levels[skipIndex - 1]}`,
+                to: `H${levels[skipIndex]}`,
+              }),
+        );
+      }
+
+      results.push(paragraphCheck(paragraphs));
+      results.push(
+        content.querySelector('ul li, ol li, table')
+          ? check('good', 5, 'listsOk')
+          : check('warn', 5, 'listsNone'),
+      );
+      results.push(numbersCheck(content.textContent ?? ''));
+
+      // Structured data: collect every @type, including inside @graph.
+      const types = new Set<string>();
+      let schemaText = '';
+      doc.querySelectorAll('script[type="application/ld+json"]').forEach((script) => {
+        schemaText += script.textContent ?? '';
+        try {
+          const walk = (node: unknown) => {
+            if (Array.isArray(node)) node.forEach(walk);
+            else if (node && typeof node === 'object') {
+              const record = node as Record<string, unknown>;
+              const type = record['@type'];
+              if (typeof type === 'string') types.add(type);
+              if (Array.isArray(type)) type.forEach((item) => types.add(String(item)));
+              walk(record['@graph']);
+            }
+          };
+          walk(JSON.parse(script.textContent ?? ''));
+        } catch {
+          /* invalid JSON-LD: ignored here, Google's tests will flag it */
+        }
+      });
+      results.push(
+        types.size
+          ? check('good', 15, 'schemaOk', { types: [...types].slice(0, 6).join(', ') })
+          : check('bad', 15, 'schemaNone'),
+      );
+
+      const meta = doc.querySelector<HTMLMetaElement>('meta[name="description"]')?.content.trim();
+      results.push(meta ? check('good', 5, 'metaOk') : check('bad', 5, 'metaNone'));
+
+      const hasAuthor =
+        !!doc.querySelector(
+          'meta[name="author"], [rel="author"], [itemprop="author"], .author, .byline',
+        ) || /"author"\s*:/.test(schemaText);
+      results.push(hasAuthor ? check('good', 5, 'authorOk') : check('warn', 5, 'authorNone'));
+
+      const hasDate =
+        !!doc.querySelector(
+          'time, meta[property="article:published_time"], meta[property="article:modified_time"]',
+        ) || /"date(Published|Modified)"\s*:/.test(schemaText);
+      results.push(hasDate ? check('good', 5, 'dateOk') : check('warn', 5, 'dateNone'));
+
+      return results;
+    };
+
+    const analyzeText = (text: string): Check[] => {
+      const blocks = text
+        .split(/\n\s*\n/)
+        .map((block) => block.trim())
+        .filter(Boolean);
+      const lines = text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
+      const isListItem = (line: string) => /^([-*•]|\d+[.)])\s/.test(line);
+      const headings = lines.filter(
+        (line) => words(line) <= 14 && !/[.:;,]$/.test(line) && !isListItem(line),
+      );
+      const prose = blocks.filter((block) => words(block) > 14);
+      return [
+        summaryCheck(prose[0]),
+        headings.length ? questionsCheck(headings) : check('bad', 10, 'headingsNone'),
+        paragraphCheck(prose),
+        lines.some(isListItem) ? check('good', 5, 'listsOk') : check('warn', 5, 'listsNone'),
+        numbersCheck(text),
+      ];
+    };
+
+    const render = () => {
+      const raw = input.value.trim();
+      out('empty').hidden = raw.length > 0;
+      out('filled').hidden = raw.length === 0;
+      if (!raw) return;
+
+      const isHtml = /<\s*(!doctype|html|body|h[1-6]|p|div|article|main)\b/i.test(raw);
+      const results = isHtml ? analyzeHtml(raw) : analyzeText(raw);
+      const possible = results.reduce((sum, item) => sum + item.weight, 0);
+      const earned = results.reduce((sum, item) => sum + item.weight * EARN[item.status], 0);
+      const score = Math.round((earned / possible) * 100);
+      const level = score >= 80 ? 'high' : score >= 50 ? 'medium' : 'low';
+      const levelStatus: Status = level === 'high' ? 'good' : level === 'medium' ? 'warn' : 'bad';
+
+      out('score').textContent = String(score);
+      const levelEl = out('level');
+      levelEl.textContent = `${ICON[levelStatus]} ${s.levels[level]}`;
+      levelEl.className = `answer-tool__level status--${levelStatus}`;
+      out('mode').textContent = isHtml ? s.modeHtml : s.modeText;
+
+      // Problems first, so the most useful fixes are at the top.
+      const order: Record<Status, number> = { bad: 0, warn: 1, good: 2 };
+      out('checks').replaceChildren(
+        ...[...results]
+          .sort((a, b) => order[a.status] - order[b.status] || b.weight - a.weight)
+          .map((item) => {
+            const li = document.createElement('li');
+            const icon = document.createElement('span');
+            icon.className = `answer-tool__icon status--${item.status}`;
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = ICON[item.status];
+            li.append(icon, item.text);
+            return li;
+          }),
+      );
+    };
+
+    let timer = 0;
+    input.addEventListener('input', () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(render, 250);
+    });
+    render();
+  }
+</script>
+
+<style>
+  .answer-tool {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 64rem) {
+    .answer-tool {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .answer-tool__result {
+      position: sticky;
+      top: var(--space-5);
+    }
+  }
+  .answer-tool textarea {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+  }
+  .answer-tool__score {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 0;
+  }
+  .answer-tool__number {
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-medium);
+  }
+  .answer-tool__level {
+    margin: var(--space-2) 0 var(--space-1);
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
+  }
+  .answer-tool__mode {
+    margin: 0 0 var(--space-4);
+    font-size: var(--fs-xs);
+  }
+  .answer-tool__checks {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-sm);
+  }
+  .answer-tool__checks :global(li) {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .answer-tool__checks :global(.answer-tool__icon) {
+    flex: none;
+    width: 1.25em;
+    font-family: var(--font-mono);
+    font-weight: var(--fw-semibold);
+  }
+</style>

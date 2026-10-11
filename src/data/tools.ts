@@ -44,6 +44,45 @@ export const TOOLS: Tool[] = [
     published: true,
   },
   {
+    key: 'answerReady',
+    slug: { en: 'ai-answer-readiness-checker', es: 'verificador-contenido-ia' },
+    title: {
+      en: 'AI Answer-Readiness Checker',
+      es: 'Verificador de contenido listo para IA',
+    },
+    description: {
+      en: 'Free AEO and GEO checker: paste a page and see if it is easy for AI search to quote, from summaries and headings to schema and dates.',
+      es: 'Verificador gratuito de AEO y GEO: pega una página y descubre si es fácil de citar por la búsqueda con IA, desde el resumen hasta el schema.',
+    },
+    category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    published: true,
+  },
+  {
+    key: 'aiRobots',
+    slug: { en: 'ai-robots-txt-generator', es: 'generador-robots-txt-ia' },
+    title: {
+      en: 'AI Crawler robots.txt Generator',
+      es: 'Generador de robots.txt para bots de IA',
+    },
+    description: {
+      en: 'Free robots.txt generator for AI crawlers: allow AI search bots like OAI-SearchBot and block AI training bots like GPTBot in a few clicks.',
+      es: 'Generador gratuito de robots.txt para rastreadores de IA: permite bots de búsqueda como OAI-SearchBot y bloquea los de entrenamiento como GPTBot.',
+    },
+    category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    published: true,
+  },
+  {
+    key: 'llmsTxt',
+    slug: { en: 'llms-txt-generator', es: 'generador-llms-txt' },
+    title: { en: 'llms.txt Generator', es: 'Generador de llms.txt' },
+    description: {
+      en: 'Free llms.txt generator: create the Markdown file that gives AI tools a short summary of your site and links to your most useful pages.',
+      es: 'Generador gratuito de llms.txt: crea el archivo Markdown que da a las herramientas de IA un resumen de tu sitio y enlaces a tus mejores páginas.',
+    },
+    category: { en: 'AI search (GEO)', es: 'Búsqueda con IA (GEO)' },
+    published: true,
+  },
+  {
     key: 'serpPreview',
     slug: { en: 'serp-preview', es: 'simulador-serp' },
     title: {
