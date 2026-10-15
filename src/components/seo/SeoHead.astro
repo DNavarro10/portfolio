@@ -20,8 +20,12 @@ export interface SeoProps {
   lang: Lang;
   /** Same content in each language. hreflang is only output when ALL languages exist. */
   alternates?: Alternates;
-  /** Canonical path. Defaults to the current URL path (self-referencing). */
-  canonicalPath?: string;
+  /**
+   * Canonical path. Defaults to the current URL path (self-referencing).
+   * Pass null for pages that must not declare one (404 pages: they're served at
+   * any missing URL, so no single canonical address exists).
+   */
+  canonicalPath?: string | null;
   /** Set true to keep the page out of search results. */
   noindex?: boolean;
   /** Use the title as-is, without " | Site name" (e.g. the home page). */
@@ -50,7 +54,7 @@ const {
 } = Astro.props;
 
 const fullTitle = bareTitle ? title : `${title} | ${SITE.name}`;
-const canonical = absoluteUrl(canonicalPath);
+const canonical = canonicalPath === null ? undefined : absoluteUrl(canonicalPath);
 const imageUrl = absoluteUrl(ogImage);
 const showHreflang = !noindex && alternates !== undefined && hasAllLanguages(alternates);
 const otherLocales = LANGS.filter((l) => l !== lang && alternates?.[l]).map(
@@ -64,7 +68,7 @@ const otherLocales = LANGS.filter((l) => l !== lang && alternates?.[l]).map(
   name="robots"
   content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}
 />
-<link rel="canonical" href={canonical} />
+{canonical && <link rel="canonical" href={canonical} />}
 
 {showHreflang && (
   <>
@@ -80,7 +84,7 @@ const otherLocales = LANGS.filter((l) => l !== lang && alternates?.[l]).map(
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
-<meta property="og:url" content={canonical} />
+{canonical && <meta property="og:url" content={canonical} />}
 <meta property="og:image" content={imageUrl} />
 <meta property="og:image:alt" content={ogImageAlt} />
 {ogImage === SITE.defaultOgImage && (

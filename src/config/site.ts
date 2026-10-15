@@ -2,12 +2,12 @@
  * Site-wide configuration: the single source of truth for values used across
  * canonical URLs, hreflang, the sitemap, and structured data (JSON-LD).
  *
- * Change SITE_URL once the domain is purchased; everything else updates.
+ * Change SITE_URL if the domain ever changes; everything else updates.
  * Privacy: never add a personal email or phone number here.
  */
 
-/** Production origin, without trailing slash. Placeholder until the domain is bought. */
-export const SITE_URL = 'https://example.com';
+/** Production origin, without trailing slash (domain: diegonavarrocr.com, apex, no www). */
+export const SITE_URL = 'https://diegonavarrocr.com';
 
 export const OWNER = {
   name: 'Luis Diego Navarro Morales',

@@ -14,10 +14,12 @@ The owner is new to modern web development: explain changes in simple terms and 
 ## Stack
 
 - **Astro 7** (static output by default), **TypeScript strict**.
-- **Fully static build** (`dist/`), no adapter for now. Hosting will be **Cloudflare Workers with static
-  assets**; the `@astrojs/cloudflare` adapter and `wrangler` are added back in roadmap step 7 (deploy),
-  together with the contact form. They were removed on Oct 9 because the Workers dev runtime crashed
-  on the owner's Windows machine.
+- **Fully static build** (`dist/`), no adapter for now. Hosting: **Cloudflare Workers with static
+  assets** at **https://diegonavarrocr.com** (apex; `www` redirects to it). `wrangler.jsonc` serves
+  `dist/` with `not_found_handling: "404-page"`; Cloudflare's Git integration (Workers Builds) runs
+  `npm run build` + `npx wrangler deploy` on every push to main. The `@astrojs/cloudflare` adapter is
+  added only when the contact form needs a server route (it was removed on Oct 9 because the Workers
+  dev runtime crashed on the owner's Windows machine; `npm run dev` stays plain Node).
 - **ESLint** (flat config) + **Prettier** (with the Astro plugin).
 - No UI framework yet. **Ask before adding any dependency** and explain why it's needed.
 
@@ -108,7 +110,7 @@ integrations/             Small build steps (nested-404.mjs)
   Unpublished pages (`published: false`, `draft: true`) are `noindex` and excluded from it.
 - Never auto-redirect by browser language; the language switcher is a normal link.
 - **404s**: `/404.html` (EN) and `/es/404.html` (ES, moved there by `integrations/nested-404.mjs`)
-  keep a real 404 status, show a short message and quick links, and redirect to the home page
+  have no canonical (`canonicalPath={null}`), keep a real 404 status, show a short message and quick links, and redirect to the home page
   (same language) after a 10-second countdown the visitor can cancel. Never redirect all missing URLs to the home page
   with a 301 (soft 404). Pages that move for good get a 301 in `public/_redirects`.
 

@@ -32,13 +32,7 @@ const links = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => ({
 }));
 ---
 
-<BaseLayout
-  title={n.title}
-  description={n.description}
-  lang={lang}
-  noindex
-  canonicalPath={lang === 'en' ? '/404/' : '/es/404/'}
->
+<BaseLayout title={n.title} description={n.description} lang={lang} noindex canonicalPath={null}>
   <Section narrow>
     <div
       class="not-found"
