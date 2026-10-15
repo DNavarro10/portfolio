@@ -439,8 +439,8 @@ main {
 
 /* ---------- Reveal on scroll ---------- */
 /*
- * Children of a `.reveal` list (cards, brand names) fade in and rise slightly as they
- * scroll into view. CSS only, no JavaScript:
+ * Children of a `.reveal` list (cards, brand names) fade in, rise, and settle to full size
+ * as they scroll into view (finishing just after they are fully on screen). CSS only, no JavaScript:
  * - Runs only in browsers that support scroll-driven animations (Chrome, Edge, Safari);
  *   elsewhere (e.g. Firefox) items simply show as normal, so nothing can stay hidden.
  * - Never for visitors who prefer reduced motion.
@@ -451,7 +451,7 @@ main {
 @keyframes reveal-up {
   from {
     opacity: 0;
-    transform: translateY(0.75rem);
+    transform: translateY(2rem) scale(0.97);
   }
   to {
     opacity: 1;
@@ -462,7 +462,7 @@ main {
   @supports (animation-timeline: view()) {
     .reveal > * {
       animation: reveal-up cubic-bezier(0.2, 0.7, 0.3, 1) both;
-      animation-range: entry 10% entry 70%;
+      animation-range: entry 0% contain 10%;
     }
     /* Kept in a separate rule on purpose: the CSS minifier would otherwise fold it into
        the "animation" shorthand above, which browsers don't accept yet. */
@@ -471,10 +471,10 @@ main {
     }
     /* A light stagger: items in the same row start one after another. */
     .reveal > :nth-child(3n + 2) {
-      animation-range: entry 18% entry 78%;
+      animation-range: entry 15% contain 15%;
     }
     .reveal > :nth-child(3n + 3) {
-      animation-range: entry 26% entry 86%;
+      animation-range: entry 30% contain 20%;
     }
   }
 }
