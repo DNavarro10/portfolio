@@ -202,13 +202,15 @@ export const es: UiStrings = {
     eyebrow: 'Sobre mí',
     title: 'Sobre Diego Navarro',
     intro:
-      'Soy Diego Navarro, especialista SEO senior y especialista en backlinks, desde Costa Rica. Desde hace más de 6 años ayudo a marcas competitivas de EE. UU. y Reino Unido a crecer en Google y, cada vez más, en los buscadores con IA.',
+      'Hola, soy Diego Navarro, especialista SEO senior desde Costa Rica. Desde hace más de 6 años formo equipos, construyo autoridad e impulso el crecimiento orgánico de marcas competitivas de EE. UU. y Reino Unido con SEO técnico, auditorías de contenido y adquisición de enlaces.',
+    introMore:
+      'Mi trabajo empieza con conversaciones directas, a veces incómodas, con los stakeholders sobre la situación real del sitio. A partir de ahí, armo un plan de acción que cubre cada frente del SEO. Mi experiencia práctica está en estrategias de backlinks de alto impacto, SEO técnico y análisis de contenido y de SERP guiado por los resultados en GEO, para que las empresas se mantengan a la vanguardia mientras la búsqueda avanza hacia las respuestas generadas por IA.',
     story: {
       title: 'De la ingeniería al SEO',
       paragraphs: [
-        'Estudié Ingeniería Informática en la Universidad Metropolitana Castro Carazo. Me dejó una forma de pensar que uso todos los días: dividir un problema en sistemas, medirlos y mejorarlos paso a paso.',
-        'Empecé en SEO en 2019 en Advision Development, llevando el SEO integral de SportsbookReview.com. En 2021 entré a Gambling.com Group como analista SEO remoto, apoyando de 8 a 12 lanzamientos de mercados estatales, y ascendí a un rol de liderazgo de equipo.',
-        'De 2023 a 2026, como especialista SEO senior y líder de búsqueda, lideré el link building, el SEO técnico y las hojas de ruta de SEO y GEO de RotoWire.com y Bookies.com, y dirigí un equipo de 7 personas. También trabajé cara a cara con stakeholders y clientes, y creé soluciones con IA para agilizar los reportes y flujos de trabajo del equipo mientras la búsqueda entraba en la era de la IA.',
+        'Estudié Ingeniería Informática en la Universidad Metropolitana Castro Carazo. Me dejó una forma de pensar que uso todos los días: dividir un problema en sistemas, medirlos y mejorarlos paso a paso. También me enseñó a integrarme rápido a un equipo y a aprender nuevas herramientas y tecnologías con facilidad. Por eso me atrajo el marketing digital: el SEO exige adaptarse constantemente y estar al día con cada cambio, y disfruto mucho la investigación y las pruebas que eso implica.',
+        'Empecé en el SEO en 2019 en Advision Development, a cargo del SEO integral de SportsbookReview.com. Era un puesto de analista, pero ahí construí mis bases: cómo funcionan los buscadores y cómo trabajar con ellos. En 2021 entré a Gambling.com Group como contratista remoto para el mercado de EE. UU., como analista SEO en varios sitios del portafolio de la empresa. Apoyé de 8 a 12 lanzamientos en mercados estatales con muy buenos resultados, seguí ampliando mis conocimientos y luego ascendí a un puesto de liderazgo.',
+        'De 2023 a 2026, como especialista SEO senior y líder de búsqueda, esta vez desde la oficina en Costa Rica, lideré el link building, el SEO técnico y las hojas de ruta de SEO y GEO de RotoWire.com y Bookies.com, al frente de un equipo de 7 personas que incluía un editor SEO dedicado. Me reunía cara a cara con stakeholders y clientes cada semana y cada mes para presentar reportes y resultados. Esos años fortalecieron mi liderazgo, la mentoría y la comunicación, y llevaron mi conocimiento de SEO más lejos, hasta crear soluciones con IA que agilizaron los reportes y flujos de trabajo del equipo mientras la búsqueda entraba en la era de la IA.',
       ],
     },
     principles: {

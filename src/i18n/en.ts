@@ -200,13 +200,15 @@ export const en = {
     eyebrow: 'About',
     title: 'About Diego Navarro',
     intro:
-      "I'm Diego Navarro, a Senior SEO Specialist and backlinks specialist based in Costa Rica. For 6+ years I've helped competitive US and UK brands grow in Google and, more recently, in AI search.",
+      "Hi, I'm Diego Navarro, a Senior SEO Specialist based in Costa Rica. For 6+ years I've built teams, authority, and organic growth for competitive US and UK brands through technical SEO, content audits, and link acquisition.",
+    introMore:
+      'My work starts with direct, sometimes uncomfortable conversations with stakeholders about where a site really stands. From there, I build an action plan that covers every part of SEO. My hands-on experience is in high-impact backlink strategies, technical SEO, and content and SERP analysis informed by GEO results, so companies stay ahead as search shifts toward AI-generated answers.',
     story: {
       title: 'From engineering to SEO',
       paragraphs: [
-        'I studied Informatics Engineering at Universidad Metropolitana Castro Carazo. It gave me a way of thinking I still use every day: break a problem into systems, measure them, and improve them one step at a time.',
-        'I started in SEO in 2019 at Advision Development, running end-to-end SEO for SportsbookReview.com. In 2021 I joined Gambling.com Group as a remote SEO analyst, supporting 8–12 state-level market launches, and was promoted into a team leadership role.',
-        'From 2023 to 2026, as Senior SEO Specialist and search lead, I led link building, technical SEO, and SEO and GEO roadmaps for RotoWire.com and Bookies.com, and led a team of 7. I also worked face to face with stakeholders and clients, and built AI solutions to streamline the team’s reports and workflows as search moved into the AI era.',
+        "I studied Informatics Engineering at Universidad Metropolitana Castro Carazo. It gave me a way of thinking I still use every day: break a problem into systems, measure them, and improve them one step at a time. It also taught me to join a team and pick up new software or technology quickly. That's what drew me to digital marketing: SEO demands constant adaptation and keeping up with every change, and I genuinely enjoy the research and testing that come with it.",
+        "I started my SEO journey in 2019 at Advision Development, running end-to-end SEO for SportsbookReview.com. It was an analyst role, but it built my foundations: how search engines work and how to work with them. In 2021 I joined Gambling.com Group as a remote contractor for the US market, working as an SEO analyst across several sites in the company's portfolio. I supported 8–12 state-level market launches with strong results, kept growing my SEO knowledge, and was later promoted to a lead role.",
+        'From 2023 to 2026, as Senior SEO Specialist and search lead, this time from the office in Costa Rica, I led link building, technical SEO, and the SEO and GEO roadmaps for RotoWire.com and Bookies.com, heading a team of 7 that included a dedicated SEO editor. I met face to face with stakeholders and clients every week and month to share reports and results. Those years strengthened my leadership, mentoring, and communication, and pushed my SEO knowledge further, to the point of building AI solutions that streamlined the team’s reports and workflows as search moved into the AI era.',
       ],
     },
     principles: {

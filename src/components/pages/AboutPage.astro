@@ -65,6 +65,7 @@ const crumbs = [
         description={a.intro}
       />
     </div>
+    <p class="intro__more">{a.introMore}</p>
 
     <h2 id="story-title">{a.story.title}</h2>
     {a.story.paragraphs.map((paragraph) => (
@@ -166,6 +167,9 @@ const crumbs = [
     border: 3px solid var(--color-accent);
     object-fit: cover;
     object-position: 50% 30%;
+  }
+  .intro__more {
+    margin-top: var(--space-5);
   }
   @media (min-width: 40rem) {
     .intro {
