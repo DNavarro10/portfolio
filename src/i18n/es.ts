@@ -350,7 +350,7 @@ export const es: UiStrings = {
         'Tus datos solo se usan para responderte. Nunca se comparten ni se agregan a una lista de correo.',
     },
     photo: {
-      caption: 'Cerro Chirripó, el punto más alto de Costa Rica (3821 m).',
+      caption: 'Foto: cerro Chirripó, el punto más alto de Costa Rica (3821 m).',
     },
     other: {
       title: 'Otras formas de contactarme',

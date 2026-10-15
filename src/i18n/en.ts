@@ -348,7 +348,7 @@ export const en = {
         'Your details are only used to reply to you. They are never shared or added to a mailing list.',
     },
     photo: {
-      caption: 'Cerro Chirripó, the highest peak in Costa Rica (3,821 m).',
+      caption: 'Photo: Cerro Chirripó, the highest peak in Costa Rica (3,821 m).',
     },
     other: {
       title: 'Other ways to reach me',
