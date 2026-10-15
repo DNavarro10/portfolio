@@ -3,34 +3,41 @@
  * Components only use these variables, never raw values, so changing the
  * brand later means editing this file only.
  *
- * Theme: "Signal green". Light by default; dark follows the visitor's
+ * Theme: "Wada No. 6" (Sanzo Wada's Swatch Collection 6, sage + slate with copper
+ * accents; it replaced "Signal green" on Oct 14). Light by default; dark follows the visitor's
  * device setting (prefers-color-scheme). Contrast ratios are noted next to
  * each text color (WCAG AA needs 4.5:1 for text, 3:1 for large text/UI).
  */
 
 :root {
   /* ---------- Color: light ---------- */
-  --color-bg: #fafaf9; /* page background */
+  /* Palette: Sanzo Wada, Swatch Collection No. 6 (white, neutral gray #b5d1cc, mineral gray
+     #9fc2b2, warm gray #9cb29e, slate #1b3644). The pastel greens are too light for text on
+     white, so links use a deepened mineral green and the pastels are backgrounds only. */
+  --color-bg: #f6f9f8; /* page background: a faint neutral gray */
   --color-surface: #ffffff; /* cards */
-  --color-surface-2: #f1f2ef; /* subtle panels, code blocks */
-  --color-border: #e2e4df; /* hairlines (decorative) */
-  --color-border-strong: #8a8f98; /* outlines on controls: 3.2:1 on bg */
+  --color-surface-2: #e6efec; /* tinted sections, subtle panels, code blocks */
+  --color-border: #d3e0dc; /* hairlines (decorative) */
+  --color-border-strong: #6f8a84; /* outlines on controls: 3.5:1 on bg */
 
-  --color-text: #16181d; /* 17.0:1 on bg */
-  --color-text-muted: #5a5f6b; /* 6.1:1 on bg */
+  --color-text: #0f1f27; /* deep slate: 15.9:1 on bg */
+  --color-text-muted: #4a606b; /* 6.2:1 on bg, 5.6:1 on surface-2 */
 
-  --color-accent: #0a6b4b; /* links, primary buttons: 6.3:1 on bg */
-  --color-accent-hover: #075239; /* 8.9:1 on bg */
-  --color-on-accent: #ffffff; /* text on accent: 6.5:1 */
-  --color-accent-soft: #e3f2ea; /* tinted backgrounds (tags) */
-  --color-on-accent-soft: #075239; /* text on accent-soft: 8.1:1 */
+  --color-accent: #2c6a57; /* deepened mineral green, links + primary buttons: 6.0:1 on bg */
+  --color-accent-hover: #1f4f41; /* 8.8:1 on bg */
+  --color-on-accent: #ffffff; /* text on accent: 6.4:1 */
+  --color-accent-soft: #cfe2dd; /* neutral gray tint (tags) */
+  --color-on-accent-soft: #1f4f41; /* text on accent-soft: 6.9:1 */
 
-  --color-focus: #0a6b4b;
+  /* Copper: small warm accents (eyebrow "//", profile details). 5.2:1 on bg. */
+  --color-highlight: #a3541c;
+
+  --color-focus: #2c6a57;
 
   /* Status colors (tool results, meters). Always paired with text, never color alone. */
-  --color-success: #0a6b4b; /* 6.3:1 on bg */
-  --color-warning: #8a5a00; /* 5.7:1 on bg */
-  --color-danger: #b42318; /* 6.3:1 on bg */
+  --color-success: #2c6a57; /* 6.0:1 on bg */
+  --color-warning: #9a520f; /* ochre: 5.5:1 on bg, 5.0:1 on surface-2 */
+  --color-danger: #a83a26; /* brick: 6.0:1 on bg */
 
   /* SERP preview: imitates Google's result colors (light). */
   --color-serp-title: #1a0dab; /* 12.5:1 on surface */
@@ -40,6 +47,8 @@
   --font-sans:
     'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     sans-serif;
+  /* Headings: Fraunces, an editorial serif (body text and labels stay IBM Plex). */
+  --font-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
   /* Fluid sizes: grow smoothly from phone (~360px) to desktop (~1280px). */
@@ -91,26 +100,28 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0f1115;
-    --color-surface: #171a20;
-    --color-surface-2: #1e222a;
-    --color-border: #2a2f38;
-    --color-border-strong: #6b7280; /* 3.7:1 on bg */
+    --color-bg: #0e1c23; /* deep slate */
+    --color-surface: #142833;
+    --color-surface-2: #1b3644; /* Wada slate: tinted sections */
+    --color-border: #28465a;
+    --color-border-strong: #6f8e95; /* 5.0:1 on bg */
 
-    --color-text: #e8eaed; /* 15.7:1 on bg */
-    --color-text-muted: #9ba1ac; /* 7.3:1 on bg */
+    --color-text: #e8f0ee; /* 15.0:1 on bg */
+    --color-text-muted: #a5bbb6; /* 8.6:1 on bg, 6.3:1 on surface-2 */
 
-    --color-accent: #4fd1a1; /* 9.9:1 on bg */
-    --color-accent-hover: #7fe0bc;
-    --color-on-accent: #0f1115; /* 9.9:1 */
-    --color-accent-soft: #12332a;
-    --color-on-accent-soft: #7fe0bc; /* 9.4:1 on accent-soft */
+    --color-accent: #9fc2b2; /* Wada mineral gray: 9.0:1 on bg, 6.5:1 on surface-2 */
+    --color-accent-hover: #c3dbd4;
+    --color-on-accent: #0e1c23; /* 9.0:1 */
+    --color-accent-soft: #24463f;
+    --color-on-accent-soft: #c3dbd4; /* 7.1:1 on accent-soft */
 
-    --color-focus: #4fd1a1;
+    --color-highlight: #e9a866; /* copper: 8.5:1 on bg */
 
-    --color-success: #4fd1a1; /* 9.9:1 on bg */
-    --color-warning: #f0b44c; /* 10.2:1 on bg */
-    --color-danger: #ff8a7a; /* 8.2:1 on bg */
+    --color-focus: #9fc2b2;
+
+    --color-success: #9fc2b2; /* 9.0:1 on bg */
+    --color-warning: #e9a866; /* 8.5:1 on bg, 6.2:1 on surface-2 */
+    --color-danger: #f2937c; /* 7.6:1 on bg, 5.6:1 on surface-2 */
 
     --color-serp-title: #99c3ff; /* 9.7:1 on surface */
     --color-serp-text: #bdc1c6; /* 9.7:1 on surface */

@@ -163,13 +163,16 @@ integrations/             Small build steps (nested-404.mjs)
 
 ## Design system
 
-- Style: "technical and precise". Theme: **Signal green**. Light by default, dark follows
-  `prefers-color-scheme` (no toggle).
+- Style: "technical and precise", with an editorial touch. Theme: **Wada No. 6** (Sanzo Wada's
+  Swatch Collection 6: sage/mineral greens + slate, copper `--color-highlight` for small accents;
+  replaced Signal green on Oct 14). Pastel greens are backgrounds only in light mode (too light for
+  text). Light by default, dark follows `prefers-color-scheme` (no toggle).
 - **Use tokens only** (`var(--color-*)`, `--fs-*`, `--space-*`, `--radius*`). No raw hex values or
   pixel font sizes in components. New colors go in `tokens.css` for both themes, with the contrast
   ratio noted in a comment (AA: 4.5:1 text, 3:1 UI/large text).
-- Fonts: IBM Plex Sans (text, variable) + IBM Plex Mono 400/500 (labels, numbers), Latin subset only,
-  loaded in `components/layout/Fonts.astro`. Only Plex Sans is preloaded.
+- Fonts: Fraunces (headings h1–h4, variable, `--font-heading`) + IBM Plex Sans (text, variable) +
+  IBM Plex Mono 400/500 (labels, numbers), Latin subset only, loaded in
+  `components/layout/Fonts.astro`. Plex Sans and Fraunces are preloaded.
 - Components (`src/components/ui/`):
   - `Section` (section landmark + container; pass `labelledby`) and `SectionHeading` (mono
     eyebrow + heading).
@@ -209,7 +212,7 @@ integrations/             Small build steps (nested-404.mjs)
 ## Roadmap
 
 1. ✅ Foundation
-2. ✅ Design system (Signal green, IBM Plex, components, style guide)
+2. ✅ Design system (Wada No. 6 colors since Oct 14, Fraunces + IBM Plex, components, style guide)
 3. ✅ Home page (hiring-team focus; CTA for services moves to Contact later)
 4. ✅ About + Experience (4 case studies, EN + ES), published
 5. 🟡 Contact page published: form first (plain HTML, shown disabled as "coming soon" until

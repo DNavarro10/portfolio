@@ -1,17 +1,20 @@
 ---
 /**
- * Self-hosted fonts (IBM Plex, SIL Open Font License).
+ * Self-hosted fonts (IBM Plex and Fraunces, SIL Open Font License).
+ * Fraunces is used for headings only (normal style, weights 100–900, ~37 KB).
  *
  * Only the Latin subset is loaded: it covers English and Spanish
  * (á é í ó ú ñ ü ¿ ¡). Files are bundled by Astro with hashed names, so
  * they're cached forever and served from our own domain (no third parties).
  *
- * Only the main text font is preloaded; italic and mono files download
+ * The main text font and the heading font are preloaded (the H1 is usually the largest
+ * element on screen, so its font should arrive early); italic and mono files download
  * only if a page actually uses them. font-display: swap shows text
  * immediately with the fallback font, then swaps when Plex is ready.
  */
 import sansUrl from '@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2?url';
 import sansItalicUrl from '@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-italic.woff2?url';
+import headingUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
 import mono400Url from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 import mono500Url from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url';
 
@@ -21,6 +24,7 @@ const LATIN =
 const faces = [
   { family: 'IBM Plex Sans', url: sansUrl, weight: '100 700', style: 'normal' },
   { family: 'IBM Plex Sans', url: sansItalicUrl, weight: '100 700', style: 'italic' },
+  { family: 'Fraunces', url: headingUrl, weight: '100 900', style: 'normal' },
   { family: 'IBM Plex Mono', url: mono400Url, weight: '400', style: 'normal' },
   { family: 'IBM Plex Mono', url: mono500Url, weight: '500', style: 'normal' },
 ];
@@ -34,4 +38,5 @@ const css = faces
 ---
 
 <link rel="preload" href={sansUrl} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={headingUrl} as="font" type="font/woff2" crossorigin />
 <style is:inline set:html={css}></style>
