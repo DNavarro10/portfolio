@@ -10,7 +10,7 @@
  *   (roadmap step 7); this file will gain a "main" entry then.
  */
 {
-  "name": "diegonavarrocr",
+  "name": "portfolio",
   "compatibility_date": "2026-10-15",
   "assets": {
     "directory": "./dist",
