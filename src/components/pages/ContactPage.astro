@@ -1,7 +1,8 @@
 ---
 /**
  * Contact page, shared by /contact/ and /es/contacto/.
- * Order: contact form (main action) → other ways (LinkedIn, CV) → working details → services.
+ * Order: contact form (main action) → other ways (LinkedIn, CV) → working details →
+ * services teaser (end-to-end SEO areas, until the /services/ page exists).
  * The form is plain HTML (no JavaScript). While SITE.contactForm.enabled is false its
  * fields are disabled and a "coming soon" note shows; it is switched on at the Cloudflare
  * deploy step, when the server route that emails the message exists.
@@ -179,6 +180,14 @@ const crumbs = [
       title={c.services.title}
       description={c.services.text}
     />
+    <ul class="areas">
+      {c.services.areas.map((area) => (
+        <li>
+          <h3>{area.title}</h3>
+          <p>{area.text}</p>
+        </li>
+      ))}
+    </ul>
   </Section>
 </BaseLayout>
 
@@ -273,6 +282,34 @@ const crumbs = [
   .form__privacy {
     margin: 0;
     font-size: var(--fs-xs);
+  }
+  .areas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-4);
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .areas li {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+  /* Five areas in two columns: the last one spans the full row instead of sitting alone. */
+  .areas li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .areas h3 {
+    margin-bottom: var(--space-1);
+    font-size: var(--fs-base);
+  }
+  .areas p {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
   }
   .other__actions {
     display: flex;

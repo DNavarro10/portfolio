@@ -356,8 +356,30 @@ export const en = {
     },
     services: {
       eyebrow: 'For businesses',
-      title: 'Need SEO help for your business?',
-      text: "I'm preparing a services offer for link building, technical SEO, and GEO. In the meantime, send me a message and tell me about your project.",
+      title: 'End-to-end SEO for your business',
+      text: "From the first audit to the links that build authority, I can cover the whole SEO process or just the part your team is missing. I'm finalizing my services offer. In the meantime, send me a message and tell me about your project.",
+      areas: [
+        {
+          title: 'Analysis and strategy',
+          text: 'SEO audits, keyword and competitor research, and a prioritized roadmap tied to your business goals.',
+        },
+        {
+          title: 'On-page and content',
+          text: 'Search intent, titles and meta descriptions, content briefs, internal linking, and copy that ranks and converts.',
+        },
+        {
+          title: 'Technical SEO',
+          text: 'Crawling and indexing, site speed, structured data, and safe site launches and migrations.',
+        },
+        {
+          title: 'Off-page and E-E-A-T',
+          text: 'Link building, publisher outreach, and the trust signals (authors, mentions, reputation) that grow your authority.',
+        },
+        {
+          title: 'AI search (GEO)',
+          text: 'Content that ChatGPT, Perplexity, and Google AI Overviews can easily find, understand, and cite.',
+        },
+      ],
     },
   },
   toolsIndex: {

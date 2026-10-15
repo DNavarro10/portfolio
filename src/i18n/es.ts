@@ -358,8 +358,30 @@ export const es: UiStrings = {
     },
     services: {
       eyebrow: 'Para empresas',
-      title: '¿Necesitas ayuda con el SEO de tu negocio?',
-      text: 'Estoy preparando una oferta de servicios de link building, SEO técnico y GEO. Mientras tanto, escríbeme y cuéntame sobre tu proyecto.',
+      title: 'SEO de principio a fin para tu negocio',
+      text: 'Desde la primera auditoría hasta los enlaces que construyen autoridad, puedo encargarme de todo el proceso SEO o solo de la parte que le falta a tu equipo. Estoy terminando mi oferta de servicios; mientras tanto, escríbeme y cuéntame sobre tu proyecto.',
+      areas: [
+        {
+          title: 'Análisis y estrategia',
+          text: 'Auditorías SEO, investigación de palabras clave y competencia, y un plan priorizado según los objetivos de tu negocio.',
+        },
+        {
+          title: 'On-page y contenido',
+          text: 'Intención de búsqueda, títulos y meta descripciones, briefs de contenido, enlazado interno y textos que posicionan y convierten.',
+        },
+        {
+          title: 'SEO técnico',
+          text: 'Rastreo e indexación, velocidad del sitio, datos estructurados, y lanzamientos y migraciones sin sobresaltos.',
+        },
+        {
+          title: 'Off-page y E-E-A-T',
+          text: 'Link building, relación con medios y publishers, y las señales de confianza (autores, menciones, reputación) que hacen crecer tu autoridad.',
+        },
+        {
+          title: 'Búsqueda con IA (GEO)',
+          text: 'Contenido que ChatGPT, Perplexity y los AI Overviews de Google puedan encontrar, entender y citar con facilidad.',
+        },
+      ],
     },
   },
   toolsIndex: {
