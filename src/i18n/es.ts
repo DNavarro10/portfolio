@@ -13,6 +13,7 @@ export const es: UiStrings = {
     skipToContent: 'Saltar al contenido principal',
     mainNav: 'Navegación principal',
     openMenu: 'Menú',
+    darkMode: 'Modo oscuro',
     breadcrumb: 'Ruta de navegación',
   },
   nav: {
@@ -1360,6 +1361,7 @@ export const es: UiStrings = {
         title: '¿El sitio usa cookies o rastreadores?',
         paragraphs: [
           'No. El sitio no instala cookies ni usa rastreadores publicitarios, píxeles de redes sociales o contenido incrustado de terceros.',
+          'Si usas el botón de modo claro u oscuro del encabezado, tu elección se guarda solo en tu propio navegador (almacenamiento local) para que el sitio la recuerde en tu próxima visita. Nunca se me envía y puedes borrarla cuando quieras eliminando los datos de este sitio en tu navegador.',
         ],
       },
       {

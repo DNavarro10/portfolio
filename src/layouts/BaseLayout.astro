@@ -34,6 +34,8 @@ const graph = [personSchema(), websiteSchema(), ...jsonLd];
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#f6f9f8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0e1c23" media="(prefers-color-scheme: dark)" />
+    <!-- Applies a saved light/dark choice before the first paint (see public/theme.js). -->
+    <script is:inline src="/theme.js"></script>
     <Fonts />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

@@ -153,7 +153,8 @@ integrations/             Small build steps (nested-404.mjs)
 ## Performance and accessibility
 
 - **Zero client JavaScript by default.** Interactivity only as Astro islands (e.g. SEO tools), and
-  only on the pages that need it.
+  only on the pages that need it. One exception: `public/theme.js` (~1 KB, theme toggle) loads in
+  `<head>` on every page so a saved theme applies before the first paint.
 - Images through `astro:assets` `<Image>` (optimized at build time). Always set meaningful `alt`
   (empty `alt=""` only for decorative images).
 - Fonts must be self-hosted (no Google Fonts `<link>`).
@@ -166,7 +167,9 @@ integrations/             Small build steps (nested-404.mjs)
 - Style: "technical and precise", with an editorial touch. Theme: **Wada No. 6** (Sanzo Wada's
   Swatch Collection 6: sage/mineral greens + slate, copper `--color-highlight` for small accents;
   replaced Signal green on Oct 14). Pastel greens are backgrounds only in light mode (too light for
-  text). Light by default, dark follows `prefers-color-scheme` (no toggle).
+  text). Light by default, dark follows `prefers-color-scheme` until the visitor uses the header
+  toggle (`public/theme.js`, saved in localStorage as `data-theme` on `<html>`). Dark tokens live in
+  two identical blocks in `tokens.css` (`[data-theme='dark']` and the media query): edit both.
 - **Use tokens only** (`var(--color-*)`, `--fs-*`, `--space-*`, `--radius*`). No raw hex values or
   pixel font sizes in components. New colors go in `tokens.css` for both themes, with the contrast
   ratio noted in a comment (AA: 4.5:1 text, 3:1 UI/large text).

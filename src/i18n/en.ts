@@ -11,6 +11,7 @@ export const en = {
     skipToContent: 'Skip to main content',
     mainNav: 'Main navigation',
     openMenu: 'Menu',
+    darkMode: 'Dark mode',
     breadcrumb: 'Breadcrumb',
   },
   nav: {
@@ -1347,6 +1348,7 @@ export const en = {
         title: 'Does this site use cookies or trackers?',
         paragraphs: [
           'No. The site doesn’t set cookies and doesn’t use advertising trackers, social media pixels, or third-party embeds.',
+          'If you use the light/dark switch in the header, your choice is saved only in your own browser (local storage) so the site remembers it on your next visit. It is never sent to me, and you can clear it at any time by clearing this site’s data in your browser.',
         ],
       },
       {

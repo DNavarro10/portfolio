@@ -4,6 +4,8 @@
  * - Desktop: brand on the left, nav links and language switch on the right.
  * - Phone: a "Menu" button built on <details>/<summary>, which opens and
  *   closes natively, with no JavaScript.
+ * - Light/dark toggle: next to the menu on every screen size. It starts hidden and
+ *   public/theme.js shows it, so visitors without JavaScript never see a dead button.
  * Only one of the two navs is visible at a time (the other is display:none,
  * so screen readers also see just one).
  */
@@ -38,25 +40,8 @@ const links = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => {
       <span class="brand__name">{SITE.name}</span>
     </a>
 
-    <nav class="nav nav--desktop" aria-label={t.a11y.mainNav}>
-      <ul class="nav__list">
-        {links.map((link) => (
-          <li>
-            <a href={link.href} aria-current={link.isCurrent ? 'page' : undefined}>
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <LanguageSwitcher lang={lang} alternates={alternates} />
-    </nav>
-
-    <details class="nav nav--mobile">
-      <summary class="nav__toggle">
-        <span class="nav__toggle-icon" aria-hidden="true"></span>
-        {t.a11y.openMenu}
-      </summary>
-      <nav aria-label={t.a11y.mainNav}>
+    <div class="site-header__end">
+      <nav class="nav nav--desktop" aria-label={t.a11y.mainNav}>
         <ul class="nav__list">
           {links.map((link) => (
             <li>
@@ -65,12 +50,49 @@ const links = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => {
               </a>
             </li>
           ))}
-          <li>
-            <LanguageSwitcher lang={lang} alternates={alternates} />
-          </li>
         </ul>
+        <LanguageSwitcher lang={lang} alternates={alternates} />
       </nav>
-    </details>
+
+      <details class="nav nav--mobile">
+        <summary class="nav__toggle">
+          <span class="nav__toggle-icon" aria-hidden="true"></span>
+          {t.a11y.openMenu}
+        </summary>
+        <nav aria-label={t.a11y.mainNav}>
+          <ul class="nav__list">
+            {links.map((link) => (
+              <li>
+                <a href={link.href} aria-current={link.isCurrent ? 'page' : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              <LanguageSwitcher lang={lang} alternates={alternates} />
+            </li>
+          </ul>
+        </nav>
+      </details>
+
+      <button
+        class="theme-toggle"
+        type="button"
+        data-theme-toggle
+        aria-pressed="false"
+        aria-label={t.a11y.darkMode}
+        title={t.a11y.darkMode}
+        hidden
+      >
+        <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"></path>
+        </svg>
+        <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2.5M12 19.5V22M4.2 4.2 6 6M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"></path>
+        </svg>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -87,6 +109,58 @@ const links = NAV_ROUTES.filter((key) => ROUTES[key].published).map((key) => {
     justify-content: space-between;
     gap: var(--space-5);
     min-height: 4rem;
+  }
+
+  .site-header__end {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  /* Light/dark toggle: shows a moon in light mode, a sun in dark mode. */
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+  .theme-toggle[hidden] {
+    display: none;
+  }
+  .theme-toggle:hover {
+    color: var(--color-text);
+    background: var(--color-surface-2);
+  }
+  .theme-toggle svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .theme-toggle__sun {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .theme-toggle__sun {
+    display: block;
+  }
+  :global(:root[data-theme='dark']) .theme-toggle__moon {
+    display: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .theme-toggle__sun {
+      display: block;
+    }
+    :global(:root:not([data-theme='light'])) .theme-toggle__moon {
+      display: none;
+    }
   }
 
   .brand {

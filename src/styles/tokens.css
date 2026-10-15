@@ -5,7 +5,7 @@
  *
  * Theme: "Wada No. 6" (Sanzo Wada's Swatch Collection 6, sage + slate with copper
  * accents; it replaced "Signal green" on Oct 14). Light by default; dark follows the visitor's
- * device setting (prefers-color-scheme). Contrast ratios are noted next to
+ * device setting (prefers-color-scheme) unless they pick a theme with the header toggle. Contrast ratios are noted next to
  * each text color (WCAG AA needs 4.5:1 for text, 3:1 for large text/UI).
  */
 
@@ -98,8 +98,49 @@
   --transition: 150ms ease;
 }
 
+/*
+ * Dark theme. It applies in two cases:
+ *   1. The visitor chose dark with the header toggle (public/theme.js sets data-theme="dark").
+ *   2. Their device is in dark mode and they haven't chosen light.
+ * The two blocks below must stay identical (CSS can't share one block between a selector and a
+ * media query). Light is the default in :root above; a light choice sets data-theme="light".
+ */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #0e1c23; /* deep slate */
+  --color-surface: #142833;
+  --color-surface-2: #1b3644; /* Wada slate: tinted sections */
+  --color-border: #28465a;
+  --color-border-strong: #6f8e95; /* 5.0:1 on bg */
+
+  --color-text: #e8f0ee; /* 15.0:1 on bg */
+  --color-text-muted: #a5bbb6; /* 8.6:1 on bg, 6.3:1 on surface-2 */
+
+  --color-accent: #9fc2b2; /* Wada mineral gray: 9.0:1 on bg, 6.5:1 on surface-2 */
+  --color-accent-hover: #c3dbd4;
+  --color-on-accent: #0e1c23; /* 9.0:1 */
+  --color-accent-soft: #24463f;
+  --color-on-accent-soft: #c3dbd4; /* 7.1:1 on accent-soft */
+
+  --color-highlight: #e9a866; /* copper: 8.5:1 on bg */
+
+  --color-focus: #9fc2b2;
+
+  --color-success: #9fc2b2; /* 9.0:1 on bg */
+  --color-warning: #e9a866; /* 8.5:1 on bg, 6.2:1 on surface-2 */
+  --color-danger: #f2937c; /* 7.6:1 on bg, 5.6:1 on surface-2 */
+
+  --color-serp-title: #99c3ff; /* 9.7:1 on surface */
+  --color-serp-text: #bdc1c6; /* 9.7:1 on surface */
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
     --color-bg: #0e1c23; /* deep slate */
     --color-surface: #142833;
     --color-surface-2: #1b3644; /* Wada slate: tinted sections */
