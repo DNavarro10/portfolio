@@ -1,4 +1,5 @@
 ---
+import BrandIcon from '@/components/ui/BrandIcon.astro';
 import { OWNER, SITE } from '@/config/site';
 import type { Lang } from '@/i18n/config';
 import { routePath, useTranslations } from '@/i18n/utils';
@@ -22,18 +23,20 @@ const legal = `© ${year} ${OWNER.name}. ${t.footer.rights} ${t.footer.builtWith
     <ul class="site-footer__links">
       {OWNER.profiles.map((profile) => (
         <li>
-          <a href={profile.url} rel="me noopener">
+          <a class="site-footer__icon-link" href={profile.url} rel="me noopener">
+            {profile.label === 'LinkedIn' && <BrandIcon name="linkedin" />}
             {profile.label}
           </a>
         </li>
       ))}
       <li>
-        <a href={routePath('privacy', lang)}>{t.footer.privacy}</a>
-      </li>
-      <li>
-        <a href={SITE.sourceUrl} rel="noopener">
+        <a class="site-footer__icon-link" href={SITE.sourceUrl} rel="noopener">
+          <BrandIcon name="github" />
           {t.footer.sourceCode}
         </a>
+      </li>
+      <li>
+        <a href={routePath('privacy', lang)}>{t.footer.privacy}</a>
       </li>
     </ul>
     <p class="site-footer__legal">{legal}</p>
@@ -74,6 +77,11 @@ const legal = `© ${year} ${OWNER.name}. ${t.footer.rights} ${t.footer.builtWith
   .site-footer__links a {
     display: inline-block;
     padding-block: var(--space-2);
+  }
+  .site-footer__links .site-footer__icon-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
   }
   .site-footer__legal {
     padding-top: var(--space-4);
