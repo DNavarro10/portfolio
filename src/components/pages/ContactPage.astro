@@ -6,8 +6,9 @@
  * The form is plain HTML (no JavaScript). While SITE.contactForm.enabled is false its
  * fields are disabled and a "coming soon" note shows; it is switched on at the Cloudflare
  * deploy step, when the server route that emails the message exists.
- * A personal photo (Cerro Chirripó) sits beside the "other ways" and "details" panels
- * on wide screens and below them on phones; it loads lazily, so the form isn't slowed down.
+ * Header: a photo band (Cerro Chirripó) behind the breadcrumbs and H1, darkened with an
+ * overlay so the light text stays readable (WCAG AA). The photo is decorative (alt=""),
+ * with a short visible caption; it loads early because it's the first thing on screen.
  * The CV button appears automatically once OWNER.cv has a file for this language.
  * JSON-LD: ContactPage (main entity: Person, whose sameAs lists the profiles).
  */
@@ -51,16 +52,31 @@ const crumbs = [
   bareTitle
   jsonLd={[contactPageSchema(path, lang), breadcrumbSchema(crumbs)]}
 >
-  <Section labelledby="contact-title" narrow>
-    <Breadcrumbs lang={lang} items={crumbs} />
-    <SectionHeading
-      level="h1"
-      id="contact-title"
-      eyebrow={c.eyebrow}
-      title={c.title}
-      description={c.intro}
+  <section class="contact-hero" aria-labelledby="contact-title">
+    <Image
+      class="contact-hero__img"
+      src={chirripo}
+      alt=""
+      widths={[640, 960, 1280, 1449]}
+      sizes="100vw"
+      quality={55}
+      loading="eager"
+      fetchpriority="high"
     />
+    <div class="container container--prose contact-hero__inner">
+      <Breadcrumbs lang={lang} items={crumbs} />
+      <SectionHeading
+        level="h1"
+        id="contact-title"
+        eyebrow={c.eyebrow}
+        title={c.title}
+        description={c.intro}
+      />
+    </div>
+    <p class="contact-hero__caption">{c.photo.caption}</p>
+  </section>
 
+  <Section narrow>
     <section class="panel panel--primary" aria-labelledby="form-title">
       <h2 id="form-title">{c.form.title}</h2>
       <p>{c.form.text}</p>
@@ -174,17 +190,6 @@ const crumbs = [
           ))}
         </dl>
       </section>
-
-      <figure class="photo">
-        <Image
-          src={chirripo}
-          alt={c.photo.alt}
-          widths={[400, 600, 800, 1000]}
-          sizes="(min-width: 48rem) 18rem, 100vw"
-          loading="lazy"
-        />
-        <figcaption>{c.photo.caption}</figcaption>
-      </figure>
     </div>
   </Section>
 
@@ -207,47 +212,61 @@ const crumbs = [
 </BaseLayout>
 
 <style>
+  /* ---------- Photo header ---------- */
+  .contact-hero {
+    /* Light-on-photo colors, the same in light and dark mode (see tokens.css). */
+    --color-text: var(--color-on-image);
+    --color-text-muted: var(--color-on-image-muted);
+    --color-accent: var(--color-on-image);
+    --color-accent-hover: var(--color-on-image);
+    --color-highlight: var(--color-highlight-on-image);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 6rem) clamp(3rem, 2rem + 4vw, 5rem);
+    background: var(--color-image-fallback);
+    color: var(--color-text);
+  }
+  .contact-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--gradient-image-overlay);
+  }
+  .contact-hero :global(.contact-hero__img) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+  .contact-hero__inner :global(.section-heading) {
+    margin-bottom: 0;
+  }
+  /* Caption: under the intro on phones, in the bottom-right corner on wider screens. */
+  .contact-hero__caption {
+    margin: var(--space-6) var(--gutter) 0;
+    font-size: var(--fs-xs);
+    color: var(--color-on-image-muted);
+  }
+  @media (min-width: 48rem) {
+    .contact-hero__caption {
+      position: absolute;
+      right: var(--gutter);
+      bottom: var(--space-3);
+      margin: 0;
+      max-width: calc(100% - 2 * var(--gutter));
+      text-align: right;
+    }
+  }
+
   .contact-grid {
     display: grid;
     gap: var(--space-5);
     margin-top: var(--space-5);
-  }
-  /* Wide screens: the two panels on the left, the photo on the right spanning both. */
-  @media (min-width: 48rem) {
-    .contact-grid {
-      grid-template-columns: minmax(0, 1fr) 18rem;
-    }
-    .photo {
-      grid-column: 2;
-      grid-row: 1 / span 2;
-    }
-  }
-  .photo {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    margin: 0;
-  }
-  .photo :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    object-position: 50% 28%;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-  }
-  @media (min-width: 48rem) {
-    .photo :global(img) {
-      flex: 1;
-      min-height: 0;
-      aspect-ratio: auto;
-    }
-  }
-  .photo figcaption {
-    font-size: var(--fs-xs);
-    color: var(--color-text-muted);
   }
   .panel {
     padding: var(--space-5);

@@ -34,6 +34,20 @@
 
   --color-focus: #2c6a57;
 
+  /* Text on photos (photo headers): always light text on a dark slate overlay, in both
+     themes. Measured on the brightest parts of the Chirripó photo: text 6.6:1, muted
+     text 5.3:1 (AA). Recheck if you use a brighter photo. */
+  --color-on-image: #f3f7f6;
+  --color-on-image-muted: #d3e1dd;
+  --color-highlight-on-image: #e9a866;
+  --color-image-fallback: #0e1c23; /* shown while the photo loads */
+  --gradient-image-overlay: linear-gradient(
+    180deg,
+    rgb(14 28 35 / 0.62) 0%,
+    rgb(14 28 35 / 0.72) 55%,
+    rgb(14 28 35 / 0.88) 100%
+  );
+
   /* Status colors (tool results, meters). Always paired with text, never color alone. */
   --color-success: #2c6a57; /* 6.0:1 on bg */
   --color-warning: #9a520f; /* ochre: 5.5:1 on bg, 5.0:1 on surface-2 */
