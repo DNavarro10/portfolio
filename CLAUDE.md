@@ -186,7 +186,8 @@ integrations/             Small build steps (nested-404.mjs)
   - `BrandIcon` (LinkedIn / GitHub marks from the official files, `currentColor`, decorative;
     always next to visible link text).
 - Layout helpers: `.container`, `.container--prose`, `.prose` (long-form), `.lead`, `.mono-label`,
-  `.text-muted`, `.visually-hidden`.
+  `.text-muted`, `.visually-hidden`, `.reveal` (CSS-only fade-and-rise for list children on
+  scroll; `CardGrid` has it built in; progressive: no support or reduced motion = no animation).
 - Header: desktop nav plus a no-JavaScript mobile menu (`<details>`). Touch targets ≥ 44px.
   The menu only lists published routes (no links to unfinished pages).
 - Review changes on `/styleguide/` in light and dark. That page is the one exception to the
