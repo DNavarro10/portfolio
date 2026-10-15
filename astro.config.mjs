@@ -33,4 +33,14 @@ export default defineConfig({
   output: 'static',
 
   integrations: [nestedNotFoundPages()],
+
+  // Never inline small scripts or assets into the HTML: the Content-Security-Policy in
+  // public/_headers only allows scripts loaded from this site as separate files
+  // (no inline code). Tiny scripts, like the home page number animation, would
+  // otherwise be inlined and blocked.
+  vite: {
+    build: {
+      assetsInlineLimit: 0,
+    },
+  },
 });

@@ -13,6 +13,7 @@ import { TOOLS } from '@/data/tools';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
 import Card from '@/components/ui/Card.astro';
+import CountUp from '@/components/ui/CountUp.astro';
 import CardGrid from '@/components/ui/CardGrid.astro';
 import MetricGroup from '@/components/ui/MetricGroup.astro';
 import Section from '@/components/ui/Section.astro';
@@ -136,7 +137,8 @@ const profileRows = [
       title={h.results.title}
       description={h.results.description}
     />
-    <MetricGroup metrics={h.results.metrics} columns={3} />
+    <MetricGroup metrics={h.results.metrics} columns={3} countUp />
+    <CountUp />
   </Section>
 
   <!-- What I do -->

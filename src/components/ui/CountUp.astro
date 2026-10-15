@@ -1,0 +1,84 @@
+---
+/**
+ * Subtle "count up" animation for the numbers in a <MetricGroup countUp>.
+ * Render this component once on a page that uses it (the home page only), so the
+ * script (~1 KB) loads only there.
+ *
+ * Safe by design:
+ * - The real numbers stay in the HTML, so search engines, AI crawlers, and visitors
+ *   without JavaScript always see the final values, never a "0".
+ * - Screen readers read the real value (kept in a visually hidden span); the moving
+ *   digits are aria-hidden.
+ * - Visitors who turned off animations (prefers-reduced-motion) see no animation.
+ * - It plays once, for ~1.4 s, when the numbers scroll into view. Only digits change,
+ *   in a monospaced font, so nothing around them moves (no layout shift).
+ */
+---
+
+<script>
+  const DURATION = 1400;
+  const NUMBER = /\d+(?:[.,]\d{3})*/g;
+
+  // Ease-out: fast at first, then settles gently on the final value.
+  const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  function format(value: number, separator: string): string {
+    const digits = String(Math.round(value));
+    return separator ? digits.replace(/\B(?=(\d{3})+(?!\d))/g, separator) : digits;
+  }
+
+  function animate(el: HTMLElement) {
+    const finalText = el.textContent?.trim() ?? '';
+    const parts = finalText.split(NUMBER); // the text around the numbers ("DR ", "+", "–")
+    const numbers = (finalText.match(NUMBER) ?? []).map((token) => ({
+      target: Number(token.replace(/[.,]/g, '')),
+      separator: token.includes(',') ? ',' : token.includes('.') ? '.' : '',
+    }));
+    if (numbers.length === 0) return;
+
+    // Real value for screen readers, moving copy for the eyes.
+    const real = document.createElement('span');
+    real.className = 'visually-hidden';
+    real.textContent = finalText;
+    const shown = document.createElement('span');
+    shown.setAttribute('aria-hidden', 'true');
+    el.replaceChildren(real, shown);
+
+    const render = (progress: number) => {
+      shown.textContent = parts
+        .map((part, i) =>
+          i < numbers.length
+            ? part + format(numbers[i].target * progress, numbers[i].separator)
+            : part,
+        )
+        .join('');
+    };
+
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min((now - start) / DURATION, 1);
+      render(easeOut(t));
+      if (t < 1) requestAnimationFrame(step);
+      else shown.textContent = finalText;
+    };
+    render(0);
+    requestAnimationFrame(step);
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const values = document.querySelectorAll<HTMLElement>('[data-count-up] .metric__value');
+
+  if (!reduceMotion && 'IntersectionObserver' in window && values.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          observer.unobserve(entry.target);
+          animate(entry.target as HTMLElement);
+        }
+      },
+      { threshold: 0.6 },
+    );
+    values.forEach((el) => observer.observe(el));
+  }
+</script>

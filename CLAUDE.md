@@ -181,7 +181,8 @@ integrations/             Small build steps (nested-404.mjs)
     eyebrow + heading).
   - `Button` (`primary` max once per view, `secondary`, `ghost`; renders `<a>` with `href`).
   - `Card` + `CardGrid` (wrap each card in `<li>`); whole card clickable via the title link.
-  - `Tag`, `TagList`, `MetricGroup` (results as a `<dl>`).
+  - `Tag`, `TagList`, `MetricGroup` (results as a `<dl>`; `countUp` + one `<CountUp />` on the page
+    animates the numbers once, home page only; real values stay in the HTML, reduced motion respected).
   - `BrandIcon` (LinkedIn / GitHub marks from the official files, `currentColor`, decorative;
     always next to visible link text).
 - Layout helpers: `.container`, `.container--prose`, `.prose` (long-form), `.lead`, `.mono-label`,
