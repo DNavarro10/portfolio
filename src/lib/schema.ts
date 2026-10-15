@@ -20,6 +20,12 @@ export function personSchema(): JsonLdNode {
     alternateName: OWNER.shortName,
     jobTitle: OWNER.jobTitle,
     url: `${SITE_URL}/`,
+    image: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}${OWNER.photo.path}`,
+      width: OWNER.photo.width,
+      height: OWNER.photo.height,
+    },
     sameAs: OWNER.profiles.map((profile) => profile.url),
     address: { '@type': 'PostalAddress', addressCountry: 'CR' },
     knowsLanguage: LANGS.map((lang) => LANG_META[lang].hreflang),

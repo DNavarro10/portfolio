@@ -7,6 +7,7 @@ import type { UiStrings } from './en';
 export const es: UiStrings = {
   site: {
     tagline: 'Especialista SEO Senior',
+    photoAlt: 'Retrato de Diego Navarro, especialista SEO senior',
   },
   a11y: {
     skipToContent: 'Saltar al contenido principal',

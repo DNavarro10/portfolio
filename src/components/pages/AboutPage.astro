@@ -5,6 +5,8 @@
  * tools, languages, education → Q&A (also marked up as FAQPage).
  * JSON-LD: AboutPage (main entity: Person) + BreadcrumbList + FAQPage.
  */
+import { Image } from 'astro:assets';
+import photo from '@/assets/diego-navarro.jpg';
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
 import Button from '@/components/ui/Button.astro';
 import Card from '@/components/ui/Card.astro';
@@ -46,13 +48,23 @@ const crumbs = [
 >
   <Section labelledby="about-title" narrow>
     <Breadcrumbs lang={lang} items={crumbs} />
-    <SectionHeading
-      level="h1"
-      id="about-title"
-      eyebrow={a.eyebrow}
-      title={a.title}
-      description={a.intro}
-    />
+    <div class="intro">
+      <Image
+        class="intro__photo"
+        src={photo}
+        alt={t.site.photoAlt}
+        widths={[160, 320, 480]}
+        sizes="10rem"
+        loading="eager"
+      />
+      <SectionHeading
+        level="h1"
+        id="about-title"
+        eyebrow={a.eyebrow}
+        title={a.title}
+        description={a.intro}
+      />
+    </div>
 
     <h2 id="story-title">{a.story.title}</h2>
     {a.story.paragraphs.map((paragraph) => (
@@ -141,6 +153,31 @@ const crumbs = [
 </BaseLayout>
 
 <style>
+  /* Photo above the heading on phones, beside it on wider screens. */
+  .intro {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .intro__photo {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    border: 3px solid var(--color-accent);
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+  @media (min-width: 40rem) {
+    .intro {
+      grid-template-columns: auto 1fr;
+      gap: var(--space-6);
+    }
+    .intro__photo {
+      width: 10rem;
+      height: 10rem;
+    }
+  }
+
   .skills {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));

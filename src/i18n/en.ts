@@ -5,6 +5,7 @@
 export const en = {
   site: {
     tagline: 'Senior SEO Specialist',
+    photoAlt: 'Portrait of Diego Navarro, Senior SEO Specialist',
   },
   a11y: {
     skipToContent: 'Skip to main content',

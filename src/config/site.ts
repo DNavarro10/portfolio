@@ -23,6 +23,11 @@ export const OWNER = {
    * Leave empty until the file exists: the "Download CV" button only shows when set.
    */
   cv: { en: '', es: '' },
+  /**
+   * Plain copy of the profile photo (800×800 JPG in /public) for JSON-LD `image`, which needs a
+   * stable URL. Pages show the optimized version from src/assets/diego-navarro.jpg instead.
+   */
+  photo: { path: '/diego-navarro.jpg', width: 800, height: 800 },
   /** Topics for JSON-LD `knowsAbout` (helps search engines understand expertise). */
   knowsAbout: [
     'Search engine optimization',
