@@ -198,10 +198,11 @@ export const en = {
     },
   },
   about: {
-    eyebrow: 'About',
-    title: 'About Diego Navarro',
+    eyebrow: 'About Diego Navarro',
+    title: 'I help brands win search, from Google to AI answers',
     intro:
       "Hi, I'm Diego Navarro, a Senior SEO Specialist based in Costa Rica. For 6+ years I've built teams, authority, and organic growth for competitive US and UK brands through technical SEO, content audits, and link acquisition.",
+    introTitle: 'What I do',
     introMore:
       'My work starts with direct, sometimes uncomfortable conversations with stakeholders about where a site really stands. From there, I build an action plan that covers every part of SEO. My hands-on experience is in high-impact backlink strategies, technical SEO, and content and SERP analysis informed by GEO results, so companies stay ahead as search shifts toward AI-generated answers.',
     story: {

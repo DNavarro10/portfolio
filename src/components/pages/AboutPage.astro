@@ -65,7 +65,10 @@ const crumbs = [
         description={a.intro}
       />
     </div>
-    <p class="intro__more">{a.introMore}</p>
+    <h2 id="focus-title" class="intro__more">
+      {a.introTitle}
+    </h2>
+    <p>{a.introMore}</p>
 
     <h2 id="story-title">{a.story.title}</h2>
     {a.story.paragraphs.map((paragraph) => (

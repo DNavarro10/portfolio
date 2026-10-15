@@ -200,10 +200,11 @@ export const es: UiStrings = {
     },
   },
   about: {
-    eyebrow: 'Sobre mí',
-    title: 'Sobre Diego Navarro',
+    eyebrow: 'Sobre Diego Navarro',
+    title: 'Ayudo a las marcas a ganar en la búsqueda, de Google a las respuestas de IA',
     intro:
       'Hola, soy Diego Navarro, especialista SEO senior desde Costa Rica. Desde hace más de 6 años formo equipos, construyo autoridad e impulso el crecimiento orgánico de marcas competitivas de EE. UU. y Reino Unido con SEO técnico, auditorías de contenido y adquisición de enlaces.',
+    introTitle: 'Lo que hago',
     introMore:
       'Mi trabajo empieza con conversaciones directas, a veces incómodas, con los stakeholders sobre la situación real del sitio. A partir de ahí, armo un plan de acción que cubre cada frente del SEO. Mi experiencia práctica está en estrategias de backlinks de alto impacto, SEO técnico y análisis de contenido y de SERP guiado por los resultados en GEO, para que las empresas se mantengan a la vanguardia mientras la búsqueda avanza hacia las respuestas generadas por IA.',
     story: {
