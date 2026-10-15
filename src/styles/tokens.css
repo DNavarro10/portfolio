@@ -34,18 +34,14 @@
 
   --color-focus: #2c6a57;
 
-  /* Text on photos (photo headers): always light text on a dark slate overlay, in both
-     themes. Measured on the brightest parts of the Chirripó photo: text 6.5:1, muted
-     text 5.2:1 (AA). Recheck if you use a brighter photo. */
-  --color-on-image: #f3f7f6;
-  --color-on-image-muted: #d3e1dd;
-  --color-highlight-on-image: #e9a866;
-  --color-image-fallback: #0e1c23; /* shown while the photo loads */
-  --gradient-image-overlay: linear-gradient(
+  /* Wash over the Contact page background photo: the page color, stronger at the top
+     where the heading sits. Text placed on it uses the strong text/accent-hover colors
+     (see .on-photo in ContactPage.astro): measured worst case 6:1+ in both themes. */
+  --color-photo-wash: linear-gradient(
     180deg,
-    rgb(14 28 35 / 0.62) 0%,
-    rgb(14 28 35 / 0.72) 55%,
-    rgb(14 28 35 / 0.88) 100%
+    rgb(246 249 248 / 0.9) 0%,
+    rgb(246 249 248 / 0.9) 40%,
+    rgb(246 249 248 / 0.6) 80%
   );
 
   /* Status colors (tool results, meters). Always paired with text, never color alone. */
@@ -144,6 +140,13 @@
 
   --color-focus: #9fc2b2;
 
+  --color-photo-wash: linear-gradient(
+    180deg,
+    rgb(14 28 35 / 0.88) 0%,
+    rgb(14 28 35 / 0.88) 40%,
+    rgb(14 28 35 / 0.6) 80%
+  );
+
   --color-success: #9fc2b2; /* 9.0:1 on bg */
   --color-warning: #e9a866; /* 8.5:1 on bg, 6.2:1 on surface-2 */
   --color-danger: #f2937c; /* 7.6:1 on bg, 5.6:1 on surface-2 */
@@ -173,6 +176,13 @@
     --color-highlight: #e9a866; /* copper: 8.5:1 on bg */
 
     --color-focus: #9fc2b2;
+
+    --color-photo-wash: linear-gradient(
+      180deg,
+      rgb(14 28 35 / 0.88) 0%,
+      rgb(14 28 35 / 0.88) 40%,
+      rgb(14 28 35 / 0.6) 80%
+    );
 
     --color-success: #9fc2b2; /* 9.0:1 on bg */
     --color-warning: #e9a866; /* 8.5:1 on bg, 6.2:1 on surface-2 */
