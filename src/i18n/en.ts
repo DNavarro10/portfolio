@@ -347,6 +347,11 @@ export const en = {
       privacy:
         'Your details are only used to reply to you. They are never shared or added to a mailing list.',
     },
+    photo: {
+      alt: 'View from the summit of Cerro Chirripó: misty valleys and glacial lakes below a sea of clouds, with alpine shrubs in the foreground',
+      caption:
+        'Cerro Chirripó, the highest peak in Costa Rica (3,821 m). My favorite place to log off.',
+    },
     other: {
       title: 'Other ways to reach me',
     },

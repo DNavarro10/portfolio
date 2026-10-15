@@ -349,6 +349,11 @@ export const es: UiStrings = {
       privacy:
         'Tus datos solo se usan para responderte. Nunca se comparten ni se agregan a una lista de correo.',
     },
+    photo: {
+      alt: 'Vista desde la cima del cerro Chirripó: valles con neblina y lagunas glaciares bajo un mar de nubes, con arbustos de páramo en primer plano',
+      caption:
+        'Cerro Chirripó, el punto más alto de Costa Rica (3821 m). Mi lugar favorito para desconectarme.',
+    },
     other: {
       title: 'Otras formas de contactarme',
     },

@@ -6,9 +6,13 @@
  * The form is plain HTML (no JavaScript). While SITE.contactForm.enabled is false its
  * fields are disabled and a "coming soon" note shows; it is switched on at the Cloudflare
  * deploy step, when the server route that emails the message exists.
+ * A personal photo (Cerro Chirripó) sits beside the "other ways" and "details" panels
+ * on wide screens and below them on phones; it loads lazily, so the form isn't slowed down.
  * The CV button appears automatically once OWNER.cv has a file for this language.
  * JSON-LD: ContactPage (main entity: Person, whose sameAs lists the profiles).
  */
+import { Image } from 'astro:assets';
+import chirripo from '@/assets/chirripo.jpg';
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
 import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
@@ -170,6 +174,17 @@ const crumbs = [
           ))}
         </dl>
       </section>
+
+      <figure class="photo">
+        <Image
+          src={chirripo}
+          alt={c.photo.alt}
+          widths={[400, 600, 800, 1000]}
+          sizes="(min-width: 48rem) 18rem, 100vw"
+          loading="lazy"
+        />
+        <figcaption>{c.photo.caption}</figcaption>
+      </figure>
     </div>
   </Section>
 
@@ -196,6 +211,43 @@ const crumbs = [
     display: grid;
     gap: var(--space-5);
     margin-top: var(--space-5);
+  }
+  /* Wide screens: the two panels on the left, the photo on the right spanning both. */
+  @media (min-width: 48rem) {
+    .contact-grid {
+      grid-template-columns: minmax(0, 1fr) 18rem;
+    }
+    .photo {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+  }
+  .photo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+  }
+  .photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 50% 28%;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+  @media (min-width: 48rem) {
+    .photo :global(img) {
+      flex: 1;
+      min-height: 0;
+      aspect-ratio: auto;
+    }
+  }
+  .photo figcaption {
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
   }
   .panel {
     padding: var(--space-5);
