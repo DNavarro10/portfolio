@@ -42,7 +42,8 @@ export const es: UiStrings = {
   },
   home: {
     eyebrow: 'Diego Navarro · Costa Rica',
-    headline: 'Especialista SEO Senior con mentalidad de ingeniero',
+    headline:
+      'Especialista SEO Senior con mentalidad de ingeniero, impulsado por café costarricense',
     summary:
       'Más de 6 años liderando el SEO y GEO de marcas competitivas en EE. UU. y Reino Unido, como RotoWire.com y Bookies.com: desde auditorías técnicas y datos estructurados hasta link building, outreach digital y visibilidad en buscadores con IA.',
     openToWork: 'Disponible para nuevos retos',
@@ -54,7 +55,7 @@ export const es: UiStrings = {
     profile: {
       label: 'Resumen del perfil',
       role: 'rol',
-      roleValue: 'Especialista SEO Senior, especialista en backlinks',
+      roleValue: 'Especialista SEO Senior, especialista en backlinks, líder de búsqueda',
       focus: 'enfoque',
       focusValue: 'SEO, SEO técnico, link building, outreach digital, AEO/GEO',
       markets: 'mercados',
@@ -74,7 +75,7 @@ export const es: UiStrings = {
         { value: '120+', label: 'Backlinks conseguidos al mes' },
         { value: 'DR 45', label: 'Domain Rating promedio de los enlaces' },
         { value: '5000+', label: 'Medios en mi red de outreach' },
-        { value: '8–12', label: 'Dominios estatales y provinciales lanzados' },
+        { value: '8–12', label: 'Dominios estatales lanzados' },
         { value: '7', label: 'Personas a cargo: contratación y mentoría' },
       ],
     },
@@ -107,8 +108,8 @@ export const es: UiStrings = {
     brands: {
       eyebrow: 'Marcas',
       title: 'Sitios que he ayudado a crecer',
-      note: 'Mercados competitivos de deportes e iGaming en EE. UU. y Reino Unido, incluidos 8–12 lanzamientos estatales.',
-      more: '+ más sitios estatales',
+      note: 'Mercados competitivos de deportes e iGaming en EE. UU., Reino Unido y Canadá, incluidos 8–12 lanzamientos estatales.',
+      more: '+ más sitios estatales e internacionales',
     },
     caseStudies: {
       eyebrow: 'Casos de estudio',
@@ -148,12 +149,19 @@ export const es: UiStrings = {
         {
           role: 'Especialista SEO Senior',
           company: 'Gambling.com Group',
+          companyNote: {
+            label: 'hoy Grandstand',
+            url: 'https://www.businesswire.com/news/home/20260722583240/en/Gambling.com-Group-Is-Now-Grandstand',
+          },
           period: '2023 – 2026',
           location: 'Costa Rica',
           points: [
+            'Rol de líder de búsqueda: trabajé cara a cara con stakeholders y clientes, y mejoré reportes, flujos de trabajo y procesos mientras nos adaptábamos a la era de la búsqueda con IA.',
+            'SEO on-page, GEO y SEO off-page en dos marcas principales, RotoWire.com y Bookies.com.',
             'Lideré el link building y el outreach digital: más de 120 backlinks al mes con un DR promedio de 45.',
-            'Lideré la implementación de SEO técnico y las hojas de ruta de SEO y GEO de RotoWire.com y Bookies.com.',
-            'Dirigí un equipo de 7 personas: contratación, formación, control de calidad y evaluaciones de desempeño.',
+            'Lideré la implementación de SEO técnico y las hojas de ruta de SEO y GEO, con primeras posiciones sostenidas en los resultados de búsqueda.',
+            'Dirigí un equipo de 7 personas, analistas SEO y un editor SEO: contratación, formación, control de calidad y evaluaciones de desempeño.',
+            'Creé soluciones con IA para automatizar y optimizar los flujos de trabajo del equipo.',
           ],
         },
         {
@@ -162,8 +170,10 @@ export const es: UiStrings = {
           period: '2021 – 2023',
           location: 'Remoto, Estados Unidos',
           points: [
-            'Apoyé el SEO de 8 a 12 dominios estatales en lanzamientos de mercado a ritmo acelerado.',
-            'Investigación de palabras clave, análisis de brechas frente a la competencia y optimización on-page.',
+            'Apoyé el SEO de 8 a 12 dominios estatales en lanzamientos de mercado a ritmo acelerado, con varios sitios de clientes a la vez.',
+            'Ayudé a que BetArizona.com fuera el sitio mejor posicionado durante el lanzamiento en Arizona, un récord para el equipo, seguido de buenos resultados en los lanzamientos siguientes.',
+            'Planificación de palabras clave, análisis de brechas frente a la competencia, optimización on-page y construcción de E-E-A-T y autoridad con outreach.',
+            'Reportes de resultados en reuniones semanales y mensuales.',
             'Ascenso a un rol de liderazgo de equipo.',
           ],
         },
@@ -174,7 +184,9 @@ export const es: UiStrings = {
           location: 'Costa Rica',
           points: [
             'Llevé el SEO integral de SportsbookReview.com en WordPress.',
-            'Auditorías técnicas, Google Tag Manager, optimización on-page y outreach.',
+            'Llegamos a la posición 1 en "NFL odds" durante unos dos meses al inicio de la temporada 2020 de la NFL.',
+            'Auditorías técnicas, Google Tag Manager, optimización on-page y auditoría de contenido.',
+            'Obtención de backlinks, evaluación del valor de cada enlace y análisis de perfiles de backlinks; apoyo en SEO para YouTube.',
           ],
         },
       ],
@@ -195,7 +207,7 @@ export const es: UiStrings = {
       paragraphs: [
         'Estudié Ingeniería Informática en la Universidad Metropolitana Castro Carazo. Me dejó una forma de pensar que uso todos los días: dividir un problema en sistemas, medirlos y mejorarlos paso a paso.',
         'Empecé en SEO en 2019 en Advision Development, llevando el SEO integral de SportsbookReview.com. En 2021 entré a Gambling.com Group como analista SEO remoto, apoyando de 8 a 12 lanzamientos de mercados estatales, y ascendí a un rol de liderazgo de equipo.',
-        'De 2023 a 2026, como especialista SEO senior, lideré el link building, el SEO técnico y las hojas de ruta de SEO y GEO de RotoWire.com y Bookies.com, y dirigí un equipo de 7 personas.',
+        'De 2023 a 2026, como especialista SEO senior y líder de búsqueda, lideré el link building, el SEO técnico y las hojas de ruta de SEO y GEO de RotoWire.com y Bookies.com, y dirigí un equipo de 7 personas. También trabajé cara a cara con stakeholders y clientes, y creé soluciones con IA para agilizar los reportes y flujos de trabajo del equipo mientras la búsqueda entraba en la era de la IA.',
       ],
     },
     principles: {
@@ -229,9 +241,11 @@ export const es: UiStrings = {
             'Auditorías e implementación de SEO técnico',
             'Investigación de palabras clave e intención de búsqueda',
             'SEO on-page y de contenido',
+            'Auditoría de contenido y copywriting',
             'Datos estructurados (Schema.org, JSON-LD)',
             'Estrategia GEO y AEO',
-            'Reportes SEO y KPI',
+            'Reportes, análisis y KPI de SEO',
+            'Reuniones de estrategia y reportes a stakeholders',
             'Liderazgo de equipo y control de calidad',
           ],
         },
@@ -240,10 +254,11 @@ export const es: UiStrings = {
           items: [
             'Apoyo en pruebas A/B y CRO',
             'Scripts en Python (nivel básico a intermedio)',
-            'HTML, CSS y JavaScript',
+            'Desarrollo web: HTML, CSS, JavaScript y PHP',
             'WordPress y Google Tag Manager',
-            'Configuración de Cloudflare',
-            'SQL básico',
+            'SQL',
+            'Automatización y desarrollo de herramientas con IA',
+            'Reportes asistidos por IA',
           ],
         },
         {
@@ -252,7 +267,8 @@ export const es: UiStrings = {
             'Grafos de conocimiento',
             'Generación aumentada por recuperación (RAG)',
             'IA agéntica',
-            'Looker Studio',
+            'Looker Studio e inteligencia de negocio (BI)',
+            'PR digital',
           ],
         },
       ],
@@ -263,6 +279,7 @@ export const es: UiStrings = {
     languages: {
       title: 'Idiomas',
       items: ['Español: nativo', 'Inglés: C1, nivel profesional avanzado'],
+      certificate: 'Ver mi certificado EF SET (C1)',
     },
     faq: {
       title: 'Preguntas y respuestas',

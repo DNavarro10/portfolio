@@ -41,6 +41,14 @@ export const OWNER = {
     'Entity SEO',
   ],
   alumniOf: 'Universidad Metropolitana Castro Carazo',
+  /** Verifiable certificates: shown on About and in JSON-LD (`hasCredential`). */
+  credentials: [
+    {
+      name: 'EF SET English Certificate (C1 Advanced)',
+      issuer: 'EF Education First',
+      url: 'https://cert.efset.org/ifCw5x',
+    },
+  ],
   /** Tools listed on the About page (names aren't translated). */
   tools: [
     'Ahrefs',

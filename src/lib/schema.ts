@@ -25,6 +25,13 @@ export function personSchema(): JsonLdNode {
     knowsLanguage: LANGS.map((lang) => LANG_META[lang].hreflang),
     knowsAbout: [...OWNER.knowsAbout],
     alumniOf: { '@type': 'CollegeOrUniversity', name: OWNER.alumniOf },
+    hasCredential: OWNER.credentials.map((credential) => ({
+      '@type': 'EducationalOccupationalCredential',
+      name: credential.name,
+      url: credential.url,
+      credentialCategory: 'certificate',
+      recognizedBy: { '@type': 'Organization', name: credential.issuer },
+    })),
   };
 }
 

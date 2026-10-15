@@ -101,6 +101,13 @@ const crumbs = [
           {a.languages.items.map((item) => (
             <li>{item}</li>
           ))}
+          {OWNER.credentials.map((credential) => (
+            <li>
+              <a href={credential.url} rel="noopener">
+                {a.languages.certificate}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
       <div>

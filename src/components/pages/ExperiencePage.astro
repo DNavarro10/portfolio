@@ -3,6 +3,7 @@
  * Experience page, shared by /experience/ and /es/experiencia/.
  * Order: answer-ready intro → case study cards → work history → education.
  * Case studies come from the "experience" collection (drafts show only in dev).
+ * A role can carry a `companyNote` link (e.g. the company's rebrand), marked nofollow.
  */
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
 import Card from '@/components/ui/Card.astro';
@@ -85,7 +86,17 @@ const crumbs = [
           <p class="timeline__period mono-label">{job.period}</p>
           <h3 class="timeline__role">{job.role}</h3>
           <p class="timeline__meta text-muted">
-            {job.company} · {job.location}
+            {job.company}
+            {job.companyNote && (
+              <>
+                {' ('}
+                <a href={job.companyNote.url} rel="nofollow noopener">
+                  {job.companyNote.label}
+                </a>
+                {')'}
+              </>
+            )}{' '}
+            · {job.location}
           </p>
           <ul class="timeline__points">
             {job.points.map((point) => (

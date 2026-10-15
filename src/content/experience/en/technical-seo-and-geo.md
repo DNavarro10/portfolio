@@ -6,6 +6,7 @@ translationKey: technical-geo
 draft: false
 seoTitle: 'Technical SEO & GEO for RotoWire, Bookies'
 pubDate: 2026-10-09
+updatedDate: 2026-10-14
 company: Gambling.com Group
 role: Senior SEO Specialist
 period: 2023 – 2026
@@ -51,7 +52,7 @@ RotoWire.com and Bookies.com are large WordPress sites competing in the US and U
 
 ## The results
 
-- **Top search positions maintained** for both brands in the US and UK.
+- **Top search positions maintained** for both brands in the US and UK: RotoWire.com kept its core money keywords on the first page, in positions 1 to 6 depending on the keyword and the season.
 - Technical SEO standards documented and adopted across the team.
 - An SEO and GEO roadmap that treats AI search visibility as part of the same strategy, not a separate project.
 

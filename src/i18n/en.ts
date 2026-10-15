@@ -41,7 +41,7 @@ export const en = {
   },
   home: {
     eyebrow: 'Diego Navarro · Costa Rica',
-    headline: "Senior SEO Specialist with an engineer's mindset",
+    headline: "Senior SEO Specialist with an engineer's mindset, fueled by Costa Rican coffee",
     summary:
       '6+ years leading SEO and GEO for competitive US and UK brands like RotoWire.com and Bookies.com, from technical audits and structured data to link building, digital outreach, and visibility in AI search.',
     openToWork: 'Open to new roles',
@@ -53,7 +53,7 @@ export const en = {
     profile: {
       label: 'Profile summary',
       role: 'role',
-      roleValue: 'Senior SEO Specialist, Backlinks Specialist',
+      roleValue: 'Senior SEO Specialist, Backlinks Specialist, Search Lead',
       focus: 'focus',
       focusValue: 'SEO, technical SEO, link building, digital outreach, AEO/GEO',
       markets: 'markets',
@@ -73,7 +73,7 @@ export const en = {
         { value: '120+', label: 'Backlinks secured per month' },
         { value: 'DR 45', label: 'Average domain rating of placements' },
         { value: '5,000+', label: 'Publishers in my outreach network' },
-        { value: '8–12', label: 'State and provincial domains launched' },
+        { value: '8–12', label: 'State-level domains launched' },
         { value: '7', label: 'Team members led, hired, and mentored' },
       ],
     },
@@ -106,8 +106,8 @@ export const en = {
     brands: {
       eyebrow: 'Brands',
       title: "Sites I've helped grow",
-      note: 'Competitive sports and iGaming markets in the US and UK, including 8–12 state-level launches.',
-      more: '+ more state sites',
+      note: 'Competitive sports and iGaming markets in the US, UK, and Canada, including 8–12 state-level launches.',
+      more: '+ more state and international sites',
     },
     caseStudies: {
       eyebrow: 'Case studies',
@@ -147,12 +147,19 @@ export const en = {
         {
           role: 'Senior SEO Specialist',
           company: 'Gambling.com Group',
+          companyNote: {
+            label: 'now Grandstand',
+            url: 'https://www.businesswire.com/news/home/20260722583240/en/Gambling.com-Group-Is-Now-Grandstand',
+          },
           period: '2023 – 2026',
           location: 'Costa Rica',
           points: [
+            'Search lead role: worked face to face with stakeholders and clients, and improved reports, workflows, and processes while adapting to the AI search era.',
+            'On-page SEO, GEO, and off-page SEO across two major brands, RotoWire.com and Bookies.com.',
             'Led link building and digital outreach: 120+ backlinks a month at an average DR of 45.',
-            'Led hands-on technical SEO and SEO/GEO roadmaps for RotoWire.com and Bookies.com.',
-            'Led a team of 7 through hiring, training, QA, and performance reviews.',
+            'Led hands-on technical SEO and SEO/GEO roadmaps, with sustained top positions in the search results.',
+            'Led a team of 7 (SEO analysts and an SEO editor) through hiring, training, QA, and performance reviews.',
+            'Built AI solutions to automate and optimize the team’s workflows.',
           ],
         },
         {
@@ -161,8 +168,10 @@ export const en = {
           period: '2021 – 2023',
           location: 'Remote, United States',
           points: [
-            'Supported SEO for 8–12 state-level domains during fast-paced market launches.',
-            'Keyword research, competitor gap analysis, and on-page optimization.',
+            'Supported SEO for 8–12 state-level domains during fast-paced market launches, working on several client sites at a time.',
+            'Helped make BetArizona.com the top-ranking site during the Arizona launch, a record for the team, followed by strong results in later launches.',
+            'Keyword planning, competitor gap analysis, on-page optimization, and E-E-A-T and authority building through outreach.',
+            'Reported results in weekly and monthly meetings.',
             'Promoted into a team leadership role.',
           ],
         },
@@ -173,7 +182,9 @@ export const en = {
           location: 'Costa Rica',
           points: [
             'Ran end-to-end SEO for SportsbookReview.com on WordPress.',
-            'Technical audits, Google Tag Manager, on-page optimization, and outreach.',
+            'Reached position 1 for "NFL odds" for about two months at the start of the 2020 NFL season.',
+            'Technical audits, Google Tag Manager, on-page optimization, and content auditing.',
+            'Backlink acquisition, link value assessment, and backlink profiling; YouTube SEO support.',
           ],
         },
       ],
@@ -194,7 +205,7 @@ export const en = {
       paragraphs: [
         'I studied Informatics Engineering at Universidad Metropolitana Castro Carazo. It gave me a way of thinking I still use every day: break a problem into systems, measure them, and improve them one step at a time.',
         'I started in SEO in 2019 at Advision Development, running end-to-end SEO for SportsbookReview.com. In 2021 I joined Gambling.com Group as a remote SEO analyst, supporting 8–12 state-level market launches, and was promoted into a team leadership role.',
-        'From 2023 to 2026, as Senior SEO Specialist, I led link building, technical SEO, and SEO and GEO roadmaps for RotoWire.com and Bookies.com, and led a team of 7.',
+        'From 2023 to 2026, as Senior SEO Specialist and search lead, I led link building, technical SEO, and SEO and GEO roadmaps for RotoWire.com and Bookies.com, and led a team of 7. I also worked face to face with stakeholders and clients, and built AI solutions to streamline the team’s reports and workflows as search moved into the AI era.',
       ],
     },
     principles: {
@@ -228,9 +239,11 @@ export const en = {
             'Technical SEO audits and implementation',
             'Keyword research and search intent',
             'On-page and content SEO',
+            'Content auditing and copywriting',
             'Structured data (Schema.org, JSON-LD)',
             'GEO and AEO strategy',
-            'SEO reporting and KPIs',
+            'SEO reporting, analysis, and KPIs',
+            'Stakeholder updates and strategy meetings',
             'Team leadership and QA',
           ],
         },
@@ -239,10 +252,11 @@ export const en = {
           items: [
             'A/B testing and CRO support',
             'Python scripting (basic to intermediate)',
-            'HTML, CSS, and JavaScript',
+            'Web development: HTML, CSS, JavaScript, and PHP',
             'WordPress and Google Tag Manager',
-            'Cloudflare configuration',
-            'Basic SQL',
+            'SQL',
+            'AI automation and tool development',
+            'AI-assisted reporting',
           ],
         },
         {
@@ -251,7 +265,8 @@ export const en = {
             'Knowledge graphs',
             'Retrieval-augmented generation (RAG)',
             'Agentic AI',
-            'Looker Studio',
+            'Looker Studio and business intelligence (BI)',
+            'Digital PR',
           ],
         },
       ],
@@ -262,6 +277,7 @@ export const en = {
     languages: {
       title: 'Languages',
       items: ['Spanish: native', 'English: C1, advanced professional proficiency'],
+      certificate: 'View my EF SET certificate (C1)',
     },
     faq: {
       title: 'Questions and answers',
