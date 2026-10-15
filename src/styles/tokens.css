@@ -35,8 +35,8 @@
   --color-focus: #2c6a57;
 
   /* Text on photos (photo headers): always light text on a dark slate overlay, in both
-     themes. Measured on the brightest parts of the Chirripó photo: text 6.6:1, muted
-     text 5.3:1 (AA). Recheck if you use a brighter photo. */
+     themes. Measured on the brightest parts of the Chirripó photo: text 6.5:1, muted
+     text 5.2:1 (AA). Recheck if you use a brighter photo. */
   --color-on-image: #f3f7f6;
   --color-on-image-muted: #d3e1dd;
   --color-highlight-on-image: #e9a866;
