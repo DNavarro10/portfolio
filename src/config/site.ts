@@ -111,5 +111,5 @@ export const SITE = {
    * Accept (Consent Mode v2, "basic" mode), and only on the live domain (never in dev).
    * The Measurement ID is public (it's visible in any site's code), not a secret.
    */
-  analytics: { ga4Id: '' as string, host: new URL(SITE_URL).hostname },
+  analytics: { ga4Id: 'G-XCXGC9ZV74' as string, host: new URL(SITE_URL).hostname },
 } as const;
