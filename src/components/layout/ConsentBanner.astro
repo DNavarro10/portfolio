@@ -1,0 +1,209 @@
+---
+/**
+ * Cookie consent banner + Google Analytics 4 loader (Consent Mode v2, "basic" mode).
+ *
+ * How it works:
+ * - Rendered only when SITE.analytics.ga4Id is set. With no ID, nothing here exists.
+ * - The banner starts hidden; the script shows it if the visitor hasn't chosen yet.
+ * - Google's script loads ONLY after "Accept", and only on the live domain
+ *   (SITE.analytics.host), so local testing never sends data.
+ * - The choice is saved in this browser (localStorage "analytics-consent").
+ *   The footer's "Cookie settings" button reopens the banner to change it; declining
+ *   after accepting turns tracking off and deletes the Google Analytics cookies.
+ * - Custom events: tool_use (first interaction with a tool, once per page) and
+ *   language_switch. Outbound clicks (LinkedIn) and file downloads (CV) come from
+ *   GA4's Enhanced measurement, so they need no code here.
+ * - The script is a separate file (Content-Security-Policy: no inline scripts).
+ */
+import { SITE } from '@/config/site';
+import type { Lang } from '@/i18n/config';
+import { routePath, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const { ga4Id, host } = SITE.analytics;
+---
+
+{ga4Id && (
+  <section
+    class="consent"
+    aria-label={t.consent.label}
+    data-consent
+    data-ga-id={ga4Id}
+    data-host={host}
+    hidden
+  >
+    <p class="consent__text">
+      {t.consent.text} <a href={routePath('privacy', lang)}>{t.consent.policy}</a>
+    </p>
+    <div class="consent__actions">
+      <button type="button" class="consent__button consent__button--accept" data-consent-accept>
+        {t.consent.accept}
+      </button>
+      <button type="button" class="consent__button" data-consent-decline>
+        {t.consent.decline}
+      </button>
+    </div>
+  </section>
+)}
+
+<script>
+  const KEY = 'analytics-consent';
+  const banner = document.querySelector<HTMLElement>('[data-consent]');
+
+  type Gtag = (...args: unknown[]) => void;
+  const w = window as typeof window & { dataLayer?: unknown[]; gtag?: Gtag };
+
+  function read(): string | null {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  }
+  function save(value: 'granted' | 'denied') {
+    try {
+      localStorage.setItem(KEY, value);
+    } catch {
+      /* not saved: the banner will ask again on the next page */
+    }
+  }
+
+  let loaded = false;
+  function loadAnalytics(id: string) {
+    if (loaded) return;
+    loaded = true;
+    w.dataLayer = w.dataLayer ?? [];
+    w.gtag = function gtag() {
+      // GA4 expects the real `arguments` object, not an array.
+      // eslint-disable-next-line prefer-rest-params
+      w.dataLayer!.push(arguments);
+    };
+    w.gtag('consent', 'default', {
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    });
+    w.gtag('js', new Date());
+    w.gtag('config', id);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+    document.head.append(script);
+    trackEvents();
+  }
+
+  function revoke() {
+    w.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+    // Remove the Google Analytics cookies (_ga, _ga_<id>) for this domain.
+    for (const cookie of document.cookie.split(';')) {
+      const name = cookie.split('=')[0].trim();
+      if (!name.startsWith('_ga')) continue;
+      for (const domain of ['', `; domain=.${location.hostname}`]) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domain}`;
+      }
+    }
+  }
+
+  function trackEvents() {
+    const toolRoot = document.querySelector<HTMLElement>('[data-tool]');
+    if (toolRoot) {
+      const once = () => {
+        w.gtag?.('event', 'tool_use', { tool_name: toolRoot.dataset.tool });
+        toolRoot.removeEventListener('input', once);
+        toolRoot.removeEventListener('click', onClick);
+      };
+      const onClick = (event: Event) => {
+        if ((event.target as Element).closest('button')) once();
+      };
+      toolRoot.addEventListener('input', once);
+      toolRoot.addEventListener('click', onClick);
+    }
+    document.addEventListener('click', (event) => {
+      const link = (event.target as Element).closest('a.lang-switch');
+      if (link) w.gtag?.('event', 'language_switch', { to: link.getAttribute('hreflang') ?? '' });
+    });
+  }
+
+  if (banner) {
+    const id = banner.dataset.gaId ?? '';
+    const onLiveSite = location.hostname === banner.dataset.host;
+    const choice = read();
+
+    if (choice === 'granted' && onLiveSite) loadAnalytics(id);
+    if (choice === null) banner.hidden = false;
+
+    banner.querySelector('[data-consent-accept]')?.addEventListener('click', () => {
+      save('granted');
+      banner.hidden = true;
+      if (onLiveSite) loadAnalytics(id);
+    });
+    banner.querySelector('[data-consent-decline]')?.addEventListener('click', () => {
+      save('denied');
+      banner.hidden = true;
+      revoke();
+    });
+    document.querySelectorAll('[data-consent-open]').forEach((button) =>
+      button.addEventListener('click', () => {
+        banner.hidden = false;
+        banner.querySelector<HTMLButtonElement>('[data-consent-accept]')?.focus();
+      }),
+    );
+  }
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 50;
+    left: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+    max-width: 28rem;
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.18);
+    font-size: var(--fs-sm);
+  }
+  .consent[hidden] {
+    display: none;
+  }
+  .consent__text {
+    margin: 0;
+    color: var(--color-text);
+  }
+  .consent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  /* Accept and Decline are equally easy to choose (same size, both clearly visible). */
+  .consent__button {
+    flex: 1 1 8rem;
+    min-height: 44px;
+    padding-inline: var(--space-4);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--color-accent);
+    font: inherit;
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+  }
+  .consent__button--accept {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .consent__button:hover {
+    border-color: var(--color-accent-hover);
+  }
+</style>

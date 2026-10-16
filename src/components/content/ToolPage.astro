@@ -118,7 +118,9 @@ const jsonLd = [
     <noscript>
       <p class="tool-noscript">{p.noscript}</p>
     </noscript>
-    <ToolUi lang={lang} />
+    <div data-tool={tool.key}>
+      <ToolUi lang={lang} />
+    </div>
   </Section>
 
   <Section labelledby="howto-title" tinted narrow>

@@ -38,6 +38,13 @@ const legal = `© ${year} ${OWNER.name}. ${t.footer.rights} ${t.footer.builtWith
       <li>
         <a href={routePath('privacy', lang)}>{t.footer.privacy}</a>
       </li>
+      {SITE.analytics.ga4Id && (
+        <li>
+          <button type="button" class="site-footer__button" data-consent-open>
+            {t.footer.cookieSettings}
+          </button>
+        </li>
+      )}
     </ul>
     <p class="site-footer__legal">{legal}</p>
   </div>
@@ -82,6 +89,17 @@ const legal = `© ${year} ${OWNER.name}. ${t.footer.rights} ${t.footer.builtWith
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
+  }
+  /* "Cookie settings" looks like the other footer links but is a button (it opens the banner). */
+  .site-footer__button {
+    padding-block: var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-accent);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
   }
   .site-footer__legal {
     padding-top: var(--space-4);

@@ -33,6 +33,14 @@ export const en = {
     builtWith: 'Built with Astro and hosted on Cloudflare.',
     sourceCode: 'Source code',
     rights: 'All rights reserved.',
+    cookieSettings: 'Cookie settings',
+  },
+  consent: {
+    label: 'Cookie consent',
+    text: 'Can I use analytics cookies (Google Analytics) to see how visitors use this site? Nothing is tracked unless you accept.',
+    accept: 'Accept',
+    decline: 'Decline',
+    policy: 'Privacy policy',
   },
   placeholder: {
     comingSoon: 'This page is under construction.',
@@ -1350,6 +1358,20 @@ export const en = {
     intro:
       'This site doesn’t use cookies, ads, or tracking pixels, and the free SEO tools never send what you type anywhere. This page explains the little data that is processed and why.',
     updated: 'Last updated',
+    // Used instead of the matching texts above when Google Analytics is on (SITE.analytics.ga4Id).
+    withAnalytics: {
+      intro:
+        'This site uses analytics cookies only if you accept them, has no ads or tracking pixels, and the free SEO tools never send what you type anywhere. This page explains what data is processed and why.',
+      cookies: [
+        'Only if you accept. When you first visit, a banner asks whether I can use Google Analytics cookies. If you decline or ignore it, no analytics code from Google is loaded and no cookies are set. There are no advertising trackers, social media pixels, or third-party embeds.',
+        'Your answer is saved in your own browser (local storage) so the banner doesn’t ask again. You can change it at any time with “Cookie settings” at the bottom of every page; declining removes the analytics cookies.',
+        'If you use the light/dark switch in the header, that choice is also saved only in your browser and is never sent to me.',
+      ],
+      analytics: [
+        'Yes, Google Analytics 4, and only after you accept it. It shows me how the site is used: which pages are visited, roughly from which country, on what kind of device, and how visitors arrived (for example from Google, LinkedIn, or an AI assistant). It also counts a few actions, such as using a tool or switching language.',
+        'Google Analytics sets cookies named _ga to recognize returning visits. Advertising features are off: the data isn’t used for ads or personalization and isn’t combined with other Google services. Data is kept for 14 months and processed by Google under its own privacy policy.',
+      ],
+    },
     sections: [
       {
         title: 'Who is responsible for this site?',
@@ -1358,6 +1380,7 @@ export const en = {
         ],
       },
       {
+        id: 'cookies',
         title: 'Does this site use cookies or trackers?',
         paragraphs: [
           'No. The site doesn’t set cookies and doesn’t use advertising trackers, social media pixels, or third-party embeds.',
@@ -1384,6 +1407,7 @@ export const en = {
         ],
       },
       {
+        id: 'analytics',
         title: 'Does the site use analytics?',
         paragraphs: [
           'Not at the moment. If analytics are added, they will be a privacy-friendly service that doesn’t use cookies, and this page will be updated.',

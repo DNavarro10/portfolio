@@ -105,4 +105,11 @@ export const SITE = {
    * written in this repo.
    */
   contactForm: { enabled: false, action: '/api/contact/' },
+  /**
+   * Google Analytics 4. Empty ID = analytics fully off (no banner, no Google code).
+   * With an ID, a consent banner appears and GA4 loads ONLY after the visitor clicks
+   * Accept (Consent Mode v2, "basic" mode), and only on the live domain (never in dev).
+   * The Measurement ID is public (it's visible in any site's code), not a secret.
+   */
+  analytics: { ga4Id: '' as string, host: new URL(SITE_URL).hostname },
 } as const;

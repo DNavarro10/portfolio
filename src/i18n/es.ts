@@ -34,6 +34,14 @@ export const es: UiStrings = {
     builtWith: 'Hecho con Astro y alojado en Cloudflare.',
     sourceCode: 'Código fuente',
     rights: 'Todos los derechos reservados.',
+    cookieSettings: 'Configuración de cookies',
+  },
+  consent: {
+    label: 'Consentimiento de cookies',
+    text: '¿Puedo usar cookies de analítica (Google Analytics) para ver cómo se usa este sitio? No se registra nada a menos que aceptes.',
+    accept: 'Aceptar',
+    decline: 'Rechazar',
+    policy: 'Política de privacidad',
   },
   placeholder: {
     comingSoon: 'Esta página está en construcción.',
@@ -1363,6 +1371,20 @@ export const es: UiStrings = {
     intro:
       'Este sitio no usa cookies, publicidad ni píxeles de seguimiento, y las herramientas SEO gratuitas nunca envían lo que escribes. Esta página explica qué pocos datos se procesan y por qué.',
     updated: 'Última actualización',
+    // Se usa en lugar de los textos equivalentes de arriba cuando Google Analytics está activo.
+    withAnalytics: {
+      intro:
+        'Este sitio usa cookies de analítica solo si las aceptas, no tiene publicidad ni píxeles de seguimiento, y las herramientas SEO gratuitas nunca envían lo que escribes. Esta página explica qué datos se procesan y por qué.',
+      cookies: [
+        'Solo si las aceptas. En tu primera visita, un aviso te pregunta si puedo usar cookies de Google Analytics. Si las rechazas o ignoras el aviso, no se carga ningún código de analítica de Google ni se guardan cookies. No hay rastreadores publicitarios, píxeles de redes sociales ni contenido incrustado de terceros.',
+        'Tu respuesta se guarda en tu propio navegador (almacenamiento local) para que el aviso no vuelva a aparecer. Puedes cambiarla cuando quieras con “Configuración de cookies” al pie de cada página; si las rechazas, se borran las cookies de analítica.',
+        'Si usas el botón de modo claro u oscuro del encabezado, esa elección también se guarda solo en tu navegador y nunca se me envía.',
+      ],
+      analytics: [
+        'Sí, Google Analytics 4, y solo después de que lo aceptes. Me muestra cómo se usa el sitio: qué páginas se visitan, desde qué país aproximadamente, con qué tipo de dispositivo y cómo llegaron los visitantes (por ejemplo, desde Google, LinkedIn o un asistente de IA). También cuenta algunas acciones, como usar una herramienta o cambiar de idioma.',
+        'Google Analytics guarda cookies llamadas _ga para reconocer visitas repetidas. Las funciones de publicidad están desactivadas: los datos no se usan para anuncios ni personalización y no se combinan con otros servicios de Google. Los datos se conservan 14 meses y Google los procesa según su propia política de privacidad.',
+      ],
+    },
     sections: [
       {
         title: '¿Quién es responsable de este sitio?',
@@ -1371,6 +1393,7 @@ export const es: UiStrings = {
         ],
       },
       {
+        id: 'cookies',
         title: '¿El sitio usa cookies o rastreadores?',
         paragraphs: [
           'No. El sitio no instala cookies ni usa rastreadores publicitarios, píxeles de redes sociales o contenido incrustado de terceros.',
@@ -1397,6 +1420,7 @@ export const es: UiStrings = {
         ],
       },
       {
+        id: 'analytics',
         title: '¿El sitio usa analítica?',
         paragraphs: [
           'Por ahora no. Si se agrega analítica, será un servicio respetuoso con la privacidad que no use cookies, y esta página se actualizará.',

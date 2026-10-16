@@ -4,9 +4,11 @@
  * Copy lives in en.ts / es.ts (`privacy.sections`), written as questions so each
  * answer can be quoted on its own. Update UPDATED (and the copy) whenever the
  * site starts handling data differently, e.g. when analytics or the form go live.
+ * Google Analytics texts switch automatically with SITE.analytics.ga4Id (bump UPDATED then).
  * Linked from the footer and the contact form, not from the main menu.
  */
 import Breadcrumbs from '@/components/layout/Breadcrumbs.astro';
+import { SITE } from '@/config/site';
 import Section from '@/components/ui/Section.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -24,6 +26,15 @@ const UPDATED = '2026-10-15';
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const p = t.privacy;
+// When Google Analytics is on, the cookie and analytics answers (and the intro) switch
+// to the "withAnalytics" texts, so the policy always matches what the site really does.
+const analyticsOn = Boolean(SITE.analytics.ga4Id);
+const intro = analyticsOn ? p.withAnalytics.intro : p.intro;
+const sections = p.sections.map((section) => {
+  const id = 'id' in section ? section.id : undefined;
+  if (!analyticsOn || (id !== 'cookies' && id !== 'analytics')) return section;
+  return { ...section, paragraphs: p.withAnalytics[id] };
+});
 const path = routePath('privacy', lang);
 const dateFormat = new Intl.DateTimeFormat(LANG_META[lang].htmlLang, {
   dateStyle: 'long',
@@ -50,13 +61,13 @@ const crumbs = [
       id="privacy-title"
       eyebrow={p.eyebrow}
       title={p.title}
-      description={p.intro}
+      description={intro}
     />
     <p class="mono-label privacy__updated">
       {p.updated} <time datetime={UPDATED}>{dateFormat.format(new Date(UPDATED))}</time>
     </p>
 
-    {p.sections.map((section) => (
+    {sections.map((section) => (
       <section class="privacy__section">
         <h2>{section.title}</h2>
         {section.paragraphs.map((paragraph) => (

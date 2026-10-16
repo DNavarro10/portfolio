@@ -203,6 +203,12 @@ integrations/             Small build steps (nested-404.mjs)
   Cloudflare Web Analytics need).
 - The privacy policy (`/privacy/`, `/es/privacidad/`, copy in `privacy` in en.ts/es.ts) must match
   reality: update it and its `UPDATED` date before turning on the form, analytics, or any embed.
+- **Google Analytics 4**: on only when `SITE.analytics.ga4Id` is set. `ConsentBanner.astro` asks first
+  (Accept/Decline equally prominent, "Cookie settings" in the footer reopens it); GA4 loads only
+  after Accept and only on the live host (Consent Mode v2 basic, ads signals denied). Privacy texts
+  switch automatically (`privacy.withAnalytics`). CSP already allows googletagmanager.com and
+  google-analytics.com. Custom events: `tool_use`, `language_switch` (outbound clicks and file
+  downloads come from GA4 Enhanced measurement).
 
 - Never put the owner's email address or phone number in code or content. Contact happens via a
   form (to be built); public profiles go in `OWNER.profiles`.

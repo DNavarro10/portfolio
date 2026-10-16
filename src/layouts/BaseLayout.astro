@@ -6,6 +6,8 @@
  * Usage: <BaseLayout title="..." description="..." lang="en" alternates={...}> ... </BaseLayout>
  * Each page must contain exactly one <h1> inside the slot.
  */
+import ConsentBanner from '@/components/layout/ConsentBanner.astro';
+import { SITE } from '@/config/site';
 import SeoHead, { type SeoProps } from '@/components/seo/SeoHead.astro';
 import Fonts from '@/components/layout/Fonts.astro';
 import SiteFooter from '@/components/layout/SiteFooter.astro';
@@ -52,5 +54,6 @@ const graph = [personSchema(), websiteSchema(), ...jsonLd];
       <slot />
     </main>
     <SiteFooter lang={lang} />
+    {SITE.analytics.ga4Id && <ConsentBanner lang={lang} />}
   </body>
 </html>
